@@ -1,0 +1,35 @@
+{
+  "name": "ship-simulator",
+  "version": "0.0.1",
+  "description": "Simulates a ship.",
+  "main": "app.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1",
+    "start": "node app.js"
+  },
+  "keywords": [
+    "ship",
+    "simulator"
+  ],
+  "author": "Mika Sundland",
+  "license": "MIT",
+  "dependencies": {
+    "chalk": "^2.3.0",
+    "compression": "^1.7.1",
+    "express": "^4.16.2",
+    "helmet": "^3.9.0",
+    "http-status-codes": "^1.3.0",
+    "winston": "^2.4.0"
+  },
+  "devDependencies": {
+    "chai": "^4.1.2",
+    "eslint": "^4.13.1",
+    "eslint-config-airbnb": "^16.1.0",
+    "eslint-plugin-import": "^2.8.0",
+    "eslint-plugin-jsx-a11y": "^6.0.3",
+    "eslint-plugin-react": "^7.5.1",
+    "mocha": "^4.0.1",
+    "nodemon": "^1.14.1",
+    "sinon": "^4.1.3"
+  }
+}
