@@ -1,7 +1,7 @@
 import React, { Component } from 'react';
 import './Power.css';
 
-class Home extends Component {
+class Power extends Component {
   constructor() {
     super();
     this.state = {};
@@ -14,4 +14,4 @@ class Home extends Component {
   }
 }
 
-export default Home;
+export default Power;
