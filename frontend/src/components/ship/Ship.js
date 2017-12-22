@@ -1,5 +1,8 @@
 import React, { Component } from 'react';
 import Thruster from '../../domain/Thruster';
+import GyroCompass from '../../domain/GyroCompass';
+import MRU from '../../domain/MRU';
+import WindSensor from '../../domain/WindSensor';
 import './Ship.css';
 
 class Ship extends Component {
@@ -12,9 +15,16 @@ class Ship extends Component {
         new Thruster('propeller', 'rpm', 2000.0, 1500.0),
         new Thruster('propeller', 'rpm', 2000.0, 1500.0),
       ],
-      windSensors: [],
-      mruSensors: [],
-      gyrocompasses: [],
+      windSensors: [
+        new WindSensor(),
+        new WindSensor(),
+      ],
+      mruSensors: [
+        new MRU(),
+      ],
+      gyrocompasses: [
+        new GyroCompass(),
+      ],
     };
 
     this.tick = this.tick.bind(this);
@@ -28,6 +38,25 @@ class Ship extends Component {
   }
 
   tick() {
+    for (let thrIdx = 0; thrIdx < this.state.thrusters.length; thrIdx += 1) {
+      this.state.thrusters[thrIdx].calculateForce(0.5);
+      this.state.thrusters[thrIdx].calculatePower(0.5);
+    }
+
+    for (let wsIdx = 0; wsIdx < this.state.windSensors.length; wsIdx += 1) {
+      this.state.windSensors[wsIdx].calculateSpeed(0.5);
+      this.state.windSensors[wsIdx].calculateDirection(0.5);
+    }
+
+    for (let mruIdx = 0; mruIdx < this.state.mruSensors.length; mruIdx += 1) {
+      this.state.mruSensors[mruIdx].calculateRoll(0.5);
+      this.state.mruSensors[mruIdx].calculatePitch(0.5);
+    }
+
+    for (let gyroIdx = 0; gyroIdx < this.state.gyrocompasses.length; gyroIdx += 1) {
+      this.state.gyrocompasses[gyroIdx].calculateHeading(0.5);
+    }
+
     this.setState(prevState => ({ simulationTime: prevState.simulationTime + 1 }));
   }
 

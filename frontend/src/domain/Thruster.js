@@ -1,66 +1,41 @@
+import ThrUtil from './ThrusterUtil';
+
 class Thruster {
   constructor(thrusterType, controlType, maxPowerPositive, maxPowerNegative) {
-    Thruster.assertConstructorInput(thrusterType, controlType, maxPowerPositive, maxPowerNegative);
+    ThrUtil.assertConstructorInput(thrusterType, controlType, maxPowerPositive, maxPowerNegative);
 
-    this.thrusterType = thrusterType;
-    this.controlType = controlType;
-    this.maxPowerPositive = maxPowerPositive;
-    this.maxPowerNegative = maxPowerNegative;
+    this._thrusterType = thrusterType;
+    this._controlType = controlType;
+    this._maxPowerPositive = maxPowerPositive;
+    this._maxPowerNegative = maxPowerNegative;
 
-    const maxForces = Thruster.calculateMaxForce(thrusterType, maxPowerPositive, maxPowerNegative);
-    this.maxPowerPositive = maxForces.maxForcePositive;
-    this.maxPowerNegative = maxForces.maxForceNegative;
+    const maxForces = ThrUtil.calculateMaxForce(thrusterType, maxPowerPositive, maxPowerNegative);
+    this._maxForcePositive = maxForces.maxForcePositive;
+    this._maxForceNegative = maxForces.maxForceNegative;
+
+    this.calculateForces = this.calculateForce.bind(this);
+    this.calculatePower = this.calculatePower.bind(this);
   }
 
-  static assertConstructorInput(thrusterType, controlType, maxPowerPositive, maxPowerNegative) {
-    const maxPowerLowLimit = 0.0;
-    const maxPowerHighLimit = 20000.0;
-
-    if (thrusterType !== 'tunnel' && thrusterType !== 'azimuth' && thrusterType !== 'propeller' && thrusterType !== 'waterjet') {
-      throw new Error('Illegal thruster type.');
-    }
-
-    if (controlType !== 'rpm' && controlType !== 'pitch') {
-      throw new Error('Illegal control type.');
-    }
-
-    if (maxPowerPositive < maxPowerLowLimit || maxPowerHighLimit < maxPowerPositive) {
-      throw new Error(`Max power positive is too low or too high. Limits: low: ${maxPowerLowLimit} kW, high: ${maxPowerHighLimit} kW.`);
-    }
-
-    if (maxPowerNegative < maxPowerLowLimit || maxPowerHighLimit < maxPowerNegative) {
-      throw new Error(`Max power positive is too low or too high. Limits: low: ${maxPowerLowLimit} kW, high: ${maxPowerHighLimit} kW.`);
-    }
-  }
-
-  static calculateMaxForce(type, maxPowerPositive, maxPowerNegative) {
-    const grav = 9.81;
-    const hpPerKw = 1.36332;
-
-    let conversionFactorPositive;
-    let conversionFactorNegative;
-
-    if (type === 'tunnel') {
-      conversionFactorPositive = 11.0 * (10 ** -3) * hpPerKw * grav;
-      conversionFactorNegative = -11.0 * (10 ** -3) * hpPerKw * grav;
-    } else if (type === 'azimuth') {
-      conversionFactorPositive = 13.0 * (10 ** -3) * hpPerKw * grav;
-      conversionFactorNegative = -8.0 * (10 ** -3) * hpPerKw * grav;
-    } else if (type === 'propeller') {
-      conversionFactorPositive = 13.0 * (10 ** -3) * hpPerKw * grav;
-      conversionFactorNegative = -0.7 * conversionFactorPositive;
-    } else if (type === 'waterjet') {
-      conversionFactorPositive = 8.0 * (10 ** -3) * hpPerKw * grav;
-      conversionFactorNegative = 0.0;
+  calculateForce(demand) {
+    if (demand >= 0.0) {
+      this._force = this._maxForcePositive * (demand ** 2.0);
     } else {
-      throw new Error('Illegal thruster type.');
+      this._force = this._maxForceNegative * (demand ** 2.0);
     }
-
-    const maxForcePositive = conversionFactorPositive * maxPowerPositive;
-    const maxForceNegative = conversionFactorNegative * maxPowerNegative;
-
-    return { maxForcePositive, maxForceNegative };
   }
+
+  calculatePower(demand) {
+    if (demand >= 0.0) {
+      this._power = this._maxPowerPositive * (demand ** 3.0);
+    } else {
+      this._power = this._maxPowerNegative * (demand ** 3.0);
+    }
+  }
+
+  get force() { return this._force; }
+
+  get power() { return this._power; }
 }
 
 export default Thruster;
