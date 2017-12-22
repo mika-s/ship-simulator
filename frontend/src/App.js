@@ -6,17 +6,25 @@ import Power from './components/power/Power';
 import Sensors from './components/sensors/Sensors';
 import Thrusters from './components/thrusters/Thrusters';
 import Settings from './components/settings/Settings';
-import Ship from './components/ship/Ship';
+import SimulatorControl from './components/simulator-control/Simulator-control';
 import Menu from './components/menu/Menu';
+import Ship from './domain/Ship';
 import './App.css';
+
+const ship = new Ship();
 
 const App = () =>
   (
     <div className="container">
       <Menu />
-      <Ship />
 
       <main>
+        <SimulatorControl
+          simulationTime={ship.simulationTime}
+          onStart={ship.start}
+          onPause={ship.pause}
+          onStop={ship.stop}
+        />
         <Switch>
           <Route exact path="/" component={Home} />
           <Route path="/map" component={Map} />
