@@ -20,7 +20,6 @@ const App = () =>
 
       <main>
         <SimulatorControl
-          simulationTime={ship.simulationTime}
           onStart={ship.start}
           onPause={ship.pause}
           onStop={ship.stop}

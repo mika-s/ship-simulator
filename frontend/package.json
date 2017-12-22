@@ -4,6 +4,7 @@
   "private": true,
   "dependencies": {
     "prop-types": "^15.6.0",
+    "pubsub-js": "^1.5.7",
     "react": "^16.2.0",
     "react-dom": "^16.2.0",
     "react-redux": "^5.0.6",

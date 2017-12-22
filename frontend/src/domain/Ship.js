@@ -1,3 +1,4 @@
+import * as PubSub from 'pubsub-js';
 import Thruster from './Thruster';
 import GyroCompass from './GyroCompass';
 import MRU from './MRU';
@@ -52,10 +53,15 @@ class Ship {
       this._gyrocompasses[gyroIdx].calculateHeading(0.5);
     }
 
-    this._simulationTime += 1;
+    this.simulationTime += 1;
   }
 
   get simulationTime() { return this._simulationTime; }
+
+  set simulationTime(value) {
+    this._simulationTime = value;
+    PubSub.publish('simulationTime', this.simulationTime);
+  }
 
   start() {
     this._timerID = setInterval(
@@ -70,7 +76,7 @@ class Ship {
 
   stop() {
     clearInterval(this._timerID);
-    this._simulationTime = 0;
+    this.simulationTime = 0;
   }
 }
 
