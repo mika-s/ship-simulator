@@ -41,12 +41,30 @@ class SimulatorControl extends Component {
 
   render() {
     return (
-      <div>
-        <button type="button" onClick={this.start} className="btn btn-success">Start</button>
-        <button type="button" onClick={this.pause} className="btn btn-warning">Pause</button>
-        <button type="button" onClick={this.stop} className="btn btn-danger">Stop</button>
+      <div className="row">
+        <div className="col-lg-2">
+          <p className="middle-vertical-align">Simulation time:</p>
+        </div>
+        <div className="col-lg-1">
+          <p className="middle-vertical-align">{this.state.simulationTime}</p>
+        </div>
+        <div className="col-lg-2">
+          <div className="btn-toolbar">
+            <div className="btn-group mr-2">
+              <button type="button" onClick={this.start} className="btn btn-success">
+                <span className="fa fa-play" />
+              </button>
 
-        <p>{this.state.simulationTime}</p>
+              <button type="button" onClick={this.pause} className="btn btn-warning">
+                <span className="fa fa-pause" />
+              </button>
+
+              <button type="button" onClick={this.stop} className="btn btn-danger">
+                <span className="fa fa-stop" />
+              </button>
+            </div>
+          </div>
+        </div>
       </div>
     );
   }
