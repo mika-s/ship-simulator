@@ -9,22 +9,22 @@ class Ship {
     this._simulationTime = 0;
 
     this._thrusters = [
-      new Thruster('tunnel', 'rpm', 800.0, 800.0),
-      new Thruster('propeller', 'rpm', 2000.0, 1500.0),
-      new Thruster('propeller', 'rpm', 2000.0, 1500.0),
+      new Thruster('Tunnel', 1, 'tunnel', 'rpm', 800.0, 800.0),
+      new Thruster('Port prop', 2, 'propeller', 'rpm', 2000.0, 1500.0),
+      new Thruster('Stbd prop', 3, 'propeller', 'rpm', 2000.0, 1500.0),
     ];
 
     this._windSensors = [
-      new WindSensor(),
-      new WindSensor(),
+      new WindSensor(1),
+      new WindSensor(2),
     ];
 
     this._mruSensors = [
-      new MRU(),
+      new MRU(1),
     ];
 
     this._gyrocompasses = [
-      new GyroCompass(),
+      new GyroCompass(1),
     ];
 
     this.tick = this.tick.bind(this);
@@ -35,25 +35,29 @@ class Ship {
 
   tick() {
     for (let thrIdx = 0; thrIdx < this._thrusters.length; thrIdx += 1) {
-      this._thrusters[thrIdx].calculateForce(0.5);
-      this._thrusters[thrIdx].calculatePower(0.5);
+      this.thrusters[thrIdx].calculateForces(0.5);
+      this.thrusters[thrIdx].calculatePower(0.5);
     }
 
     for (let wsIdx = 0; wsIdx < this._windSensors.length; wsIdx += 1) {
-      this._windSensors[wsIdx].calculateSpeed(0.5);
-      this._windSensors[wsIdx].calculateDirection(0.5);
+      this._windSensors[wsIdx].measureSpeed(0.5);
+      this._windSensors[wsIdx].measureDirection(0.5);
     }
 
     for (let mruIdx = 0; mruIdx < this._mruSensors.length; mruIdx += 1) {
-      this._mruSensors[mruIdx].calculateRoll(0.5);
-      this._mruSensors[mruIdx].calculatePitch(0.5);
+      this._mruSensors[mruIdx].measureRoll(0.5);
+      this._mruSensors[mruIdx].measurePitch(0.5);
     }
 
     for (let gyroIdx = 0; gyroIdx < this._gyrocompasses.length; gyroIdx += 1) {
-      this._gyrocompasses[gyroIdx].calculateHeading(0.5);
+      this._gyrocompasses[gyroIdx].measureHeading(0.5);
     }
 
     this.simulationTime += 1;
+    PubSub.publish('thrusters', this.thrusters);
+    PubSub.publish('windSensors', this.windSensors);
+    PubSub.publish('mruSensors', this.mruSensors);
+    PubSub.publish('gyrocompasses', this.gyrocompasses);
   }
 
   get simulationTime() { return this._simulationTime; }
@@ -62,6 +66,14 @@ class Ship {
     this._simulationTime = value;
     PubSub.publish('simulationTime', this.simulationTime);
   }
+
+  get thrusters() { return this._thrusters; }
+
+  get windSensors() { return this._windSensors; }
+
+  get mruSensors() { return this._mruSensors; }
+
+  get gyrocompasses() { return this._gyrocompasses; }
 
   start() {
     this._timerID = setInterval(

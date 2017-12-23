@@ -27,16 +27,16 @@ class SimulatorControl extends Component {
     PubSub.unsubscribe(this.simulationTimeToken);
   }
 
-  start(e) {
-    this.props.onStart(e.target.value);
+  start() {
+    this.props.onStart();
   }
 
-  pause(e) {
-    this.props.onPause(e.target.value);
+  pause() {
+    this.props.onPause();
   }
 
-  stop(e) {
-    this.props.onStop(e.target.value);
+  stop() {
+    this.props.onStop();
   }
 
   render() {

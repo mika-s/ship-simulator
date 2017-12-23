@@ -1,7 +1,27 @@
 class ThrusterUtil {
-  static assertConstructorInput(thrusterType, controlType, maxPowerPositive, maxPowerNegative) {
+  static assertConstructorInput(
+    name, number,
+    thrusterType, controlType,
+    maxPowerPositive, maxPowerNegative,
+  ) {
+    const minThrusterNameLength = 1;
+    const maxThrusterNameLength = 20;
+    const minNumber = 1;
+    const maxNumber = 20;
     const maxPowerLowLimit = 0.0;
     const maxPowerHighLimit = 20000.0;
+
+    if (typeof name !== 'string' || name.length < minThrusterNameLength || maxThrusterNameLength < name.length) {
+      throw new Error(`Illegal thruster name: ${name}. Limits: length: ${minThrusterNameLength}-${maxThrusterNameLength}.`);
+    }
+
+    if (typeof number !== 'number' || number < minNumber || maxNumber < number) {
+      throw new Error(`Illegal thruster number: ${number}. Limits: lowest: ${minNumber}, highest: ${maxNumber}.`);
+    }
+
+    if (thrusterType !== 'tunnel' && thrusterType !== 'azimuth' && thrusterType !== 'propeller' && thrusterType !== 'waterjet') {
+      throw new Error('Illegal thruster type.');
+    }
 
     if (thrusterType !== 'tunnel' && thrusterType !== 'azimuth' && thrusterType !== 'propeller' && thrusterType !== 'waterjet') {
       throw new Error('Illegal thruster type.');
@@ -11,12 +31,12 @@ class ThrusterUtil {
       throw new Error('Illegal control type.');
     }
 
-    if (maxPowerPositive < maxPowerLowLimit || maxPowerHighLimit < maxPowerPositive) {
+    if (typeof maxPowerPositive !== 'number' || maxPowerPositive < maxPowerLowLimit || maxPowerHighLimit < maxPowerPositive) {
       throw new Error(`Max power positive is too low or too high. Limits: low: ${maxPowerLowLimit} kW, high: ${maxPowerHighLimit} kW.`);
     }
 
-    if (maxPowerNegative < maxPowerLowLimit || maxPowerHighLimit < maxPowerNegative) {
-      throw new Error(`Max power positive is too low or too high. Limits: low: ${maxPowerLowLimit} kW, high: ${maxPowerHighLimit} kW.`);
+    if (typeof maxPowerNegative !== 'number' || maxPowerNegative < maxPowerLowLimit || maxPowerHighLimit < maxPowerNegative) {
+      throw new Error(`Max power negative is too low or too high. Limits: low: ${maxPowerLowLimit} kW, high: ${maxPowerHighLimit} kW.`);
     }
   }
 

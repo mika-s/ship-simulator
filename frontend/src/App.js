@@ -28,13 +28,20 @@ const App = () =>
           <Route exact path="/" component={Home} />
           <Route path="/map" component={Map} />
           <Route path="/power" component={Power} />
-          <Route path="/sensors" component={Sensors} />
+          <Route
+            path="/sensors"
+            render={() => (
+              <Sensors
+                windSensors={ship.windSensors}
+                gyroCompasses={ship.gyrocompasses}
+                mruSensors={ship.mruSensors}
+              />)}
+          />
           <Route path="/settings" component={Settings} />
-          <Route path="/thrusters" component={Thrusters} />
+          <Route path="/thrusters" render={() => <Thrusters thrusters={ship.thrusters} />} />
         </Switch>
       </main>
     </div>
   );
-
 
 export default App;
