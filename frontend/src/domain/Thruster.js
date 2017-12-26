@@ -1,14 +1,14 @@
 import ThrUtil from './ThrusterUtil';
 
 class Thruster {
-  constructor(name, number, thrusterType, controlType, maxPowerPositive, maxPowerNegative) {
+  constructor(number, name, thrusterType, controlType, maxPowerPositive, maxPowerNegative) {
     ThrUtil.assertConstructorInput(
-      name, number, thrusterType, controlType,
+      number, name, thrusterType, controlType,
       maxPowerPositive, maxPowerNegative,
     );
 
-    this._name = name;
     this._number = number;
+    this._name = name;
     this._thrusterType = thrusterType;
     this._controlType = controlType;
     this._maxPowerPositive = maxPowerPositive;
@@ -25,19 +25,29 @@ class Thruster {
   }
 
   calculateForces(demand) {
+    let newForce;
+
     if (demand >= 0.0) {
-      this._force = this._maxForcePositive * (demand ** 2.0);
+      newForce = this._maxForcePositive * (demand ** 2.0);
     } else {
-      this._force = this._maxForceNegative * (demand ** 2.0);
+      newForce = this._maxForceNegative * (demand ** 2.0);
     }
+
+    newForce = newForce.toFixed(2);
+    this._force = newForce;
   }
 
   calculatePower(demand) {
+    let newPower;
+
     if (demand >= 0.0) {
-      this._power = this._maxPowerPositive * (demand ** 3.0);
+      newPower = this._maxPowerPositive * (demand ** 3.0);
     } else {
-      this._power = this._maxPowerNegative * (demand ** 3.0);
+      newPower = this._maxPowerNegative * (demand ** 3.0);
     }
+
+    newPower = newPower.toFixed(2);
+    this._power = newPower;
   }
 
   get force() { return this._force; }

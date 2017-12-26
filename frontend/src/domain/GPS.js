@@ -3,6 +3,7 @@ import GeneralUtil from './GeneralUtil';
 
 class GPS {
   constructor(number, initialLatitude, initialLongitude) {
+    this._number = number;
     this._latitude = initialLatitude;
     this._longitude = initialLongitude;
 
@@ -16,10 +17,10 @@ class GPS {
   }
 
   measurePosition() {
-    const minLatitude = -90.0;
-    const maxLatitude = 90.0;
-    const minLongitude = -180.0;
-    const maxLongitude = 180.0;
+    const minLatitude = -1000; // -90.0;
+    const maxLatitude = 1000; // 90.0;
+    const minLongitude = -1000; // -180.0;
+    const maxLongitude = 1000; // 180.0;
     const minNoiseAmplitude = -0.005;
     const maxNoiseAmplitude = 0.005;
 

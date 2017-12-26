@@ -3,13 +3,14 @@ import Thruster from './Thruster';
 import GyroCompass from './GyroCompass';
 import MRU from './MRU';
 import WindSensor from './WindSensor';
+import GPS from './GPS';
 
 class Ship {
   constructor() {
     this._thrusters = [
-      new Thruster('Tunnel', 1, 'tunnel', 'rpm', 800.0, 800.0),
-      new Thruster('Port prop', 2, 'propeller', 'rpm', 2000.0, 1500.0),
-      new Thruster('Stbd prop', 3, 'propeller', 'rpm', 2000.0, 1500.0),
+      new Thruster(1, 'Tunnel', 'tunnel', 'rpm', 800.0, 800.0),
+      new Thruster(2, 'Port prop', 'propeller', 'rpm', 2000.0, 1500.0),
+      new Thruster(3, 'Stbd prop', 'propeller', 'rpm', 2000.0, 1500.0),
     ];
 
     this._windSensors = [
@@ -25,12 +26,17 @@ class Ship {
       new GyroCompass(1),
     ];
 
+    this._gpses = [
+      new GPS(1, 0.0, 0.0),
+    ];
+
+    this.destruct = this.destruct.bind(this);
     this.tick = this.tick.bind(this);
 
     this.simulationTimeToken = PubSub.subscribe('simulationTime', this.tick);
   }
 
-  componentWillUnmount() {
+  destruct() {
     PubSub.unsubscribe(this.simulationTimeToken);
   }
 
@@ -51,13 +57,18 @@ class Ship {
     }
 
     for (let gyroIdx = 0; gyroIdx < this._gyrocompasses.length; gyroIdx += 1) {
-      this._gyrocompasses[gyroIdx].measureHeading(0.5);
+      this._gyrocompasses[gyroIdx].measureHeading();
+    }
+
+    for (let gpsIdx = 0; gpsIdx < this._gpses.length; gpsIdx += 1) {
+      this._gpses[gpsIdx].measurePosition();
     }
 
     PubSub.publish('thrusters', this.thrusters);
     PubSub.publish('windSensors', this.windSensors);
     PubSub.publish('mruSensors', this.mruSensors);
     PubSub.publish('gyrocompasses', this.gyrocompasses);
+    PubSub.publish('gpses', this.gpses);
   }
 
   get thrusters() { return this._thrusters; }
@@ -67,6 +78,8 @@ class Ship {
   get mruSensors() { return this._mruSensors; }
 
   get gyrocompasses() { return this._gyrocompasses; }
+
+  get gpses() { return this._gpses; }
 }
 
 export default Ship;

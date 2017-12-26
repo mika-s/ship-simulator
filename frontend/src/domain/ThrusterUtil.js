@@ -1,6 +1,6 @@
 class ThrusterUtil {
   static assertConstructorInput(
-    name, number,
+    number, name,
     thrusterType, controlType,
     maxPowerPositive, maxPowerNegative,
   ) {
@@ -11,12 +11,12 @@ class ThrusterUtil {
     const maxPowerLowLimit = 0.0;
     const maxPowerHighLimit = 20000.0;
 
-    if (typeof name !== 'string' || name.length < minThrusterNameLength || maxThrusterNameLength < name.length) {
-      throw new Error(`Illegal thruster name: ${name}. Limits: length: ${minThrusterNameLength}-${maxThrusterNameLength}.`);
-    }
-
     if (typeof number !== 'number' || number < minNumber || maxNumber < number) {
       throw new Error(`Illegal thruster number: ${number}. Limits: lowest: ${minNumber}, highest: ${maxNumber}.`);
+    }
+
+    if (typeof name !== 'string' || name.length < minThrusterNameLength || maxThrusterNameLength < name.length) {
+      throw new Error(`Illegal thruster name: ${name}. Limits: length: ${minThrusterNameLength}-${maxThrusterNameLength}.`);
     }
 
     if (thrusterType !== 'tunnel' && thrusterType !== 'azimuth' && thrusterType !== 'propeller' && thrusterType !== 'waterjet') {

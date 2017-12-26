@@ -12,6 +12,7 @@ class Menu extends Component {
         { name: 'Power', href: '/power' },
         { name: 'Thrusters', href: '/thrusters' },
         { name: 'Sensors', href: '/sensors' },
+        { name: 'Reference systems', href: '/reference-systems' },
         { name: 'Settings', href: '/settings' },
       ],
     };

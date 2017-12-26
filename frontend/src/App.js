@@ -4,6 +4,7 @@ import Home from './components/home/Home';
 import Map from './components/map/Map';
 import Power from './components/power/Power';
 import Sensors from './components/sensors/Sensors';
+import ReferenceSystems from './components/reference-systems/ReferenceSystems';
 import Thrusters from './components/thrusters/Thrusters';
 import Settings from './components/settings/Settings';
 import SimulatorControl from './components/simulator-control/Simulator-control';
@@ -14,7 +15,7 @@ import Ship from './domain/Ship';
 import './App.css';
 
 const simulator = new Simulator();
-const vesselModel = new VesselModel(0.0, 0.0, 0.0, 100.0, 16.0, 5.0, 0.71);
+const vesselModel = new VesselModel(60.0, 5.0, 0.0, 100.0, 16.0, 5.0, 0.71);
 const ship = new Ship();
 
 const App = () =>
@@ -39,6 +40,13 @@ const App = () =>
                 windSensors={ship.windSensors}
                 gyroCompasses={ship.gyrocompasses}
                 mruSensors={ship.mruSensors}
+              />)}
+          />
+          <Route
+            path="/reference-systems"
+            render={() => (
+              <ReferenceSystems
+                gpses={ship.gpses}
               />)}
           />
           <Route path="/settings" component={Settings} />
