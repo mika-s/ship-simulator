@@ -8,9 +8,13 @@ import Thrusters from './components/thrusters/Thrusters';
 import Settings from './components/settings/Settings';
 import SimulatorControl from './components/simulator-control/Simulator-control';
 import Menu from './components/menu/Menu';
+import Simulator from './domain/Simulator';
+import VesselModel from './domain/VesselModel';
 import Ship from './domain/Ship';
 import './App.css';
 
+const simulator = new Simulator();
+const vesselModel = new VesselModel(0.0, 0.0, 0.0, 100.0, 16.0, 5.0, 0.71);
 const ship = new Ship();
 
 const App = () =>
@@ -20,9 +24,9 @@ const App = () =>
 
       <main>
         <SimulatorControl
-          onStart={ship.start}
-          onPause={ship.pause}
-          onStop={ship.stop}
+          onStart={simulator.start}
+          onPause={simulator.pause}
+          onStop={simulator.stop}
         />
         <Switch>
           <Route exact path="/" component={Home} />
