@@ -63,8 +63,8 @@ class ThrusterUtil {
       throw new Error('Illegal thruster type.');
     }
 
-    const maxForcePositive = conversionFactorPositive * maxPowerPositive;
-    const maxForceNegative = conversionFactorNegative * maxPowerNegative;
+    const maxForcePositive = conversionFactorPositive * (maxPowerPositive / 9.81);
+    const maxForceNegative = conversionFactorNegative * (maxPowerNegative / 9.81);
 
     return { maxForcePositive, maxForceNegative };
   }

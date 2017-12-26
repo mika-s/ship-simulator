@@ -16,8 +16,19 @@ class VesselModel {
     this._T_current = { surge: 0.0, sway: 0.0, yaw: 0.0 };
 
     this._displacement = VesselUtil.calculateDisplacement(this._dimensions);
-    this._mass = VesselUtil.calculateMass(this._displacement, this._dimensions.lpp);
-    this._drag = VesselUtil.calculateDrag(this._displacement, this._dimensions.lpp);
+
+    this._mass = VesselUtil.calculateMass(
+      this._displacement,
+      this._dimensions.lpp,
+    );
+
+    this._drag = VesselUtil.calculateDrag(
+      this._dimensions.lpp,
+      this._dimensions.breadth,
+      this._dimensions.draft,
+    );
+
+    console.log(this._mass, this._drag);
 
     this.tick = this.tick.bind(this);
     this.calculatePosition = this.calculatePosition.bind(this);
@@ -27,12 +38,13 @@ class VesselModel {
 
   tick() {
     this.calculatePosition();
-    console.log(this._nedPosition);
   }
 
   calculatePosition() {
     // eta_d = R * nu
-    // M * nu + D * nu_d = T_thr + T_wi + T_cu
+    // M * nu_d + D * nu = T_thr + T_wi + T_cu
+
+    this._T_thrusters.surge = 100.0;
 
     // Calculate total forces.
     const Tsu = this._T_thrusters.surge + this._T_wind.surge + this._T_current.surge;
@@ -41,7 +53,7 @@ class VesselModel {
 
     // Solve with respect to velocity.
     this._velocity = {
-      u: (Tsu - (this._drag.surge * this._previousVelocity.u)) / this._mass.surge,
+      u: (Tsu - (this._drag.surge * (this._previousVelocity.u ** 2.0))) / this._mass.surge,
       v: (Tsw - (this._drag.sway * this._previousVelocity.v)) / this._mass.sway,
       r: (Tya - (this._drag.yaw * this._previousVelocity.r)) / this._mass.yaw,
     };
@@ -60,9 +72,15 @@ class VesselModel {
       heading: this._previousNedPosition.heading + this._velocity.r,
     };
 
+    // console.log(this._nedPosition);
+    console.log(this._velocity.u, this._previousVelocity.u);
+
     // Copy the solved velocities and position for use in the next iteration.
     Object.assign(this._previousVelocity, this._velocity);
     Object.assign(this._previousNedPosition, this._nedPosition);
+
+    // Send data to all the subscribers.
+    PubSub.publish('heading', this._nedPosition.heading);
   }
 }
 

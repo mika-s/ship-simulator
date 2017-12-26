@@ -23,11 +23,17 @@ class VesselUtil {
     return mass;
   }
 
-  static calculateDrag(displacement, lpp) {
+  static calculateDrag(lpp, breadth, draft) {
+    const dragSurge = 0.05 * breadth * draft;
+    const dragSway = 0.075 * lpp * draft;
+    const dragYaw = (dragSway / (4 * lpp)) * (((lpp / 2.0) ** 4) + ((lpp / 2.0) ** 4));
+
+    const expRatio = { surge: 0.5, sway: 0.6, yaw: 1.0 };
+
     const drag = {
-      surge: 1.2 * displacement,
-      sway: 1.8 * displacement,
-      yaw: 60 * displacement,
+      surge: expRatio.surge * dragSurge,
+      sway: expRatio.sway * dragSway,
+      yaw: expRatio.yaw * dragYaw,
     };
 
     return drag;
