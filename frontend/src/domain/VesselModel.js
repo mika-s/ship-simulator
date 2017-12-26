@@ -1,10 +1,15 @@
 import * as PubSub from 'pubsub-js';
+import GeoUtil from './GeoUtil';
 import VesselUtil from './VesselUtil';
 
 class VesselModel {
   constructor(latitude, longitude, heading, lpp, breadth, draft, blockCoefficient) {
     this._nedPosition = { latitude, longitude, heading };
-    this._previousNedPosition = { latitude: 0.0, longitude: 0.0, heading: 0.0 };
+    this._previousNedPosition = Object.assign({}, this._nedPosition);
+
+    this._nedPositionInMeters = { latitude: 0.0, longitude: 0.0, heading: 0.0 };
+    this._previousNedPositionInMeters = { latitude: 0.0, longitude: 0.0, heading: 0.0 };
+
     this._velocity = { u: 0.0, v: 0.0, r: 0.0 };
     this._dimensions = {
       lpp, breadth, draft, blockCoefficient,
@@ -70,19 +75,26 @@ class VesselModel {
       heading: this._nedPosition.heading,
     });
 
-    const nedPositionInMeters = {
-      latitude: this._previousNedPosition.latitude + nedVelocity.latitude,
-      longitude: this._previousNedPosition.longitude + nedVelocity.longitude,
-      heading: this._previousNedPosition.heading + this._velocity.r,
+    this._nedPositionInMeters = {
+      latitude: this._previousNedPositionInMeters.latitude + nedVelocity.latitude,
+      longitude: this._previousNedPositionInMeters.longitude + nedVelocity.longitude,
+      heading: this._previousNedPositionInMeters.heading + this._velocity.r,
     };
+
+    const newPosition = GeoUtil.getPositionInLatLon(
+      this._nedPosition,
+      this._nedPositionInMeters,
+      this._previousNedPositionInMeters,
+    );
 
     this._nedPosition = {
-      latitude: nedPositionInMeters.latitude,
-      longitude: nedPositionInMeters.longitude,
-      heading: nedPositionInMeters.heading,
+      latitude: newPosition.latitude,
+      longitude: newPosition.longitude,
+      heading: this._nedPositionInMeters.heading,
     };
 
-    Object.assign(this._previousNedPosition, nedPositionInMeters);
+    this._previousNedPositionInMeters = Object.assign({}, this._nedPositionInMeters);
+    this._previousNedPosition = Object.assign({}, this._nedPosition);
 
     PubSub.publish('heading', this._nedPosition.heading);
     PubSub.publish('position', { latitude: this._nedPosition.latitude, longitude: this._nedPosition.longitude });

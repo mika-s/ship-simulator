@@ -17,12 +17,12 @@ class GPS {
   }
 
   measurePosition() {
-    const minLatitude = -1000; // -90.0;
-    const maxLatitude = 1000; // 90.0;
-    const minLongitude = -1000; // -180.0;
-    const maxLongitude = 1000; // 180.0;
-    const minNoiseAmplitude = -0.005;
-    const maxNoiseAmplitude = 0.005;
+    const minLatitude = -90.0;
+    const maxLatitude = 90.0;
+    const minLongitude = -180.0;
+    const maxLongitude = 180.0;
+    const minNoiseAmplitude = -0.5 * 10e-8;
+    const maxNoiseAmplitude = 0.5 * 10e-8;
 
     // Add measurement noise.
     let newLatitude = this._modelLatitude +
@@ -38,9 +38,9 @@ class GPS {
     newLongitude = Math.min(newLongitude, maxLongitude);
     newLongitude = Math.max(newLongitude, minLongitude);
 
-    // Remove unnecessary decimals. Keep 3.
-    newLatitude = newLatitude.toFixed(3);
-    newLongitude = newLongitude.toFixed(3);
+    // Remove unnecessary decimals. Keep 6.
+    newLatitude = newLatitude.toFixed(6);
+    newLongitude = newLongitude.toFixed(6);
 
     this._latitude = newLatitude;
     this._longitude = newLongitude;
