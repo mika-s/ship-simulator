@@ -20,30 +20,32 @@ class Thruster {
     this._maxForcePositive = maxForces.maxForcePositive;
     this._maxForceNegative = maxForces.maxForceNegative;
 
+    this._demand = 0.0;
+
     this.calculateForces = this.calculateForces.bind(this);
     this.calculatePower = this.calculatePower.bind(this);
   }
 
-  calculateForces(demand) {
+  calculateForces() {
     let newForce;
 
-    if (demand >= 0.0) {
-      newForce = this._maxForcePositive * (demand ** 2.0);
+    if (this._demand >= 0.0) {
+      newForce = this._maxForcePositive * (this._demand ** 2.0);
     } else {
-      newForce = this._maxForceNegative * (demand ** 2.0);
+      newForce = this._maxForceNegative * (this._demand ** 2.0);
     }
 
     newForce = newForce.toFixed(2);
     this._force = newForce;
   }
 
-  calculatePower(demand) {
+  calculatePower() {
     let newPower;
 
-    if (demand >= 0.0) {
-      newPower = this._maxPowerPositive * (demand ** 3.0);
+    if (this._demand >= 0.0) {
+      newPower = this._maxPowerPositive * (this._demand ** 3.0);
     } else {
-      newPower = this._maxPowerNegative * (demand ** 3.0);
+      newPower = this._maxPowerNegative * (this._demand ** 3.0);
     }
 
     newPower = newPower.toFixed(2);
@@ -57,6 +59,14 @@ class Thruster {
   get name() { return this._name; }
 
   get number() { return this._number; }
+
+  get demand() { return this._demand; }
+
+  set demand(value) {
+    this._demand = value;
+    this.calculateForces();
+    this.calculatePower();
+  }
 
   get thrusterType() { return this._thrusterType; }
 

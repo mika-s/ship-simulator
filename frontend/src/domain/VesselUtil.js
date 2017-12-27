@@ -1,4 +1,13 @@
 class VesselUtil {
+  /**
+  * Calculate the displacement of a vessel.
+  * @param {object} dimensions       - Object containing:
+  * @param {number} lpp              - Length between perpendiculars.
+  * @param {number} breadth          - Breadth.
+  * @param {number} draft            - Draft.
+  * @param {number} blockCoefficient - The block coefficient.
+  * @returns {number}                - The vessel's displacement in metric tons.
+  */
   static calculateDisplacement(dimensions) {
     const {
       lpp, breadth, draft, blockCoefficient,
@@ -57,6 +66,10 @@ class VesselUtil {
     const longitude = (Math.sin(headingInRad) * surge) + (Math.cos(headingInRad) * sway);
 
     return { latitude, longitude, heading };
+  }
+
+  static transformTo0To360(angle) {
+    return (angle % 360) + (angle < 0 ? 360 : 0);
   }
 }
 

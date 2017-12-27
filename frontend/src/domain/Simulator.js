@@ -35,6 +35,7 @@ class Simulator {
   stop() {
     clearInterval(this._timerID);
     this.simulationTime = 0;
+    PubSub.publish('reset', this.simulationTime);
   }
 }
 

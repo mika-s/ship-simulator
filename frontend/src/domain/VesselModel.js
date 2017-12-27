@@ -4,20 +4,13 @@ import VesselUtil from './VesselUtil';
 
 class VesselModel {
   constructor(latitude, longitude, heading, lpp, breadth, draft, blockCoefficient) {
-    this._nedPosition = { latitude, longitude, heading };
-    this._previousNedPosition = Object.assign({}, this._nedPosition);
+    this._initialValues = { latitude, longitude, heading };
 
-    this._nedPositionInMeters = { latitude: 0.0, longitude: 0.0, heading: 0.0 };
-    this._previousNedPositionInMeters = { latitude: 0.0, longitude: 0.0, heading: 0.0 };
+    this.reset();
 
-    this._velocity = { u: 0.0, v: 0.0, r: 0.0 };
     this._dimensions = {
       lpp, breadth, draft, blockCoefficient,
     };
-
-    this._T_thrusters = { surge: 0.0, sway: 0.0, yaw: 0.0 };
-    this._T_wind = { surge: 0.0, sway: 0.0, yaw: 0.0 };
-    this._T_current = { surge: 0.0, sway: 0.0, yaw: 0.0 };
 
     this._displacement = VesselUtil.calculateDisplacement(this._dimensions);
 
@@ -34,9 +27,11 @@ class VesselModel {
 
     this.destruct = this.destruct.bind(this);
     this.tick = this.tick.bind(this);
+    this.reset = this.reset.bind(this);
     this.calculatePosition = this.calculatePosition.bind(this);
 
     this.simulationTimeToken = PubSub.subscribe('simulationTime', this.tick);
+    this.resetToken = PubSub.subscribe('reset', this.reset);
   }
 
   destruct() {
@@ -44,23 +39,44 @@ class VesselModel {
   }
 
   tick() {
-    this.calculatePosition();
+    // this.calculatePosition();
   }
 
-  calculatePosition() {
+  reset() {
+    this._nedPosition = this._initialValues;
+    this._previousNedPosition = Object.assign({}, this._nedPosition);
+
+    this._nedPositionInMeters = { latitude: 0.0, longitude: 0.0, heading: 0.0 };
+    this._previousNedPositionInMeters = Object.assign({}, this._nedPositionInMeters);
+
+    this._velocity = { u: 0.0, v: 0.0, r: 0.0 };
+
+    this._T_thrusters = { surge: 0.0, sway: 0.0, yaw: 0.0 };
+    this._T_wind = { surge: 0.0, sway: 0.0, yaw: 0.0 };
+    this._T_current = { surge: 0.0, sway: 0.0, yaw: 0.0 };
+  }
+
+  calculatePosition(TsuInp, TswInp, TyaInp) {
     // eta_d = R * nu
     // M * nu_d + D * nu = T_thr + T_wi + T_cu
 
-    this._T_thrusters.surge = 100.0;
+    this._T_thrusters.surge = TsuInp;
+    this._T_thrusters.sway = TswInp;
+    this._T_thrusters.yaw = TyaInp;
 
     const Tsu = this._T_thrusters.surge + this._T_wind.surge + this._T_current.surge;
     const Tsw = this._T_thrusters.sway + this._T_wind.sway + this._T_current.sway;
     const Tya = this._T_thrusters.yaw + this._T_wind.yaw + this._T_current.yaw;
 
     const nuDot = {
-      surge: (Tsu - (this._drag.surge * (this._velocity.u ** 2.0))) / this._mass.surge,
-      sway: (Tsw - (this._drag.sway * (this._velocity.v ** 2.0))) / this._mass.sway,
-      yaw: (Tya - (this._drag.yaw * (this._velocity.r ** 2.0))) / this._mass.yaw,
+      surge: (Tsu - (this._drag.surge * (Math.sign(this._velocity.u) *
+        (this._velocity.u ** 2.0)))) / this._mass.surge,
+
+      sway: (Tsw - (this._drag.sway * (Math.sign(this._velocity.v) *
+        (this._velocity.v ** 2.0)))) / this._mass.sway,
+
+      yaw: (Tya - (this._drag.yaw * (Math.sign(this._velocity.r) *
+        (this._velocity.r ** 2.0)))) / this._mass.yaw,
     };
 
     this._velocity = {
@@ -75,10 +91,13 @@ class VesselModel {
       heading: this._nedPosition.heading,
     });
 
+    console.log(nuDot, this._velocity);
+
     this._nedPositionInMeters = {
       latitude: this._previousNedPositionInMeters.latitude + nedVelocity.latitude,
       longitude: this._previousNedPositionInMeters.longitude + nedVelocity.longitude,
-      heading: this._previousNedPositionInMeters.heading + this._velocity.r,
+      heading: VesselUtil.transformTo0To360(this._previousNedPositionInMeters.heading
+        + this._velocity.r),
     };
 
     const newPosition = GeoUtil.getPositionInLatLon(
@@ -98,6 +117,7 @@ class VesselModel {
 
     PubSub.publish('heading', this._nedPosition.heading);
     PubSub.publish('position', { latitude: this._nedPosition.latitude, longitude: this._nedPosition.longitude });
+    PubSub.publish('velocity', this._velocity);
   }
 }
 

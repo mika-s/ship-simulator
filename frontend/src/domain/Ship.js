@@ -6,7 +6,9 @@ import WindSensor from './WindSensor';
 import GPS from './GPS';
 
 class Ship {
-  constructor() {
+  constructor(vesselModel) {
+    this._vesselModel = vesselModel;
+
     this._thrusters = [
       new Thruster(1, 'Tunnel', 'tunnel', 'rpm', 800.0, 800.0),
       new Thruster(2, 'Port prop', 'propeller', 'rpm', 2000.0, 1500.0),
@@ -42,13 +44,12 @@ class Ship {
 
   tick() {
     for (let thrIdx = 0; thrIdx < this._thrusters.length; thrIdx += 1) {
-      this.thrusters[thrIdx].calculateForces(0.5);
-      this.thrusters[thrIdx].calculatePower(0.5);
+      this.thrusters[thrIdx].demand = 0.5;
     }
 
     for (let wsIdx = 0; wsIdx < this._windSensors.length; wsIdx += 1) {
-      this._windSensors[wsIdx].measureSpeed(0.5);
-      this._windSensors[wsIdx].measureDirection(0.5);
+      this._windSensors[wsIdx].measureSpeed();
+      this._windSensors[wsIdx].measureDirection();
     }
 
     for (let mruIdx = 0; mruIdx < this._mruSensors.length; mruIdx += 1) {
@@ -64,6 +65,9 @@ class Ship {
       this._gpses[gpsIdx].measurePosition();
     }
 
+    this._vesselModel.calculatePosition(0, 0, -1000000);
+
+    // Publish to the view.
     PubSub.publish('thrusters', this.thrusters);
     PubSub.publish('windSensors', this.windSensors);
     PubSub.publish('mruSensors', this.mruSensors);
