@@ -26,20 +26,14 @@ class VesselModel {
     );
 
     this.destruct = this.destruct.bind(this);
-    this.tick = this.tick.bind(this);
     this.reset = this.reset.bind(this);
     this.calculatePosition = this.calculatePosition.bind(this);
 
-    this.simulationTimeToken = PubSub.subscribe('simulationTime', this.tick);
     this.resetToken = PubSub.subscribe('reset', this.reset);
   }
 
   destruct() {
     PubSub.unsubscribe(this.simulationTimeToken);
-  }
-
-  tick() {
-    // this.calculatePosition();
   }
 
   reset() {

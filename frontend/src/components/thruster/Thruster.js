@@ -7,15 +7,23 @@ class Thruster extends Component {
     super();
     this.state = {
       manualRpmDemand: 0,
+      manualPitchDemand: 0,
     };
 
     this.changeManualRpmDemand = this.changeManualRpmDemand.bind(this);
+    this.changeManualPitchDemand = this.changeManualPitchDemand.bind(this);
   }
 
   changeManualRpmDemand(event) {
     const manualRpmDemand = Number.parseFloat(event.target.value) / 100.0;
     this.props.thrusterData.rpmDemand = manualRpmDemand;
     this.setState({ manualRpmDemand });
+  }
+
+  changeManualPitchDemand(event) {
+    const manualPitchDemand = Number.parseFloat(event.target.value) / 100.0;
+    this.props.thrusterData.pitchDemand = manualPitchDemand;
+    this.setState({ manualPitchDemand });
   }
 
   render() {
@@ -64,7 +72,21 @@ class Thruster extends Component {
                   </form>
                 </td>
                 <td>Pitch demand</td>
-                <td>{displayPitchDemand} %</td>
+                <td>
+                  <form className="form-inline">
+                    {displayPitchDemand} %
+                    <input
+                      type="number"
+                      min="-100"
+                      max="100"
+                      step="0.1"
+                      defaultValue={this.state.manualPitchDemand}
+                      onChange={this.changeManualPitchDemand}
+                      style={{ width: 70, marginLeft: 15 }}
+                      className="form-control mb-2 mr-sm-2 mb-sm-0"
+                    />
+                  </form>
+                </td>
               </tr>
             </tbody>
           </table>

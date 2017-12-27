@@ -79,6 +79,12 @@ class Thruster {
 
   get pitchDemand() { return this._pitchDemand; }
 
+  set pitchDemand(value) {
+    this._pitchDemand = value;
+    this.calculateForces();
+    this.calculatePower();
+  }
+
   get azimuthDemand() { return this._azimuthDemand; }
 
   get thrusterType() { return this._thrusterType; }
