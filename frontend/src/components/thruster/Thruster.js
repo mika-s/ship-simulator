@@ -11,7 +11,13 @@ class Thruster extends Component {
   render() {
     const {
       name, number, force, power, thrusterType, controlType,
+      rpmDemand, pitchDemand,
     } = this.props.thrusterData;
+
+    const displayForce = typeof force !== 'undefined' ? force.toFixed(2) : 0;
+    const displayPower = typeof power !== 'undefined' ? power.toFixed(2) : 0;
+    const displayRpmDemand = typeof rpmDemand !== 'undefined' ? (rpmDemand * 100.0).toFixed(2) : 0;
+    const displayPitchDemand = typeof pitchDemand !== 'undefined' ? (pitchDemand * 100.0).toFixed(2) : 0;
 
     return (
       <div className="card" style={{ marginTop: 20, marginBottom: 20 }}>
@@ -26,15 +32,15 @@ class Thruster extends Component {
             <tbody>
               <tr>
                 <td>Force</td>
-                <td>{force}</td>
+                <td>{displayForce} T</td>
                 <td>Power</td>
-                <td>{power}</td>
+                <td>{displayPower} kW</td>
               </tr>
               <tr>
-                <td>RPM</td>
-                <td>{power}</td>
-                <td>Pitch</td>
-                <td>{power}</td>
+                <td>RPM demand</td>
+                <td>{displayRpmDemand} %</td>
+                <td>Pitch demand</td>
+                <td>{displayPitchDemand} %</td>
               </tr>
             </tbody>
           </table>

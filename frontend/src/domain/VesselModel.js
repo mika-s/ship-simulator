@@ -91,8 +91,6 @@ class VesselModel {
       heading: this._nedPosition.heading,
     });
 
-    console.log(nuDot, this._velocity);
-
     this._nedPositionInMeters = {
       latitude: this._previousNedPositionInMeters.latitude + nedVelocity.latitude,
       longitude: this._previousNedPositionInMeters.longitude + nedVelocity.longitude,

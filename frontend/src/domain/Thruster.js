@@ -1,10 +1,16 @@
 import ThrUtil from './ThrusterUtil';
 
 class Thruster {
-  constructor(number, name, thrusterType, controlType, maxPowerPositive, maxPowerNegative) {
+  constructor(
+    number, name,
+    thrusterType, controlType,
+    maxPowerPositive, maxPowerNegative,
+    xPos, yPos,
+  ) {
     ThrUtil.assertConstructorInput(
       number, name, thrusterType, controlType,
       maxPowerPositive, maxPowerNegative,
+      xPos, yPos,
     );
 
     this._number = number;
@@ -13,6 +19,8 @@ class Thruster {
     this._controlType = controlType;
     this._maxPowerPositive = maxPowerPositive;
     this._maxPowerNegative = maxPowerNegative;
+    this._xPos = xPos;
+    this._yPos = yPos;
 
     const maxForces =
       ThrUtil.calculateMaxForce(thrusterType, maxPowerPositive, maxPowerNegative);
@@ -20,7 +28,9 @@ class Thruster {
     this._maxForcePositive = maxForces.maxForcePositive;
     this._maxForceNegative = maxForces.maxForceNegative;
 
-    this._demand = 0.0;
+    this._rpmDemand = 0.0;
+    this._pitchDemand = 0.0;
+    this._azimuthDemand = thrusterType === 'tunnel' ? 90.0 : 0.0;
 
     this.calculateForces = this.calculateForces.bind(this);
     this.calculatePower = this.calculatePower.bind(this);
@@ -29,26 +39,24 @@ class Thruster {
   calculateForces() {
     let newForce;
 
-    if (this._demand >= 0.0) {
-      newForce = this._maxForcePositive * (this._demand ** 2.0);
+    if (this._rpmDemand >= 0.0) {
+      newForce = this._maxForcePositive * (this._rpmDemand ** 2.0);
     } else {
-      newForce = this._maxForceNegative * (this._demand ** 2.0);
+      newForce = this._maxForceNegative * (this._rpmDemand ** 2.0);
     }
 
-    newForce = newForce.toFixed(2);
     this._force = newForce;
   }
 
   calculatePower() {
     let newPower;
 
-    if (this._demand >= 0.0) {
-      newPower = this._maxPowerPositive * (this._demand ** 3.0);
+    if (this._rpmDemand >= 0.0) {
+      newPower = this._maxPowerPositive * (this._rpmDemand ** 3.0);
     } else {
-      newPower = this._maxPowerNegative * (this._demand ** 3.0);
+      newPower = this._maxPowerNegative * (this._rpmDemand ** 3.0);
     }
 
-    newPower = newPower.toFixed(2);
     this._power = newPower;
   }
 
@@ -60,13 +68,17 @@ class Thruster {
 
   get number() { return this._number; }
 
-  get demand() { return this._demand; }
+  get rpmDemand() { return this._rpmDemand; }
 
-  set demand(value) {
-    this._demand = value;
+  set rpmDemand(value) {
+    this._rpmDemand = value;
     this.calculateForces();
     this.calculatePower();
   }
+
+  get pitchDemand() { return this._pitchDemand; }
+
+  get azimuthDemand() { return this._azimuthDemand; }
 
   get thrusterType() { return this._thrusterType; }
 

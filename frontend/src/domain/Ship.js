@@ -10,9 +10,9 @@ class Ship {
     this._vesselModel = vesselModel;
 
     this._thrusters = [
-      new Thruster(1, 'Tunnel', 'tunnel', 'rpm', 800.0, 800.0),
-      new Thruster(2, 'Port prop', 'propeller', 'rpm', 2000.0, 1500.0),
-      new Thruster(3, 'Stbd prop', 'propeller', 'rpm', 2000.0, 1500.0),
+      new Thruster(1, 'Tunnel', 'tunnel', 'rpm', 800.0, 800.0, 45.0, 0.0),
+      new Thruster(2, 'Port prop', 'azimuth', 'rpm', 2000.0, 1500.0, -45.0, -5.0),
+      new Thruster(3, 'Stbd prop', 'azimuth', 'rpm', 2000.0, 1500.0, -45.0, 5.0),
     ];
 
     this._windSensors = [
@@ -43,8 +43,22 @@ class Ship {
   }
 
   tick() {
+    const thrusterForces = { surge: 0.0, sway: 0.0, yaw: 0.0 };
+
     for (let thrIdx = 0; thrIdx < this._thrusters.length; thrIdx += 1) {
-      this.thrusters[thrIdx].demand = 0.5;
+      const thr = this.thrusters[thrIdx];
+      thr.rpmDemand = 0.5;
+
+      thrusterForces.surge += thr.force *
+        Math.cos(thr.azimuthDemand * (Math.PI / 180.0));
+
+      thrusterForces.sway += thr.force *
+        Math.sin(thr.azimuthDemand * (Math.PI / 180.0));
+
+      thrusterForces.yaw += (thr.force * thr._xPos *
+        Math.cos(thr.azimuthDemand * (Math.PI / 180.0))) +
+        (thr.force * thr._yPos *
+        Math.sin(thr.azimuthDemand * (Math.PI / 180.0)));
     }
 
     for (let wsIdx = 0; wsIdx < this._windSensors.length; wsIdx += 1) {
@@ -65,7 +79,11 @@ class Ship {
       this._gpses[gpsIdx].measurePosition();
     }
 
-    this._vesselModel.calculatePosition(0, 0, -1000000);
+    this._vesselModel.calculatePosition(
+      thrusterForces.surge,
+      thrusterForces.sway,
+      thrusterForces.yaw,
+    );
 
     // Publish to the view.
     PubSub.publish('thrusters', this.thrusters);

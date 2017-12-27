@@ -3,6 +3,7 @@ class ThrusterUtil {
     number, name,
     thrusterType, controlType,
     maxPowerPositive, maxPowerNegative,
+    xPos, yPos,
   ) {
     const minThrusterNameLength = 1;
     const maxThrusterNameLength = 20;
@@ -10,6 +11,10 @@ class ThrusterUtil {
     const maxNumber = 20;
     const maxPowerLowLimit = 0.0;
     const maxPowerHighLimit = 20000.0;
+    const minXPos = -200.0;
+    const maxXPos = 200.0;
+    const minYPos = -50.0;
+    const maxYPos = 50.0;
 
     if (typeof number !== 'number' || number < minNumber || maxNumber < number) {
       throw new Error(`Illegal thruster number: ${number}. Limits: lowest: ${minNumber}, highest: ${maxNumber}.`);
@@ -38,8 +43,25 @@ class ThrusterUtil {
     if (typeof maxPowerNegative !== 'number' || maxPowerNegative < maxPowerLowLimit || maxPowerHighLimit < maxPowerNegative) {
       throw new Error(`Max power negative is too low or too high. Limits: low: ${maxPowerLowLimit} kW, high: ${maxPowerHighLimit} kW.`);
     }
+
+    if (typeof xPos !== 'number' || xPos < minXPos || maxXPos < xPos) {
+      throw new Error(`x position is too small or too large. Limits: ${minXPos} m to ${maxXPos} m.`);
+    }
+
+    if (typeof yPos !== 'number' || yPos < minYPos || maxYPos < yPos) {
+      throw new Error(`y position is too small or too large. Limits: ${minYPos} m to ${maxYPos} m.`);
+    }
   }
 
+  /**
+  * Calculate maximum force, both directions, using IMCA's rules.
+  * @param {string} type              - Thruster type: tunnel, azimuth, propeller or waterjet.
+  * @param {number} maxPowerPositive  - Maximum power, positive direction.
+  * @param {number} maxPowerNegative  - Maximum power, negative direction.
+  * @returns {object}                 - Object containing max force in pos. and neg. direction.
+  * @returns {number}                 - Maximum force in positive direction.
+  * @returns {number}                 - Maximum force in negative direction.
+  */
   static calculateMaxForce(type, maxPowerPositive, maxPowerNegative) {
     const grav = 9.81;
     const hpPerKw = 1.36332;

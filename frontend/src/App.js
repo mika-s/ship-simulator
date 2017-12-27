@@ -15,7 +15,7 @@ import Ship from './domain/Ship';
 import './App.css';
 
 const simulator = new Simulator();
-const vesselModel = new VesselModel(60.0, 5.0, 0.0, 100.0, 16.0, 5.0, 0.71);
+const vesselModel = new VesselModel(50.0, 4.0, 0.0, 100.0, 16.0, 5.0, 0.71);
 const ship = new Ship(vesselModel);
 
 const App = () =>

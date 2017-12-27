@@ -1,8 +1,11 @@
 import * as PubSub from 'pubsub-js';
 
+const stateEnum = { RUNNING: 1, PAUSED: 2, STOPPED: 3 };
+
 class Simulator {
   constructor() {
     this._simulationTime = 0;
+    this._state = stateEnum.STOPPED;
 
     this.tick = this.tick.bind(this);
     this.start = this.start.bind(this);
@@ -22,20 +25,24 @@ class Simulator {
   }
 
   start() {
-    this._timerID = setInterval(
-      () => this.tick(),
-      1000,
-    );
+    if (this._state !== stateEnum.RUNNING) {
+      this._state = stateEnum.RUNNING;
+      this._timerID = setInterval(() => this.tick(), 1000);
+    }
   }
 
   pause() {
+    this._state = stateEnum.PAUSED;
     clearInterval(this._timerID);
   }
 
   stop() {
-    clearInterval(this._timerID);
-    this.simulationTime = 0;
-    PubSub.publish('reset', this.simulationTime);
+    if (this._state === stateEnum.PAUSED || this._state === stateEnum.RUNNING) {
+      this._state = stateEnum.STOPPED;
+      clearInterval(this._timerID);
+      this.simulationTime = 0;
+      PubSub.publish('reset', this.simulationTime);
+    }
   }
 }
 
