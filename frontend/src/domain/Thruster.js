@@ -28,6 +28,7 @@ class Thruster {
     this._maxForcePositive = maxForces.maxForcePositive;
     this._maxForceNegative = maxForces.maxForceNegative;
 
+    this._force = 0.0;
     this._rpmDemand = 0.0;
     this._pitchDemand = 0.0;
     this._azimuthDemand = thrusterType === 'tunnel' ? 90.0 : 0.0;

@@ -5,7 +5,17 @@ import './Thruster.css';
 class Thruster extends Component {
   constructor() {
     super();
-    this.state = {};
+    this.state = {
+      manualRpmDemand: 0,
+    };
+
+    this.changeManualRpmDemand = this.changeManualRpmDemand.bind(this);
+  }
+
+  changeManualRpmDemand(event) {
+    const manualRpmDemand = Number.parseFloat(event.target.value) / 100.0;
+    this.props.thrusterData.rpmDemand = manualRpmDemand;
+    this.setState({ manualRpmDemand });
   }
 
   render() {
@@ -38,7 +48,21 @@ class Thruster extends Component {
               </tr>
               <tr>
                 <td>RPM demand</td>
-                <td>{displayRpmDemand} %</td>
+                <td>
+                  <form className="form-inline">
+                    {displayRpmDemand} %
+                    <input
+                      type="number"
+                      min="-100"
+                      max="100"
+                      step="0.1"
+                      defaultValue={this.state.manualRpmDemand}
+                      onChange={this.changeManualRpmDemand}
+                      style={{ width: 70, marginLeft: 15 }}
+                      className="form-control mb-2 mr-sm-2 mb-sm-0"
+                    />
+                  </form>
+                </td>
                 <td>Pitch demand</td>
                 <td>{displayPitchDemand} %</td>
               </tr>

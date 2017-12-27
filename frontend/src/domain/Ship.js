@@ -47,7 +47,6 @@ class Ship {
 
     for (let thrIdx = 0; thrIdx < this._thrusters.length; thrIdx += 1) {
       const thr = this.thrusters[thrIdx];
-      thr.rpmDemand = 0.5;
 
       thrusterForces.surge += thr.force *
         Math.cos(thr.azimuthDemand * (Math.PI / 180.0));
@@ -56,9 +55,9 @@ class Ship {
         Math.sin(thr.azimuthDemand * (Math.PI / 180.0));
 
       thrusterForces.yaw += (thr.force * thr._xPos *
-        Math.cos(thr.azimuthDemand * (Math.PI / 180.0))) +
+        Math.sin(thr.azimuthDemand * (Math.PI / 180.0))) +
         (thr.force * thr._yPos *
-        Math.sin(thr.azimuthDemand * (Math.PI / 180.0)));
+        Math.cos(thr.azimuthDemand * (Math.PI / 180.0)));
     }
 
     for (let wsIdx = 0; wsIdx < this._windSensors.length; wsIdx += 1) {
@@ -78,6 +77,8 @@ class Ship {
     for (let gpsIdx = 0; gpsIdx < this._gpses.length; gpsIdx += 1) {
       this._gpses[gpsIdx].measurePosition();
     }
+
+    // console.log(thrusterForces);
 
     this._vesselModel.calculatePosition(
       thrusterForces.surge,

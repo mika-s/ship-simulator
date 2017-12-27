@@ -94,7 +94,7 @@ class VesselModel {
     this._nedPositionInMeters = {
       latitude: this._previousNedPositionInMeters.latitude + nedVelocity.latitude,
       longitude: this._previousNedPositionInMeters.longitude + nedVelocity.longitude,
-      heading: VesselUtil.transformTo0To360(this._previousNedPositionInMeters.heading
+      heading: VesselUtil.transformTo0To2pi(this._previousNedPositionInMeters.heading
         + this._velocity.r),
     };
 
@@ -113,7 +113,7 @@ class VesselModel {
     this._previousNedPositionInMeters = Object.assign({}, this._nedPositionInMeters);
     this._previousNedPosition = Object.assign({}, this._nedPosition);
 
-    PubSub.publish('heading', this._nedPosition.heading);
+    PubSub.publish('heading', this._nedPosition.heading * (180.0 / Math.PI));
     PubSub.publish('position', { latitude: this._nedPosition.latitude, longitude: this._nedPosition.longitude });
     PubSub.publish('velocity', this._velocity);
   }
