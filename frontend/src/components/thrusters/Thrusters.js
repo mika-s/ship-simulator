@@ -25,10 +25,8 @@ class Thrusters extends Component {
   }
 
   render() {
-    const thrusterElements = [];
-    for (let i = 0; i < this.state.thrusters.length; i += 1) {
-      thrusterElements.push(<Thruster key={i.toString()} thrusterData={this.state.thrusters[i]} />);
-    }
+    const thrusterElements = this.state.thrusters.map(thruster =>
+      <Thruster key={thruster.number} thrusterData={thruster} />);
 
     return (
       <div className="thrusters">

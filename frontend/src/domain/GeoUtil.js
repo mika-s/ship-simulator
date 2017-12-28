@@ -1,6 +1,15 @@
 import { LatLonSpherical } from 'geodesy';
 
 class GeoUtil {
+  /**
+  * Get the new position in latitude and longitude, given old lat/lon-position
+  * and new/previous position in meters.
+  * @param {object} previousLatLonPos   - Object with previous latitude and longitude in degrees.
+  * @param {object} newInMeterPos       - Object with new position in meters.
+  * @param {object} previousInMeterPos  - Object with previous position in meters.
+  * @returns {object}                   - Object with the new position in latitude
+  *                                       and longitude in degrees.
+  */
   static getPositionInLatLon(previousLatLonPos, newInMeterPos, previousInMeterPos) {
     const position = new LatLonSpherical(previousLatLonPos.latitude, previousLatLonPos.longitude);
 
