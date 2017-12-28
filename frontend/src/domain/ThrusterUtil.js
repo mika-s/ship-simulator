@@ -1,9 +1,8 @@
 class ThrusterUtil {
   static assertConstructorInput(
-    number, name,
-    thrusterType, controlType,
+    number, name, thrusterType, controlType,
     maxPowerPositive, maxPowerNegative,
-    xPos, yPos,
+    xPos, yPos, pitchExponentPositive, pitchExponentNegative,
   ) {
     const minThrusterNameLength = 1;
     const maxThrusterNameLength = 20;
@@ -15,6 +14,8 @@ class ThrusterUtil {
     const maxXPos = 200.0;
     const minYPos = -50.0;
     const maxYPos = 50.0;
+    const minPitchExponent = 0.0;
+    const maxPitchExponent = 2.5;
 
     if (typeof number !== 'number' || number < minNumber || maxNumber < number) {
       throw new Error(`Illegal thruster number: ${number}. Limits: lowest: ${minNumber}, highest: ${maxNumber}.`);
@@ -50,6 +51,14 @@ class ThrusterUtil {
 
     if (typeof yPos !== 'number' || yPos < minYPos || maxYPos < yPos) {
       throw new Error(`y position is too small or too large. Limits: ${minYPos} m to ${maxYPos} m.`);
+    }
+
+    if (typeof pitchExponentPositive !== 'number' || pitchExponentPositive < minPitchExponent || maxPitchExponent < pitchExponentPositive) {
+      throw new Error(`pitch exponent positive is too small or too large. Limits: ${minPitchExponent} to ${maxPitchExponent}.`);
+    }
+
+    if (typeof pitchExponentNegative !== 'number' || pitchExponentNegative < minPitchExponent || maxPitchExponent < pitchExponentNegative) {
+      throw new Error(`pitch exponent negative is too small or too large. Limits: ${minPitchExponent} to ${maxPitchExponent}.`);
     }
   }
 

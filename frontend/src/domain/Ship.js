@@ -10,7 +10,7 @@ class Ship {
     this._vesselModel = vesselModel;
 
     this._thrusters = [
-      new Thruster(1, 'Tunnel', 'tunnel', 'rpm', 800.0, 800.0, 45.0, 0.0),
+      new Thruster(1, 'Tunnel', 'tunnel', 'pitch', 800.0, 800.0, 45.0, 0.0, 1.8, 1.8),
       new Thruster(2, 'Port prop', 'azimuth', 'rpm', 2000.0, 1500.0, -45.0, -5.0),
       new Thruster(3, 'Stbd prop', 'azimuth', 'rpm', 2000.0, 1500.0, -45.0, 5.0),
     ];

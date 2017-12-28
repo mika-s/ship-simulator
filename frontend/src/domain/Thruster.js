@@ -2,15 +2,14 @@ import ThrUtil from './ThrusterUtil';
 
 class Thruster {
   constructor(
-    number, name,
-    thrusterType, controlType,
+    number, name, thrusterType, controlType,
     maxPowerPositive, maxPowerNegative,
-    xPos, yPos,
+    xPos, yPos, pitchExponentPositive = 0.0, pitchExponentNegative = 0.0,
   ) {
     ThrUtil.assertConstructorInput(
       number, name, thrusterType, controlType,
       maxPowerPositive, maxPowerNegative,
-      xPos, yPos,
+      xPos, yPos, pitchExponentPositive, pitchExponentNegative,
     );
 
     this._number = number;
@@ -21,6 +20,8 @@ class Thruster {
     this._maxPowerNegative = maxPowerNegative;
     this._xPos = xPos;
     this._yPos = yPos;
+    this._pitchExponent = { positive: pitchExponentPositive, negative: pitchExponentNegative };
+    this._rpmExponent = controlType === 'rpm' ? { positive: 2.0, negative: 2.0 } : { positive: 0.0, negative: 0.0 };
 
     const maxForces =
       ThrUtil.calculateMaxForce(thrusterType, maxPowerPositive, maxPowerNegative);
@@ -41,9 +42,13 @@ class Thruster {
     let newForce;
 
     if (this._rpmDemand >= 0.0) {
-      newForce = this._maxForcePositive * (this._rpmDemand ** 2.0);
+      newForce = this._maxForcePositive *
+        (this._pitchDemand ** this._pitchExponent.positive) *
+        (this._rpmDemand ** this._rpmExponent.positive);
     } else {
-      newForce = this._maxForceNegative * (this._rpmDemand ** 2.0);
+      newForce = this._maxForceNegative *
+        (this._pitchDemand ** this._pitchExponent.negative) *
+        (this._rpmDemand ** this._rpmExponent.negative);
     }
 
     this._force = newForce;
