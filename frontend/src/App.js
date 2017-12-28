@@ -1,21 +1,59 @@
 import React, { Component } from 'react';
-import logo from './logo.svg';
+import { Switch, Route } from 'react-router-dom';
+import Home from './components/home/Home';
+import Map from './components/map/Map';
+import Power from './components/power/Power';
+import Sensors from './components/sensors/Sensors';
+import ReferenceSystems from './components/reference-systems/ReferenceSystems';
+import Thrusters from './components/thrusters/Thrusters';
+import Settings from './components/settings/Settings';
+import SimulatorControl from './components/simulator-control/Simulator-control';
+import Menu from './components/menu/Menu';
+import Simulator from './domain/Simulator';
+import VesselModel from './domain/VesselModel';
+import Ship from './domain/Ship';
 import './App.css';
 
-class App extends Component {
-  render() {
-    return (
-      <div className="App">
-        <header className="App-header">
-          <img src={logo} className="App-logo" alt="logo" />
-          <h1 className="App-title">Welcome to React</h1>
-        </header>
-        <p className="App-intro">
-          To get started, edit <code>src/App.js</code> and save to reload.
-        </p>
-      </div>
-    );
-  }
-}
+const simulator = new Simulator();
+const vesselModel = new VesselModel(50.0, 4.0, 0.0, 84.0, 20.0, 5.0, 0.71);
+const ship = new Ship(vesselModel);
+
+const App = () =>
+  (
+    <div className="container">
+      <Menu />
+
+      <main>
+        <SimulatorControl
+          onStart={simulator.start}
+          onPause={simulator.pause}
+          onStop={simulator.stop}
+        />
+        <Switch>
+          <Route exact path="/" component={Home} />
+          <Route path="/map" component={Map} />
+          <Route path="/power" component={Power} />
+          <Route
+            path="/sensors"
+            render={() => (
+              <Sensors
+                windSensors={ship.windSensors}
+                gyroCompasses={ship.gyrocompasses}
+                mruSensors={ship.mruSensors}
+              />)}
+          />
+          <Route
+            path="/reference-systems"
+            render={() => (
+              <ReferenceSystems
+                gpses={ship.gpses}
+              />)}
+          />
+          <Route path="/settings" component={Settings} />
+          <Route path="/thrusters" render={() => <Thrusters thrusters={ship.thrusters} />} />
+        </Switch>
+      </main>
+    </div>
+  );
 
 export default App;

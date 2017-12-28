@@ -1,0 +1,164 @@
+\documentclass[a4paper]{article}  
+
+\usepackage{amsmath}
+\usepackage{amssymb}
+\usepackage{mathrsfs}
+\usepackage[toc,page]{appendix}
+\usepackage[pdftex]{graphicx}
+\usepackage{geometry}
+\usepackage[utf8]{inputenc}
+\usepackage{tabularx}
+\usepackage{color}
+\usepackage{natbib}
+\usepackage{epstopdf}
+\usepackage{caption}
+\usepackage{subcaption}
+\usepackage{cancel}
+\usepackage{pdfpages}
+
+\bibliographystyle{plainnat}
+\newcommand{\HRule}{\rule{\linewidth}{1mm}}
+\newcommand{\myparagraph}[1]{\paragraph{#1}\mbox{}\\}
+
+\title{\textsc{Design description of the model}}
+\date{\today}
+
+\begin{document}
+
+\begin{titlepage}
+	\centering
+	{\scshape\LARGE Design description of the model \par}
+	\vspace{1cm}
+	{\scshape\Large Rev 0 \par}
+	\vspace{2cm}
+	\vfill
+
+% Bottom of the page
+	{\large \today\par}
+\end{titlepage}
+
+\thispagestyle{empty}
+\newpage
+
+\setcounter{tocdepth}{3}
+\tableofcontents
+\setcounter{secnumdepth}{3}
+\newpage
+
+\section{Vessel model}
+
+\begin{equation}
+\label{eq:vessel_model}
+\begin{aligned}
+	\boldsymbol{\dot{\eta}} &= \boldsymbol{R} (\psi) \boldsymbol{\nu} \\
+	(\boldsymbol{M}_{RB} + \boldsymbol{M}_A) \boldsymbol{\dot{\nu}}_r + \boldsymbol{D} \boldsymbol{\nu}_r |\boldsymbol{\nu_r}| &= \boldsymbol{\tau}_{thr} + \boldsymbol{\tau}_{wind} + \boldsymbol{\tau}_{ext}
+\end{aligned}
+\end{equation}
+\\
+\\
+The matrix $\boldsymbol{M}_{RB}$ can be defined as
+\begin{equation}
+\label{eq:MRB_matrix}
+\begin{aligned}
+	\boldsymbol{M}_{RB} &=
+		\left[ \begin{array}{ccc}
+			m &  0 & 0 \\
+			0 &  m & 0 \\
+			0 &  0 &  I_z 
+		\end{array} \right],
+\end{aligned}
+\end{equation}
+%
+where $m$ is the displacement, i.e. the mass of the displaced fluid, or the mass of the vessel, and $I_z$ is the moment of inertia about the $z_b$-axis. The elements that are not on
+the diagonal of the matrix are ignored.
+\\
+\\
+The added-mass matrix, $\boldsymbol{M}_A$, is calculated in the origin of the coordinate system, CO. This matrix can be written as
+
+\begin{equation}
+\label{eq:MA_matrix}
+\begin{aligned}
+	\boldsymbol{M}_A &=
+		\left[ \begin{array}{ccc}
+			-X_{\dot{u}} &  0 & 0 \\
+			0 &  -Y_{\dot{v}} & 0 \\
+			0 & 0 &  -N_{\dot{r}} 
+		\end{array} \right],
+\end{aligned}
+\end{equation}
+%
+in SNAME notation. $X_{\dot{u}}$ is added mass in surge, $Y_{\dot{v}}$ is added mass in sway og $N_{\dot{r}}$ is added mass ini yaw. The elements that are not on
+the diagonal of the matrix are ignored.
+\\
+\\
+The matrix $\boldsymbol{D}$ can, in SNAME notation, be written as
+
+\begin{equation}
+\label{eq:D_matrise}
+\begin{aligned}
+	\boldsymbol{D} &=
+		\left[ \begin{array}{ccc}
+			-X_u &  0 & 0 \\
+			0 &  -Y_v & 0 \\
+			0 & 0 &  -N_r 
+		\end{array} \right],
+\end{aligned}
+\end{equation}
+%
+where $X_u$ is drag in surge, $Y_v$ is drag in sway and $N_r$ is drag in yaw. The elements that are not on the diagonal of the matrix are ignored.
+\\
+\\
+$\boldsymbol{\tau}_{thr} = [\tau_{thr,X}, \tau_{thr,Y}, \tau_{thr,N}]^{\top}$ are forces from thrusters in surge, sway and yaw. 
+$\boldsymbol{\tau}_{wind} = [\tau_{wind,X}, \tau_{wind,Y}, \tau_{wind,N}]^{\top}$ and $\boldsymbol{\tau}_{ext} =
+ [\tau_{ext,X}, \tau_{ext,Y}, \tau_{ext,N}]^{\top}$ are wind forces and external forces (pipe, winch, etc.) that affects the vessel.
+\\
+\\
+Rotation from vessel coordinates (BODY) to Earth coordinates (NED) can be done with a rotation matrix, $\boldsymbol{R}(\psi)$. For three degrees of freedom, this can be written as
+
+\begin{equation}
+\label{eq:rotation_matrix}
+\begin{aligned}
+	\boldsymbol{R}(\psi) &=
+		\left[ \begin{array}{ccc}
+			\cos(\psi) &  -\sin(\psi) & 0 \\
+			\sin(\psi) &  \cos(\psi) & 0 \\
+			0 & 0 &  1 
+		\end{array} \right],
+\end{aligned}
+\end{equation}
+%
+where $\psi$ is the heading of the vessel. $\boldsymbol{\eta} = [N, E, \psi]^{\top}$ is the position in North, East and heading. $\boldsymbol{\nu} = [u, v, r]^{\top}$ 
+is velocity in surge, sway and yaw. $\boldsymbol{\nu}_c = [u_c, v_c, r_c]^{\top}$ is current velocity in surge, sway and yaw. 
+$\boldsymbol{\nu}_r = \boldsymbol{\nu} - \boldsymbol{\nu}_c$is then relative vessel velocity.
+
+
+\section{Thruster model}
+
+The force that a single thruster can give can be written as
+
+\begin{equation}
+	T = K_T \rho D^4 n^2,
+\end{equation}
+%
+where $T$ is the thruster force, $\rho$ is the density of water, $D$ is the diameter of the propeller and $n$ is the rpm of the propeller. $K_T$ is an empirical value that is
+dependent on water speed into the propeller and the pitch angle of the propeller. A simplified version can be written as
+
+\begin{equation}
+	K_T = K \cdot \theta^\alpha,
+\end{equation}
+%
+where $K$ is a constant, $\theta$ is pitch angle normalized to 0 $\rightarrow$ 1 (0\% $\rightarrow$ 100\%) and $\alpha$ is a constant. Because $K$, $\rho$ og $D$ are constants
+they can be merged together into one constant. $n$ can also be normalized such that it's between $0$ and $1$: $n_n = K_n \cdot n$. The final expression for $T$ is then
+
+\begin{equation}
+\begin{aligned}
+	T &= K_T \rho D^4 n^2 \\
+	   &= K \theta^\alpha D^4 (K_n n_n)^2 \\
+	   &= K \theta^\alpha D^4 K_n^2 n_n^2 \\
+	   &= T_{K} \cdot \theta^\alpha n_n^2,
+\end{aligned}
+\end{equation}
+%
+where $T_{K} = K D^4 K_n^2$.
+
+\end{document}

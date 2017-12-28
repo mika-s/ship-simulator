@@ -12,6 +12,8 @@
     },
     "globals": {
         "fetch": true,
-        "document": true
+        "document": true,
+        "it": true,
+        "expect": true
     }
 }
