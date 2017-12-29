@@ -1,6 +1,6 @@
 export function setWindSpeed(speed) {
   return {
-    type: 'SET_SPEED',
+    type: 'SET_WIND_SPEED',
     payload: {
       speed,
     },
@@ -9,7 +9,7 @@ export function setWindSpeed(speed) {
 
 export function setWindDirection(direction) {
   return {
-    type: 'SET_DIRECTION',
+    type: 'SET_WIND_DIRECTION',
     payload: {
       direction,
     },
@@ -18,7 +18,7 @@ export function setWindDirection(direction) {
 
 export function resetWind() {
   return {
-    type: 'RESET',
+    type: 'RESET_WIND',
   };
 }
 
