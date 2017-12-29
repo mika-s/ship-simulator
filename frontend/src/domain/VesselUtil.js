@@ -1,3 +1,5 @@
+import GeneralUtil from '../domain/GeneralUtil';
+
 class VesselUtil {
   /**
   * Calculate the displacement of a vessel.
@@ -15,7 +17,7 @@ class VesselUtil {
     const rhoWater = 1.024;
 
     let displacement = rhoWater * blockCoefficient * lpp * breadth * draft;
-    displacement = displacement.toFixed(2);
+    displacement = GeneralUtil.truncToDecimal(displacement, 2);
 
     return displacement;
   }

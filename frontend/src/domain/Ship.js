@@ -78,8 +78,6 @@ class Ship {
       this._gpses[gpsIdx].measurePosition();
     }
 
-    // console.log(thrusterForces);
-
     this._vesselModel.calculatePosition(
       thrusterForces.surge,
       thrusterForces.sway,

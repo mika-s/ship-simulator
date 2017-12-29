@@ -1,11 +1,12 @@
 import * as PubSub from 'pubsub-js';
-
-const stateEnum = { RUNNING: 1, PAUSED: 2, STOPPED: 3 };
+import * as simulation from '../actions/simulation.actions';
+import { simulationState } from '../enums';
+import store from '../redux.store';
 
 class Simulator {
   constructor() {
     this._simulationTime = 0;
-    this._state = stateEnum.STOPPED;
+    this._state = simulationState.STOPPED;
 
     this.tick = this.tick.bind(this);
     this.start = this.start.bind(this);
@@ -15,6 +16,7 @@ class Simulator {
 
   tick() {
     this.simulationTime += 1;
+    store.dispatch(simulation.incrementSimulationTime());
   }
 
   get simulationTime() { return this._simulationTime; }
@@ -25,20 +27,32 @@ class Simulator {
   }
 
   start() {
-    if (this._state !== stateEnum.RUNNING) {
-      this._state = stateEnum.RUNNING;
+    const { state } = store.getState().simulation;
+    if (state !== simulationState.RUNNING) {
+      store.dispatch(simulation.setSimulationState(simulationState.RUNNING));
+    }
+
+    if (this._state !== simulationState.RUNNING) {
+      this._state = simulationState.RUNNING;
       this._timerID = setInterval(() => this.tick(), 1000);
     }
   }
 
   pause() {
-    this._state = stateEnum.PAUSED;
+    store.dispatch(simulation.setSimulationState(simulationState.PAUSED));
+    this._state = simulationState.PAUSED;
     clearInterval(this._timerID);
   }
 
   stop() {
-    if (this._state === stateEnum.PAUSED || this._state === stateEnum.RUNNING) {
-      this._state = stateEnum.STOPPED;
+    const { state } = store.getState().simulation;
+    if (state === simulationState.PAUSED || state === simulationState.RUNNING) {
+      store.dispatch(simulation.setSimulationState(simulationState.STOPPED));
+      store.dispatch(simulation.stopSimulationTime());
+    }
+
+    if (this._state === simulationState.PAUSED || this._state === simulationState.RUNNING) {
+      this._state = simulationState.STOPPED;
       clearInterval(this._timerID);
       this.simulationTime = 0;
       PubSub.publish('reset', this.simulationTime);
