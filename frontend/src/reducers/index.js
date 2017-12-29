@@ -15,11 +15,27 @@ export default function rootreducer(state = initialState, action) {
     state.vesselmodel.model.velocity,
   );
 
-  return {
-    ...state,
-    simulation: simulationReducer(state.simulation, 'SOME_ACTION'),
-    environment: environmentReducer(state.environment, 'SOME_ACTION'),
-    ship: shipReducer(state.ship, 'SOME_ACTION'),
-    vesselmodel: vesselmodelReducer(state.vesselmodel, 'SOME_ACTION', model),
-  };
+  switch (action.type) {
+    case 'SIMULATE':
+      return {
+        ...state,
+        simulation: simulationReducer(state.simulation, action),
+        environment: environmentReducer(state.environment, action),
+        ship: shipReducer(state.ship, action),
+        vesselmodel: vesselmodelReducer(state.vesselmodel, action, model),
+      };
+    case 'PAUSE_SIMULATION':
+      return {
+        ...state,
+        simulation: simulationReducer(state.simulation, action),
+      };
+    case 'STOP_SIMULATION':
+      return {
+        ...state,
+        simulation: simulationReducer(state.simulation, action),
+        vesselmodel: vesselmodelReducer(state.vesselmodel, action),
+      };
+    default:
+      return state;
+  }
 }

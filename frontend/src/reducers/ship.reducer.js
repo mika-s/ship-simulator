@@ -1,5 +1,10 @@
 export default function shipReducer(state, action) {
-  return {
-    ...state,
-  };
+  switch (action.type) {
+    case 'SIMULATE':
+      return {
+        ...state,
+      };
+    default:
+      return state;
+  }
 }

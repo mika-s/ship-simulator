@@ -1,5 +1,10 @@
 export default function environmentReducer(state, action) {
-  return {
-    ...state,
-  };
+  switch (action.type) {
+    case 'SIMULATE':
+      return {
+        ...state,
+      };
+    default:
+      return state;
+  }
 }

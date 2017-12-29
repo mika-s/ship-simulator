@@ -16,7 +16,7 @@ class Simulator {
 
   tick() {
     this.simulationTime += 1;
-    store.dispatch(simulation.incrementSimulationTime());
+    store.dispatch(simulation.simulate());
   }
 
   get simulationTime() { return this._simulationTime; }
@@ -27,9 +27,9 @@ class Simulator {
   }
 
   start() {
-    const { state } = store.getState().simulation;
+    const state = store.getState().simulation.simulationState;
     if (state !== simulationState.RUNNING) {
-      store.dispatch(simulation.setSimulationState(simulationState.RUNNING));
+      store.dispatch(simulation.simulate());
     }
 
     if (this._state !== simulationState.RUNNING) {
@@ -39,16 +39,15 @@ class Simulator {
   }
 
   pause() {
-    store.dispatch(simulation.setSimulationState(simulationState.PAUSED));
+    store.dispatch(simulation.pauseSimulation());
     this._state = simulationState.PAUSED;
     clearInterval(this._timerID);
   }
 
   stop() {
-    const { state } = store.getState().simulation;
+    const state = store.getState().simulation.simulationState;
     if (state === simulationState.PAUSED || state === simulationState.RUNNING) {
-      store.dispatch(simulation.setSimulationState(simulationState.STOPPED));
-      store.dispatch(simulation.stopSimulationTime());
+      store.dispatch(simulation.stopSimulation());
     }
 
     if (this._state === simulationState.PAUSED || this._state === simulationState.RUNNING) {

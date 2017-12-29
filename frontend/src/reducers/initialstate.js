@@ -3,7 +3,7 @@ import VesselUtil from '../domain/VesselUtil';
 
 const simulatorInitialState = {
   time: 0,
-  state: simulationState.STOPPED,
+  simulationState: simulationState.STOPPED,
 };
 
 const environmentInitialState = {
