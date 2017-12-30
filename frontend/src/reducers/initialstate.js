@@ -1,4 +1,5 @@
 import { simulationState } from '../enums';
+import { Gyrocompass, MRU, Windsensor, GPS, Thruster } from './domain-constructors';
 import VesselUtil from '../domain/VesselUtil';
 
 const simulatorInitialState = {
@@ -23,6 +24,9 @@ const shipInitialState = {
     gyrocompasses: [],
     mrus: [],
     windsensors: [],
+  },
+  referencesystems: {
+    gpses: [],
   },
 };
 
@@ -101,6 +105,31 @@ vesselModelInitialState.drag = VesselUtil.calculateDrag(
   vesselModelInitialState.dimensions.breadth,
   vesselModelInitialState.dimensions.draft,
 );
+
+shipInitialState.sensors.gyrocompasses = [
+  new Gyrocompass(1, 0.0),
+  new Gyrocompass(2, 0.0),
+  new Gyrocompass(3, 0.0),
+];
+
+shipInitialState.sensors.mrus = [
+  new MRU(1, 0.0, 0.0),
+];
+
+shipInitialState.sensors.windsensors = [
+  new Windsensor(1, 0.0, 0.0),
+  new Windsensor(2, 0.0, 0.0),
+];
+
+shipInitialState.referencesystems.gpses = [
+  new GPS(1, 50.0, 4.0),
+];
+
+shipInitialState.thrusters = [
+  new Thruster(1, 'Tunnel', 'tunnel', 'pitch', 800.0, 800.0, 45.0, 0.0, 1.8, 1.8),
+  new Thruster(2, 'Port prop', 'azimuth', 'rpm', 2000.0, 1500.0, -45.0, -5.0),
+  new Thruster(3, 'Stbd prop', 'azimuth', 'rpm', 2000.0, 1500.0, -45.0, 5.0),
+];
 
 const initialState = {
   simulation: simulatorInitialState,

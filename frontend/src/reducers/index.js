@@ -1,5 +1,5 @@
 import initialState from './initialstate';
-import VesselModel from './NewVesselModel';
+import VesselModel from './VesselModel';
 import vesselmodelReducer from './vesselmodel.reducer';
 import environmentReducer from './environment.reducer';
 import shipReducer from './ship.reducer';
@@ -21,7 +21,7 @@ export default function rootreducer(state = initialState, action) {
         ...state,
         simulation: simulationReducer(state.simulation, action),
         environment: environmentReducer(state.environment, action),
-        ship: shipReducer(state.ship, action),
+        ship: shipReducer(state.ship, action, model),
         vesselmodel: vesselmodelReducer(state.vesselmodel, action, model),
       };
     case 'PAUSE_SIMULATION':
