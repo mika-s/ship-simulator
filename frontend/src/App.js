@@ -23,18 +23,10 @@ const App = () =>
           <Route exact path="/" component={Home} />
           <Route path="/map" component={Map} />
           <Route path="/power" component={Power} />
-          <Route
-            path="/sensors"
-            render={() => (
-              <Sensors />)}
-          />
-          <Route
-            path="/reference-systems"
-            render={() => (
-              <ReferenceSystems />)}
-          />
+          <Route path="/sensors" component={Sensors} />
+          <Route path="/reference-systems" component={ReferenceSystems} />
           <Route path="/settings" component={Settings} />
-          <Route path="/thrusters" render={() => <Thrusters />} />
+          <Route path="/thrusters" component={Thrusters} />
         </Switch>
       </main>
     </div>

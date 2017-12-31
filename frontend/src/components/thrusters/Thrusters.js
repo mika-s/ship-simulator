@@ -1,31 +1,17 @@
-import * as PubSub from 'pubsub-js';
 import React, { Component } from 'react';
+import { connect } from 'react-redux';
 import PropTypes from 'prop-types';
 import Thruster from '../thruster/Thruster';
 import './Thrusters.css';
 
 class Thrusters extends Component {
-  constructor(props) {
-    super(props);
-    this.state = {
-      thrusters: props.thrusters,
-    };
-  }
-
-  componentDidMount() {
-    const thrustersSubscriber = (msg, data) => {
-      this.setState({ thrusters: data });
-    };
-
-    this.thrustersToken = PubSub.subscribe('thrusters', thrustersSubscriber);
-  }
-
-  componentWillUnmount() {
-    PubSub.unsubscribe(this.thrustersToken);
+  constructor() {
+    super();
+    this.state = {};
   }
 
   render() {
-    const thrusterElements = this.state.thrusters.map(thruster =>
+    const thrusterElements = this.props.thrusters.map(thruster =>
       <Thruster key={thruster.number} thrusterData={thruster} />);
 
     return (
@@ -37,8 +23,16 @@ class Thrusters extends Component {
   }
 }
 
+const mapStateToProps = state => ({
+  thrusters: state.ship.thrusters,
+});
+
+const mapDispatchToProps = () => ({});
+
+const ConnectedThrusters = connect(mapStateToProps, mapDispatchToProps)(Thrusters);
+
 Thrusters.propTypes = {
   thrusters: PropTypes.arrayOf(PropTypes.object).isRequired,
 };
 
-export default Thrusters;
+export default ConnectedThrusters;

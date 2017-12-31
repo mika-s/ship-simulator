@@ -9,10 +9,10 @@ function getPosition(model) {
   const maxNoiseAmplitude = 0.5 * 10e-8;
 
   // Add measurement noise.
-  let newLatitude = model.latitude +
+  let newLatitude = model.position.latitude +
     GeneralUtil.getRandomBetween(minNoiseAmplitude, maxNoiseAmplitude);
 
-  let newLongitude = model.longitude +
+  let newLongitude = model.position.longitude +
     GeneralUtil.getRandomBetween(minNoiseAmplitude, maxNoiseAmplitude);
 
   // Apply clip limits.
@@ -27,8 +27,8 @@ function getPosition(model) {
   newLongitude = GeneralUtil.truncToDecimal(newLongitude, 6);
 
   return {
-    newLatitude,
-    newLongitude,
+    latitude: newLatitude,
+    longitude: newLongitude,
   };
 }
 

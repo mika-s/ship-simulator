@@ -9,15 +9,13 @@ class GPS extends Component {
   }
 
   render() {
-    const {
-      number, latitude, longitude,
-    } = this.props.gpsData;
+    const { number, position } = this.props.gpsData;
 
     return (
       <tr>
         <td>{number}</td>
-        <td>{latitude}</td>
-        <td>{longitude}</td>
+        <td>{position.latitude}</td>
+        <td>{position.longitude}</td>
       </tr>
     );
   }
