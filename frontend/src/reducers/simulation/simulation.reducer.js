@@ -1,4 +1,4 @@
-import { simulationState } from '../enums';
+import { simulationState } from '../../util/enums';
 
 export default function simulationReducer(state, action) {
   switch (action.type) {

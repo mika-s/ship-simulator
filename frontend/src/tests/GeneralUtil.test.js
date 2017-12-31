@@ -1,4 +1,4 @@
-import GeneralUtil from '../GeneralUtil';
+import GeneralUtil from '../util/GeneralUtil';
 
 it('truncToDecimal(20.12345, 2) = 20.12', () => {
   const truncatedNumber = GeneralUtil.truncToDecimal(20.12345, 2);

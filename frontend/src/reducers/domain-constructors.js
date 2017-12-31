@@ -1,4 +1,4 @@
-import ThrUtil from '../domain/ThrusterUtil';
+import ThrUtil from './ship/ThrusterUtil';
 
 function Gyrocompass(number, initialHeading) {
   this.number = number;
@@ -19,8 +19,10 @@ function Windsensor(number, initialSpeed, initialDirection) {
 
 function GPS(number, initialLatitude, initialLongitude) {
   this.number = number;
-  this.latitude = initialLatitude;
-  this.longitude = initialLongitude;
+  this.position = {
+    latitude: initialLatitude,
+    longitude: initialLongitude,
+  };
 }
 
 function Thruster(

@@ -1,4 +1,4 @@
-import VesselUtil from '../VesselUtil';
+import VesselUtil from '../reducers/vesselmodel/VesselUtil';
 
 it('transforms 400 deg to 40 deg', () => {
   const transformedAngle = VesselUtil.transformTo0To360(400);

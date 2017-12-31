@@ -1,6 +1,6 @@
-import { simulationState } from '../enums';
+import { simulationState } from '../util/enums';
 import { Gyrocompass, MRU, Windsensor, GPS, Thruster } from './domain-constructors';
-import VesselUtil from '../domain/VesselUtil';
+import VesselUtil from '../reducers/vesselmodel/VesselUtil';
 
 const simulatorInitialState = {
   time: 0,

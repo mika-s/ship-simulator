@@ -1,4 +1,4 @@
-import GeneralUtil from '../domain/GeneralUtil';
+import GeneralUtil from '../../util/GeneralUtil';
 
 class VesselUtil {
   /**

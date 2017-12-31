@@ -2,7 +2,7 @@ import React, { Component } from 'react';
 import PropTypes from 'prop-types';
 import { connect } from 'react-redux';
 import { simulate, pauseSimulation, stopSimulation } from '../../actions/simulation.actions';
-import { simulationState } from '../../enums';
+import { simulationState } from '../../util/enums';
 import './Simulator-control.css';
 
 class SimulatorControl extends Component {

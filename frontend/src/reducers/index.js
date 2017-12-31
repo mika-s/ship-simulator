@@ -1,9 +1,9 @@
 import initialState from './initialstate';
-import VesselModel from './VesselModel';
-import vesselmodelReducer from './vesselmodel.reducer';
-import environmentReducer from './environment.reducer';
-import shipReducer from './ship.reducer';
-import simulationReducer from './simulation.reducer';
+import VesselModel from './vesselmodel/VesselModel';
+import vesselmodelReducer from './vesselmodel/vesselmodel.reducer';
+import environmentReducer from './environment/environment.reducer';
+import shipReducer from './ship/ship.reducer';
+import simulationReducer from './simulation/simulation.reducer';
 
 export default function rootreducer(state = initialState, action) {
   const model = VesselModel.calculatePosition(
