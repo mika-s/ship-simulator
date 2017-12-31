@@ -3,6 +3,7 @@ import MRU from './MRU';
 import Windsensor from './Windsensor';
 import GPS from './GPS';
 import Thruster from './Thruster';
+import gyroReducer from './ship/gyro.reducer';
 
 export default function shipReducer(state, action, model) {
   switch (action.type) {
@@ -29,6 +30,15 @@ export default function shipReducer(state, action, model) {
         referencesystems: {
           gpses: state.referencesystems.gpses.map(gps =>
             GPS.measurePosition(gps, model.position.latitude, model.position.longitude)),
+        },
+      };
+    case 'STOP_SIMULATION':
+      return {
+        ...state,
+        sensors: {
+          ...state.sensors,
+          gyrocompasses: state.sensors.gyrocompasses.map(gyrocompass =>
+            Gyrocompass.resetGyrocompass(gyrocompass)),
         },
       };
     default:

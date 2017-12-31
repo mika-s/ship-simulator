@@ -24,6 +24,14 @@ class Gyrocompass {
 
     return newGyrocompass;
   }
+
+  static resetGyrocompass(gyrocompass) {
+    const newGyrocompass = Object.assign({}, gyrocompass);
+
+    newGyrocompass.heading = 0.0;
+
+    return newGyrocompass;
+  }
 }
 
 export default Gyrocompass;

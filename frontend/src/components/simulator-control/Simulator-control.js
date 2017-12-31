@@ -1,52 +1,55 @@
-import * as PubSub from 'pubsub-js';
 import React, { Component } from 'react';
 import PropTypes from 'prop-types';
+import { connect } from 'react-redux';
+import { simulate, pauseSimulation, stopSimulation } from '../../actions/simulation.actions';
+import { simulationState } from '../../enums';
 import './Simulator-control.css';
 
 class SimulatorControl extends Component {
-  constructor(props) {
-    super(props);
-    this.state = {
-      simulationTime: 0,
-    };
+  constructor() {
+    super();
+    this.state = {};
 
+    this.tick = this.tick.bind(this);
     this.start = this.start.bind(this);
     this.pause = this.pause.bind(this);
     this.stop = this.stop.bind(this);
   }
 
-  componentDidMount() {
-    const simulationTimeSubscriber = (msg, data) => {
-      this.setState({ simulationTime: data });
-    };
-
-    this.simulationTimeToken = PubSub.subscribe('simulationTime', simulationTimeSubscriber);
-  }
-
-  componentWillUnmount() {
-    PubSub.unsubscribe(this.simulationTimeToken);
+  tick() {
+    this.props.onSimulateClick(simulate());
   }
 
   start() {
-    this.props.onStart();
+    if (this.props.state !== simulationState.RUNNING) {
+      this._timerID = setInterval(() => this.tick(), 1000);
+    }
   }
 
   pause() {
-    this.props.onPause();
+    if (this.props.state === simulationState.RUNNING) {
+      this.props.onPauseClick(pauseSimulation());
+      clearInterval(this._timerID);
+    }
   }
 
   stop() {
-    this.props.onStop();
+    if (this.props.state !== simulationState.STOPPED) {
+      this.props.onStopClick(stopSimulation());
+      clearInterval(this._timerID);
+    }
   }
 
   render() {
+    const { time } = this.props;
+
     return (
       <div className="row">
         <div className="col-lg-2">
           <p className="middle-vertical-align">Simulation time:</p>
         </div>
         <div className="col-lg-1">
-          <p className="middle-vertical-align">{this.state.simulationTime}</p>
+          <p className="middle-vertical-align">{time}</p>
         </div>
         <div className="col-lg-2">
           <div className="btn-toolbar">
@@ -70,10 +73,25 @@ class SimulatorControl extends Component {
   }
 }
 
+const mapStateToProps = state => ({
+  time: state.simulation.time,
+  state: state.simulation.simulationState,
+});
+
+const mapDispatchToProps = dispatch => ({
+  onSimulateClick: () => dispatch(simulate()),
+  onPauseClick: () => dispatch(pauseSimulation()),
+  onStopClick: () => dispatch(stopSimulation()),
+});
+
+const ConnectedSimulatorControl = connect(mapStateToProps, mapDispatchToProps)(SimulatorControl);
+
 SimulatorControl.propTypes = {
-  onStart: PropTypes.func.isRequired,
-  onPause: PropTypes.func.isRequired,
-  onStop: PropTypes.func.isRequired,
+  time: PropTypes.number.isRequired,
+  state: PropTypes.number.isRequired,
+  onSimulateClick: PropTypes.func.isRequired,
+  onPauseClick: PropTypes.func.isRequired,
+  onStopClick: PropTypes.func.isRequired,
 };
 
-export default SimulatorControl;
+export default ConnectedSimulatorControl;

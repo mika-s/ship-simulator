@@ -33,6 +33,7 @@ export default function rootreducer(state = initialState, action) {
       return {
         ...state,
         simulation: simulationReducer(state.simulation, action),
+        ship: shipReducer(state.ship, action, model),
         vesselmodel: vesselmodelReducer(state.vesselmodel, action),
       };
     default:
