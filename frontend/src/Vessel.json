@@ -1,0 +1,139 @@
+{
+  "dimensions": {
+    "lpp": 84.0,
+    "breadth": 20.0,
+    "draft": 5.0,
+    "blockCoefficient": 0.71
+  },
+  "model": {
+    "position": {
+      "latitude": 50.0,
+      "longitude": 4.0,
+      "heading": 0.0
+    }
+  },
+  "sensors": {
+    "gyrocompasses": [
+      {
+        "number": 1,
+        "initialHeading": 0.0
+      },
+      {
+        "number": 2,
+        "initialHeading": 0.0
+      },
+      {
+        "number": 3,
+        "initialHeading": 0.0
+      }
+    ],
+    "mrus": [
+      {
+        "number": 1,
+        "initialRoll": 0.0,
+        "initialPitch": 0.0
+      }
+    ],
+    "windsensors": [
+      {
+        "number": 1,
+        "initialSpeed": 0.0,
+        "initialDirection": 0.0
+      },
+      {
+        "number": 2,
+        "initialSpeed": 0.0,
+        "initialDirection": 0.0
+      }
+    ]
+  },
+  "referencesystems": {
+    "gpses": [
+      {
+        "number": 1,
+        "initialPosition": {
+          "latitude": 50.0,
+          "longitude": 4.0
+        }
+      }
+    ]
+  },
+  "thrusters": [
+    {
+      "number": 1,
+      "name": "Tunnel",
+      "thrusterType": "tunnel",
+      "controlType": "pitch",
+      "maxPower": {
+        "positive": 800.0,
+        "negative": 800.0
+      },
+      "location": {
+        "x": 45.0,
+        "y": 0.0
+      },
+      "pitchExponent": {
+        "positive": 1.8,
+        "negative": 1.8
+      },
+      "pitchPowerExponent": {
+        "positive": 2.7,
+        "negative": 2.7
+      },
+      "risetimes": {
+        "pitch": {
+          "positive": 10.0,
+          "negative": -10.0
+        }
+      }
+    },
+    {
+      "number": 2,
+      "name": "Port prop",
+      "thrusterType": "azimuth",
+      "controlType": "rpm",
+      "maxPower": {
+        "positive": 2000.0,
+        "negative": 1500.0
+      },
+      "location": {
+        "x": -45.0,
+        "y": -5.0
+      },
+      "risetimes": {
+        "azimuth": {
+          "positive": 5.0,
+          "negative": -5.0
+        },
+        "rpm": {
+          "positive": 10.0,
+          "negative": -10.0
+        }
+      }
+    },
+    {
+      "number": 3,
+      "name": "Stbd prop",
+      "thrusterType": "azimuth",
+      "controlType": "rpm",
+      "maxPower": {
+        "positive": 2000.0,
+        "negative": 1500.0
+      },
+      "location": {
+        "x": -45.0,
+        "y": 5.0
+      },
+      "risetimes": {
+        "azimuth": {
+          "positive": 5.0,
+          "negative": -5.0
+        },
+        "rpm": {
+          "positive": 10.0,
+          "negative": -10.0
+        }
+      }
+    }
+  ]
+}

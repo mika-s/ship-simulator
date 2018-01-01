@@ -1,35 +1,18 @@
-import * as PubSub from 'pubsub-js';
 import React, { Component } from 'react';
+import { connect } from 'react-redux';
 import PropTypes from 'prop-types';
 import GPS from '../gps/GPS';
 import './ReferenceSystems.css';
 
-class Sensors extends Component {
-  constructor(props) {
-    super(props);
-    this.state = {
-      gpses: props.gpses,
-    };
-  }
-
-  componentDidMount() {
-    const gpsesSubscriber = (msg, data) => { this.setState({ gpses: data }); };
-
-    this.gpsesToken = PubSub.subscribe('gpses', gpsesSubscriber);
-  }
-
-  componentWillUnmount() {
-    PubSub.unsubscribe(this.gpsesToken);
+class ReferenceSystems extends Component {
+  constructor() {
+    super();
+    this.state = {};
   }
 
   render() {
-    const gpsElements = [];
-    for (let i = 0; i < this.state.gpses.length; i += 1) {
-      gpsElements.push(<GPS
-        key={i.toString()}
-        gpsData={this.state.gpses[i]}
-      />);
-    }
+    const gpsElements = this.props.gpses.map(gps => <GPS key={gps.number} gpsData={gps} />);
+
     return (
       <div className="reference-systems">
         <h2>Reference systems</h2>
@@ -54,8 +37,16 @@ class Sensors extends Component {
   }
 }
 
-Sensors.propTypes = {
+const mapStateToProps = state => ({
+  gpses: state.ship.referencesystems.gpses,
+});
+
+const mapDispatchToProps = () => ({});
+
+const ConnectedReferenceSystems = connect(mapStateToProps, mapDispatchToProps)(ReferenceSystems);
+
+ReferenceSystems.propTypes = {
   gpses: PropTypes.arrayOf(PropTypes.object).isRequired,
 };
 
-export default Sensors;
+export default ConnectedReferenceSystems;

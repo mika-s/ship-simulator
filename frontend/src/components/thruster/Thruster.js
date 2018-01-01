@@ -5,37 +5,38 @@ import './Thruster.css';
 class Thruster extends Component {
   constructor() {
     super();
-    this.state = {
-      manualRpmDemand: 0,
-      manualPitchDemand: 0,
-    };
+    this.state = {};
 
     this.changeManualRpmDemand = this.changeManualRpmDemand.bind(this);
     this.changeManualPitchDemand = this.changeManualPitchDemand.bind(this);
   }
 
   changeManualRpmDemand(event) {
+    const { number } = this.props.thrusterData;
     const manualRpmDemand = Number.parseFloat(event.target.value) / 100.0;
-    this.props.thrusterData.rpmDemand = manualRpmDemand;
-    this.setState({ manualRpmDemand });
+
+    this.props.setThrusterDemand(number, 'rpm', manualRpmDemand);
   }
 
   changeManualPitchDemand(event) {
+    const { number } = this.props.thrusterData;
     const manualPitchDemand = Number.parseFloat(event.target.value) / 100.0;
-    this.props.thrusterData.pitchDemand = manualPitchDemand;
-    this.setState({ manualPitchDemand });
+
+    this.props.setThrusterDemand(number, 'pitch', manualPitchDemand);
   }
 
   render() {
     const {
       name, number, force, power, thrusterType, controlType,
-      rpmDemand, pitchDemand,
+      demand, feedback,
     } = this.props.thrusterData;
 
-    const displayForce = typeof force !== 'undefined' ? force.toFixed(2) : 0;
-    const displayPower = typeof power !== 'undefined' ? power.toFixed(2) : 0;
-    const displayRpmDemand = typeof rpmDemand !== 'undefined' ? (rpmDemand * 100.0).toFixed(2) : 0;
-    const displayPitchDemand = typeof pitchDemand !== 'undefined' ? (pitchDemand * 100.0).toFixed(2) : 0;
+    const displayForce = force.toFixed(2);
+    const displayPower = power.toFixed(2);
+    const displayRpmDemand = (demand.rpm * 100.0).toFixed(2);
+    const displayPitchDemand = (demand.pitch * 100.0).toFixed(2);
+    const displayRpmFeedback = (feedback.rpm * 100.0).toFixed(2);
+    const displayPitchFeedback = (feedback.pitch * 100.0).toFixed(2);
 
     return (
       <div className="card" style={{ marginTop: 20, marginBottom: 20 }}>
@@ -88,6 +89,16 @@ class Thruster extends Component {
                   </form>
                 </td>
               </tr>
+              <tr>
+                <td>RPM feedback</td>
+                <td>
+                  {displayRpmFeedback} %
+                </td>
+                <td>Pitch feedback</td>
+                <td>
+                  {displayPitchFeedback} %
+                </td>
+              </tr>
             </tbody>
           </table>
         </div>
@@ -98,6 +109,7 @@ class Thruster extends Component {
 
 Thruster.propTypes = {
   thrusterData: PropTypes.object.isRequired,
+  setThrusterDemand: PropTypes.func.isRequired,
 };
 
 export default Thruster;

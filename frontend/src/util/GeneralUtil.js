@@ -26,6 +26,16 @@ class GeneralUtil {
   static knotsInMps(knots) {
     return 0.514444 * knots;
   }
+
+  /**
+  * Truncate to a given number of decimals.
+  * @param {Number} number   - The number to truncate.
+  * @param {Number} decimals - Number of decimals.
+  * @returns {Number} the value of the given number, truncated to given number of decimals.
+  */
+  static truncToDecimal(number, decimals) {
+    return Math.trunc(number * (10 ** decimals)) / (10 ** decimals);
+  }
 }
 
 export default GeneralUtil;
