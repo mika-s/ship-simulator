@@ -13,10 +13,13 @@ class GyroCompass extends Component {
       number, heading,
     } = this.props.gyroCompassData;
 
+    const displayHeading = heading.toFixed(2);
+
     return (
       <tr>
         <td>{number}</td>
-        <td>{heading}</td>
+        <td>{displayHeading}</td>
+        <td />
       </tr>
     );
   }

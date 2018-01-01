@@ -5,24 +5,36 @@ import './Thruster.css';
 class Thruster extends Component {
   constructor() {
     super();
-    this.state = {};
+    this.state = { manualRpm: 0, manualPitch: 0 };
 
+    this.handleRpmChange = this.handleRpmChange.bind(this);
+    this.handlePitchChange = this.handlePitchChange.bind(this);
     this.changeManualRpmDemand = this.changeManualRpmDemand.bind(this);
     this.changeManualPitchDemand = this.changeManualPitchDemand.bind(this);
   }
 
-  changeManualRpmDemand(event) {
-    const { number } = this.props.thrusterData;
-    const manualRpmDemand = Number.parseFloat(event.target.value) / 100.0;
+  handleRpmChange(event) {
+    this.setState({ manualRpm: event.target.value });
+  }
 
-    this.props.setThrusterDemand(number, 'rpm', manualRpmDemand);
+  handlePitchChange(event) {
+    this.setState({ manualPitch: event.target.value });
+  }
+
+  changeManualRpmDemand(event) {
+    event.preventDefault();
+    const { number } = this.props.thrusterData;
+    const manualRpmFactor = Number.parseFloat(this.state.manualRpm) / 100.0;
+
+    this.props.setThrusterDemand(number, 'rpm', manualRpmFactor);
   }
 
   changeManualPitchDemand(event) {
+    event.preventDefault();
     const { number } = this.props.thrusterData;
-    const manualPitchDemand = Number.parseFloat(event.target.value) / 100.0;
+    const manualPitchFactor = Number.parseFloat(this.state.manualPitch) / 100.0;
 
-    this.props.setThrusterDemand(number, 'pitch', manualPitchDemand);
+    this.props.setThrusterDemand(number, 'pitch', manualPitchFactor);
   }
 
   render() {
@@ -58,34 +70,38 @@ class Thruster extends Component {
               <tr>
                 <td>RPM demand</td>
                 <td>
-                  <form className="form-inline">
+                  <form className="form-inline" onSubmit={this.changeManualRpmDemand}>
                     {displayRpmDemand} %
                     <input
                       type="number"
                       min="-100"
                       max="100"
                       step="0.1"
-                      defaultValue={this.state.manualRpmDemand}
-                      onChange={this.changeManualRpmDemand}
+                      defaultValue={demand.rpm * 100.0}
+                      onChange={this.handleRpmChange}
                       style={{ width: 70, marginLeft: 15 }}
                       className="form-control mb-2 mr-sm-2 mb-sm-0"
+                      required
                     />
+                    <button className="btn btn-secondary btn-sm" type="submit">Set</button>
                   </form>
                 </td>
                 <td>Pitch demand</td>
                 <td>
-                  <form className="form-inline">
+                  <form className="form-inline" onSubmit={this.changeManualPitchDemand}>
                     {displayPitchDemand} %
                     <input
                       type="number"
                       min="-100"
                       max="100"
                       step="0.1"
-                      defaultValue={this.state.manualPitchDemand}
-                      onChange={this.changeManualPitchDemand}
+                      defaultValue={demand.pitch * 100.0}
+                      onChange={this.handlePitchChange}
                       style={{ width: 70, marginLeft: 15 }}
                       className="form-control mb-2 mr-sm-2 mb-sm-0"
+                      required
                     />
+                    <button className="btn btn-secondary btn-sm" type="submit">Set</button>
                   </form>
                 </td>
               </tr>

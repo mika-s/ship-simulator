@@ -13,11 +13,15 @@ class WindSensor extends Component {
       number, speed, direction,
     } = this.props.windSensorData;
 
+    const displaySpeed = speed.toFixed(2);
+    const displayDirection = direction.toFixed(2);
+
     return (
       <tr>
         <td>{number}</td>
-        <td>{speed}</td>
-        <td>{direction}</td>
+        <td>{displaySpeed}</td>
+        <td>{displayDirection}</td>
+        <td />
       </tr>
     );
   }

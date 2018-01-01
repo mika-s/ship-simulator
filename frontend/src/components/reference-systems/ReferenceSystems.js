@@ -23,9 +23,9 @@ class ReferenceSystems extends Component {
             <table className="table table-condensed">
               <tbody>
                 <tr>
-                  <td>#</td>
-                  <td>Latitude</td>
-                  <td>Longitude</td>
+                  <td style={{ width: '10%' }}>#</td>
+                  <td style={{ width: '45%' }}>Latitude</td>
+                  <td style={{ width: '45%' }}>Longitude</td>
                 </tr>
                 {gpsElements}
               </tbody>
