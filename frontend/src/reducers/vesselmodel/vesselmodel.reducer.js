@@ -28,9 +28,9 @@ export default function vesselmodelReducer(state, action, model, forces) {
         },
         model: {
           position: {
-            latitude: 0.0,
-            longitude: 0.0,
-            heading: 0.0,
+            latitude: state.initialPosition.latitude,
+            longitude: state.initialPosition.longitude,
+            heading: state.initialPosition.heading * (Math.PI / 180.0),
           },
           positionInMeters: {
             latitude: 0.0,

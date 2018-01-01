@@ -9,10 +9,7 @@ class WindSensor extends Component {
   }
 
   render() {
-    const {
-      number, speed, direction,
-    } = this.props.windSensorData;
-
+    const { number, speed, direction } = this.props.windSensorData;
     const displaySpeed = speed.toFixed(2);
     const displayDirection = direction.toFixed(2);
 

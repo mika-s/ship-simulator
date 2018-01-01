@@ -36,6 +36,11 @@ const shipInitialState = {
 };
 
 const vesselModelInitialState = {
+  initialPosition: {
+    latitude: 0.0,
+    longitude: 0.0,
+    heading: 0.0,
+  },
   model: {
     position: {
       latitude: 0.0,
@@ -91,6 +96,7 @@ const vesselModelInitialState = {
 
 vesselModelInitialState.dimensions = InitialVessel.dimensions;
 vesselModelInitialState.model.position = InitialVessel.model.position;
+vesselModelInitialState.initialPosition = InitialVessel.model.position;
 
 vesselModelInitialState.dimensions.displacement =
   VesselUtil.calculateDisplacement(vesselModelInitialState.dimensions);

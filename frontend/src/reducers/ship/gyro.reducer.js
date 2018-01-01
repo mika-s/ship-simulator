@@ -2,9 +2,9 @@ import GeneralUtil from '../../util/GeneralUtil';
 
 function getHeading(modelHeading) {
   const minHeading = 0.0;
-  const maxHeading = 360.0;
-  const minNoiseAmplitude = -0.5;
-  const maxNoiseAmplitude = 0.5;
+  const maxHeading = 2 * Math.PI;
+  const minNoiseAmplitude = -0.01;
+  const maxNoiseAmplitude = 0.01;
 
   // Add measurement noise.
   let newHeading = modelHeading +
@@ -13,6 +13,9 @@ function getHeading(modelHeading) {
   // Apply clip limits.
   newHeading = Math.min(newHeading, maxHeading);
   newHeading = Math.max(newHeading, minHeading);
+
+  // Convert to degrees.
+  newHeading *= (180.0 / Math.PI);
 
   // Remove unnecessary decimals. Keep 1.
   newHeading = GeneralUtil.truncToDecimal(newHeading, 1);

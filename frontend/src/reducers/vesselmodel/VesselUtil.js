@@ -68,30 +68,28 @@ class VesselUtil {
 
   /**
   * Transform from NED to BODY. I.e. latitude, longitude, heading to surge, sway, heading.
-  * @param {object} bodyPostion   - Object containing latitude, longitude, heading.
+  * @param {object} bodyPostion   - Object containing latitude, longitude, heading (rad).
   * @returns {object}             - Object containing surge, sway, heading.
   */
   static transformNEDToBODY(nedPosition) {
     const { latitude, longitude, heading } = nedPosition;
-    const headingInRad = heading * (Math.PI / 180.0);
 
-    const surge = (Math.cos(headingInRad) * latitude) + (Math.sin(headingInRad) * longitude);
-    const sway = -(Math.sin(headingInRad) * latitude) + (Math.cos(headingInRad) * longitude);
+    const surge = (Math.cos(heading) * latitude) + (Math.sin(heading) * longitude);
+    const sway = -(Math.sin(heading) * latitude) + (Math.cos(heading) * longitude);
 
     return { surge, sway, heading };
   }
 
   /**
   * Transform from BODY to NED. I.e. surge, sway, heading to latitude, longitude, heading.
-  * @param {object} bodyPostion   - Object containing surge, sway, heading.
+  * @param {object} bodyPostion   - Object containing surge (m), sway (m), heading (rad).
   * @returns {object}             - Object containing latitude, longitude, heading.
   */
   static transformBODYToNED(bodyPostion) {
     const { surge, sway, heading } = bodyPostion;
-    const headingInRad = heading * (Math.PI / 180.0);
 
-    const latitude = (Math.cos(headingInRad) * surge) - (Math.sin(headingInRad) * sway);
-    const longitude = (Math.sin(headingInRad) * surge) + (Math.cos(headingInRad) * sway);
+    const latitude = (Math.cos(heading) * surge) - (Math.sin(heading) * sway);
+    const longitude = (Math.sin(heading) * surge) + (Math.cos(heading) * sway);
 
     return { latitude, longitude, heading };
   }

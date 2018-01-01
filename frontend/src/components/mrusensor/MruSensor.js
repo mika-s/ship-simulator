@@ -9,10 +9,7 @@ class MruSensor extends Component {
   }
 
   render() {
-    const {
-      number, roll, pitch,
-    } = this.props.mruSensorData;
-
+    const { number, roll, pitch } = this.props.mruSensorData;
     const displayRoll = roll.toFixed(2);
     const displayPitch = pitch.toFixed(2);
 
