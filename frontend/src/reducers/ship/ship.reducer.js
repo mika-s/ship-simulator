@@ -4,19 +4,19 @@ import mruReducer from './mru.reducer';
 import thrusterReducer from './thruster.reducer';
 import windsensorReducer from './windsensor.reducer';
 
-export default function shipReducer(state, action, model) {
+export default function shipReducer(state, action, model, uiThrusters) {
   return {
     ...state,
 
-    thrusters: state.thrusters.map(thruster =>
-      thrusterReducer(thruster, action)),
+    thrusters: state.thrusters.map((thruster, i) =>
+      thrusterReducer(thruster, action, uiThrusters[i].demand)),
 
     sensors: {
       gyrocompasses: state.sensors.gyrocompasses.map(gyrocompass =>
         gyroReducer(gyrocompass, action, model.position.heading)),
 
       mrus: state.sensors.mrus.map(mru =>
-        mruReducer(mru, action, model.position.roll, model.pitch)),
+        mruReducer(mru, action, 0.0, 0.0)),
 
       windsensors: state.sensors.windsensors.map(windsensor =>
         windsensorReducer(

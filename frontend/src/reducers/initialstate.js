@@ -1,6 +1,11 @@
 import { simulationState } from '../util/enums';
-import { Gyrocompass, MRU, Windsensor, GPS, Thruster } from './domain-constructors';
+import { Gyrocompass, MRU, Windsensor, GPS, Thruster, UiThruster } from './domain-constructors';
 import VesselUtil from '../reducers/vesselmodel/VesselUtil';
+import InitialVessel from '../Vessel.json';
+
+const uiInitialState = {
+  thrusters: [],
+};
 
 const simulatorInitialState = {
   time: 0,
@@ -84,13 +89,8 @@ const vesselModelInitialState = {
   },
 };
 
-vesselModelInitialState.dimensions.lpp = 84.0;
-vesselModelInitialState.dimensions.breadth = 20.0;
-vesselModelInitialState.dimensions.draft = 5.0;
-vesselModelInitialState.dimensions.blockCoefficient = 0.71;
-vesselModelInitialState.model.position.latitude = 50.0;
-vesselModelInitialState.model.position.longitude = 4.0;
-vesselModelInitialState.model.position.heading = 0.0;
+vesselModelInitialState.dimensions = InitialVessel.dimensions;
+vesselModelInitialState.model.position = InitialVessel.model.position;
 
 vesselModelInitialState.dimensions.displacement =
   VesselUtil.calculateDisplacement(vesselModelInitialState.dimensions);
@@ -106,32 +106,32 @@ vesselModelInitialState.drag = VesselUtil.calculateDrag(
   vesselModelInitialState.dimensions.draft,
 );
 
-shipInitialState.sensors.gyrocompasses = [
-  new Gyrocompass(1, 0.0),
-  new Gyrocompass(2, 0.0),
-  new Gyrocompass(3, 0.0),
-];
+for (let gcIdx = 0; gcIdx < InitialVessel.sensors.gyrocompasses.length; gcIdx += 1) {
+  shipInitialState.sensors.gyrocompasses
+    .push(new Gyrocompass(InitialVessel.sensors.gyrocompasses[gcIdx]));
+}
 
-shipInitialState.sensors.mrus = [
-  new MRU(1, 0.0, 0.0),
-];
+for (let mruIdx = 0; mruIdx < InitialVessel.sensors.mrus.length; mruIdx += 1) {
+  shipInitialState.sensors.mrus.push(new MRU(InitialVessel.sensors.mrus[mruIdx]));
+}
 
-shipInitialState.sensors.windsensors = [
-  new Windsensor(1, 0.0, 0.0),
-  new Windsensor(2, 0.0, 0.0),
-];
+for (let wsIdx = 0; wsIdx < InitialVessel.sensors.windsensors.length; wsIdx += 1) {
+  shipInitialState.sensors.windsensors
+    .push(new Windsensor(InitialVessel.sensors.windsensors[wsIdx]));
+}
 
-shipInitialState.referencesystems.gpses = [
-  new GPS(1, 50.0, 4.0),
-];
+for (let gpsIdx = 0; gpsIdx < InitialVessel.referencesystems.gpses.length; gpsIdx += 1) {
+  shipInitialState.referencesystems.gpses
+    .push(new GPS(InitialVessel.referencesystems.gpses[gpsIdx]));
+}
 
-shipInitialState.thrusters = [
-  new Thruster(1, 'Tunnel', 'tunnel', 'pitch', 800.0, 800.0, 45.0, 0.0, 1.8, 1.8),
-  new Thruster(2, 'Port prop', 'azimuth', 'rpm', 2000.0, 1500.0, -45.0, -5.0),
-  new Thruster(3, 'Stbd prop', 'azimuth', 'rpm', 2000.0, 1500.0, -45.0, 5.0),
-];
+for (let thrIdx = 0; thrIdx < InitialVessel.thrusters.length; thrIdx += 1) {
+  shipInitialState.thrusters.push(new Thruster(InitialVessel.thrusters[thrIdx]));
+  uiInitialState.thrusters.push(new UiThruster(InitialVessel.thrusters[thrIdx]));
+}
 
 const initialState = {
+  ui: uiInitialState,
   simulation: simulatorInitialState,
   environment: environmentInitialState,
   ship: shipInitialState,
