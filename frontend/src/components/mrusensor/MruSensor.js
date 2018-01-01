@@ -9,22 +9,23 @@ class MruSensor extends Component {
   }
 
   render() {
-    const {
-      number, roll, pitch,
-    } = this.props.mruSensorData;
+    const { number, roll, pitch } = this.props.mruSensorData;
+    const displayRoll = roll.toFixed(2);
+    const displayPitch = pitch.toFixed(2);
 
     return (
       <tr>
         <td>{number}</td>
-        <td>{roll}</td>
-        <td>{pitch}</td>
+        <td>{displayRoll}</td>
+        <td>{displayPitch}</td>
+        <td />
       </tr>
     );
   }
 }
 
 MruSensor.propTypes = {
-  mruSensorData: PropTypes.object.isRequired,
+  mruSensorData: PropTypes.objectOf(PropTypes.number).isRequired,
 };
 
 export default MruSensor;

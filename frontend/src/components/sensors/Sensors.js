@@ -47,9 +47,10 @@ class Sensors extends Component {
             <table className="table table-condensed">
               <tbody>
                 <tr>
-                  <td>#</td>
-                  <td>Speed</td>
-                  <td>Direction</td>
+                  <td style={{ width: '10%' }}>#</td>
+                  <td style={{ width: '20%' }}>Speed</td>
+                  <td style={{ width: '20%' }}>Direction</td>
+                  <td style={{ width: '50%' }} />
                 </tr>
                 {windSensorElements}
               </tbody>
@@ -63,8 +64,9 @@ class Sensors extends Component {
             <table className="table table-condensed">
               <tbody>
                 <tr>
-                  <td>#</td>
-                  <td>Heading</td>
+                  <td style={{ width: '10%' }}>#</td>
+                  <td style={{ width: '20%' }}>Heading</td>
+                  <td style={{ width: '70%' }} />
                 </tr>
                 {gyroCompassElements}
               </tbody>
@@ -78,9 +80,10 @@ class Sensors extends Component {
             <table className="table table-condensed">
               <tbody>
                 <tr>
-                  <td>#</td>
-                  <td>Roll</td>
-                  <td>Pitch</td>
+                  <td style={{ width: '10%' }}>#</td>
+                  <td style={{ width: '20%' }}>Roll</td>
+                  <td style={{ width: '20%' }}>Pitch</td>
+                  <td style={{ width: '50%' }} />
                 </tr>
                 {mruSensorElements}
               </tbody>

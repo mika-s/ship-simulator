@@ -7,13 +7,16 @@ import simulationReducer from './simulation/simulation.reducer';
 import uiReducer from './ui/ui.reducer';
 
 export default function rootreducer(state = initialState, action) {
+  let forces;
   let model;
 
   if (action.type === 'SIMULATE' || action.type === 'STOP_SIMULATION') {
+    forces = VesselModel.calculateForces(state.ship.thrusters);
+
     model = VesselModel.calculatePosition(
       state.vesselmodel.mass,
       state.vesselmodel.drag,
-      state.vesselmodel.forces,
+      forces,
       state.vesselmodel.model.position,
       state.vesselmodel.model.positionInMeters,
       state.vesselmodel.model.velocity,
@@ -27,7 +30,7 @@ export default function rootreducer(state = initialState, action) {
         simulation: simulationReducer(state.simulation, action),
         environment: environmentReducer(state.environment, action),
         ship: shipReducer(state.ship, action, model, state.ui.thrusters),
-        vesselmodel: vesselmodelReducer(state.vesselmodel, action, model),
+        vesselmodel: vesselmodelReducer(state.vesselmodel, action, model, forces),
       };
     case 'PAUSE_SIMULATION':
       return {

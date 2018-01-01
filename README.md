@@ -5,3 +5,6 @@ be a game.
 The technologies behind the project are React and Node. The frontend runs the
 simulator itself, Node is only used to host the application. The simulator
 can therefore run offline without problems.
+
+State is handled by Redux. All business logic lies in the reducers. The React
+components are only used to handle input and output.

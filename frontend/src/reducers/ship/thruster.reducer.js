@@ -104,9 +104,27 @@ function getFeedback(thruster) {
 
   if (ThrUtil.isAzi(thruster.thrusterType)) {
     const aziDifference = thruster.demand.azimuth - thruster.feedback.azimuth;
+    const aziFeedbackState = ThrUtil.getFeedbackState(aziDifference, thruster.risetimes.azimuth);
+    const { positive: rtPosAzi, negative: rtNegAzi } = thruster.risetimes.azimuth;
 
-    if (aziDifference.azimuth > 0 && aziDifference.azimuth > thruster.risetimes.azimuth.positive) {
-      newFeedback.azimuth += thruster.risetimes.azimuth.positive;
+    switch (aziFeedbackState) {
+      case thrusterFeedbackState.AT_POSITION:
+        newFeedback.azimuth = thruster.feedback.azimuth;
+        break;
+      case thrusterFeedbackState.INCREASING_BY_RT:
+        newFeedback.azimuth = thruster.feedback.azimuth + rtPosAzi;
+        break;
+      case thrusterFeedbackState.INCREASING_LT_RT:
+        newFeedback.azimuth = thruster.demand.azimuth;
+        break;
+      case thrusterFeedbackState.DECREASING_BY_RT:
+        newFeedback.azimuth = thruster.feedback.azimuth + rtNegAzi;
+        break;
+      case thrusterFeedbackState.DECREASING_LT_RT:
+        newFeedback.azimuth = thruster.demand.azimuth;
+        break;
+      default:
+        throw new Error('Illegal feedback state for the thruster.');
     }
   } else {
     newFeedback.azimuth = thruster.feedback.azimuth;

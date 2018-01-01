@@ -1,18 +1,36 @@
-export default function vesselmodelReducer(state, action, model) {
+export default function vesselmodelReducer(state, action, model, forces) {
   switch (action.type) {
     case 'SIMULATE':
       return {
         ...state,
+        forces,
         model,
       };
     case 'STOP_SIMULATION':
       return {
         ...state,
+        forces: {
+          thrusters: {
+            surge: 0.0,
+            sway: 0.0,
+            yaw: 0.0,
+          },
+          wind: {
+            surge: 0.0,
+            sway: 0.0,
+            yaw: 0.0,
+          },
+          current: {
+            surge: 0.0,
+            sway: 0.0,
+            yaw: 0.0,
+          },
+        },
         model: {
           position: {
-            latitude: 0.0,
-            longitude: 0.0,
-            heading: 0.0,
+            latitude: state.initialPosition.latitude,
+            longitude: state.initialPosition.longitude,
+            heading: state.initialPosition.heading * (Math.PI / 180.0),
           },
           positionInMeters: {
             latitude: 0.0,
