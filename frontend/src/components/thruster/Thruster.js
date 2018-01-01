@@ -5,21 +5,19 @@ import './Thruster.css';
 class Thruster extends Component {
   constructor() {
     super();
-    this.state = { manualRpm: 0, manualPitch: 0 };
+    this.state = { manualRpm: 0.0, manualPitch: 0.0, manualAzimuth: 0.0 };
 
     this.handleRpmChange = this.handleRpmChange.bind(this);
     this.handlePitchChange = this.handlePitchChange.bind(this);
+    this.handleAzimuthChange = this.handleAzimuthChange.bind(this);
     this.changeManualRpmDemand = this.changeManualRpmDemand.bind(this);
     this.changeManualPitchDemand = this.changeManualPitchDemand.bind(this);
+    this.changeManualAzimuthDemand = this.changeManualAzimuthDemand.bind(this);
   }
 
-  handleRpmChange(event) {
-    this.setState({ manualRpm: event.target.value });
-  }
-
-  handlePitchChange(event) {
-    this.setState({ manualPitch: event.target.value });
-  }
+  handleRpmChange(event) { this.setState({ manualRpm: event.target.value }); }
+  handlePitchChange(event) { this.setState({ manualPitch: event.target.value }); }
+  handleAzimuthChange(event) { this.setState({ manualAzimuth: event.target.value }); }
 
   changeManualRpmDemand(event) {
     event.preventDefault();
@@ -37,6 +35,14 @@ class Thruster extends Component {
     this.props.setThrusterDemand(number, 'pitch', manualPitchFactor);
   }
 
+  changeManualAzimuthDemand(event) {
+    event.preventDefault();
+    const { number } = this.props.thrusterData;
+    const manualAzimuthFactor = Number.parseFloat(this.state.manualAzimuth);
+
+    this.props.setThrusterDemand(number, 'azimuth', manualAzimuthFactor);
+  }
+
   render() {
     const {
       name, number, force, power, thrusterType, controlType,
@@ -45,10 +51,14 @@ class Thruster extends Component {
 
     const displayForce = force.toFixed(2);
     const displayPower = power.toFixed(2);
+
     const displayRpmDemand = (demand.rpm * 100.0).toFixed(2);
     const displayPitchDemand = (demand.pitch * 100.0).toFixed(2);
+    const displayAzimuthDemand = (demand.azimuth).toFixed(1);
+
     const displayRpmFeedback = (feedback.rpm * 100.0).toFixed(2);
     const displayPitchFeedback = (feedback.pitch * 100.0).toFixed(2);
+    const displayAzimuthFeedback = (feedback.azimuth).toFixed(1);
 
     return (
       <div className="card" style={{ marginTop: 20, marginBottom: 20 }}>
@@ -56,22 +66,33 @@ class Thruster extends Component {
           <h4 className="card-title">{name}</h4>
           <h6 className="card-subtitle mb-2 text-muted">No. {number}</h6>
           <div className="card-text">
-            <p>Thruster type: {thrusterType}</p>
-            <p>Control type: {controlType}</p>
+            <table className="typeTable">
+              <tbody>
+                <tr>
+                  <td>Thruster type:</td>
+                  <td>{thrusterType}</td>
+                </tr>
+                <tr>
+                  <td>Control type:</td>
+                  <td>{controlType}</td>
+                </tr>
+              </tbody>
+            </table>
           </div>
           <table className="table table-condensed">
             <tbody>
               <tr>
-                <td>Force</td>
-                <td>{displayForce} T</td>
-                <td>Power</td>
-                <td>{displayPower} kW</td>
+                <td style={{ width: '25%' }}>Force</td>
+                <td style={{ width: '15%' }}>{displayForce} T</td>
+                <td style={{ width: '20%' }} />
+                <td style={{ width: '20%' }}>Power</td>
+                <td style={{ width: '20%' }}>{displayPower} kW</td>
               </tr>
               <tr>
                 <td>RPM demand</td>
+                <td>{displayRpmDemand} %</td>
                 <td>
                   <form className="form-inline" onSubmit={this.changeManualRpmDemand}>
-                    {displayRpmDemand} %
                     <input
                       type="number"
                       min="-100"
@@ -86,10 +107,14 @@ class Thruster extends Component {
                     <button className="btn btn-secondary btn-sm" type="submit">Set</button>
                   </form>
                 </td>
+                <td>RPM feedback</td>
+                <td>{displayRpmFeedback} %</td>
+              </tr>
+              <tr>
                 <td>Pitch demand</td>
+                <td>{displayPitchDemand} %</td>
                 <td>
                   <form className="form-inline" onSubmit={this.changeManualPitchDemand}>
-                    {displayPitchDemand} %
                     <input
                       type="number"
                       min="-100"
@@ -104,16 +129,30 @@ class Thruster extends Component {
                     <button className="btn btn-secondary btn-sm" type="submit">Set</button>
                   </form>
                 </td>
+                <td>Pitch feedback</td>
+                <td>{displayPitchFeedback} %</td>
               </tr>
               <tr>
-                <td>RPM feedback</td>
+                <td>Azimuth demand</td>
+                <td>{displayAzimuthDemand}°</td>
                 <td>
-                  {displayRpmFeedback} %
+                  <form className="form-inline" onSubmit={this.changeManualAzimuthDemand}>
+                    <input
+                      type="number"
+                      min="0"
+                      max="360"
+                      step="0.1"
+                      defaultValue={demand.azimuth}
+                      onChange={this.handleAzimuthChange}
+                      style={{ width: 70, marginLeft: 15 }}
+                      className="form-control mb-2 mr-sm-2 mb-sm-0"
+                      required
+                    />
+                    <button className="btn btn-secondary btn-sm" type="submit">Set</button>
+                  </form>
                 </td>
-                <td>Pitch feedback</td>
-                <td>
-                  {displayPitchFeedback} %
-                </td>
+                <td>Azimuth feedback</td>
+                <td>{displayAzimuthFeedback}°</td>
               </tr>
             </tbody>
           </table>

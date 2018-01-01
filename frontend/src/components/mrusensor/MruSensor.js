@@ -28,7 +28,7 @@ class MruSensor extends Component {
 }
 
 MruSensor.propTypes = {
-  mruSensorData: PropTypes.object.isRequired,
+  mruSensorData: PropTypes.objectOf(PropTypes.number).isRequired,
 };
 
 export default MruSensor;

@@ -26,7 +26,7 @@ class GyroCompass extends Component {
 }
 
 GyroCompass.propTypes = {
-  gyroCompassData: PropTypes.object.isRequired,
+  gyroCompassData: PropTypes.objectOf(PropTypes.number).isRequired,
 };
 
 export default GyroCompass;

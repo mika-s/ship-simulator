@@ -207,7 +207,7 @@ class ThrusterUtil {
   * @param {object} risetimes   - The risetimes object.
   * @returns {object}           - The risetimes object with converted values.
   */
-  static normalizeRisetimes(risetimes, thrusterType, maxRudderAngle) {
+  static normalizeRisetimes(risetimes) {
     const convertedRisetimes = JSON.parse(JSON.stringify(risetimes));
 
     if (convertedRisetimes.rpm) {
@@ -218,20 +218,6 @@ class ThrusterUtil {
     if (convertedRisetimes.pitch) {
       convertedRisetimes.pitch.positive /= 100.0;
       convertedRisetimes.pitch.negative /= 100.0;
-    }
-
-    if (convertedRisetimes.azimuth && thrusterType === 'azimuth') {
-      convertedRisetimes.azimuth.positive =
-        (convertedRisetimes.azimuth.positive / 180.0) / 100.0;
-
-      convertedRisetimes.azimuth.negative =
-        (convertedRisetimes.azimuth.negative / 180.0) / 100.0;
-    } else if (convertedRisetimes.azimuth && thrusterType === 'propeller') {
-      convertedRisetimes.azimuth.positive =
-        (convertedRisetimes.azimuth.positive / maxRudderAngle) / 100.0;
-
-      convertedRisetimes.azimuth.negative =
-        (convertedRisetimes.azimuth.negative / maxRudderAngle) / 100.0;
     }
 
     return convertedRisetimes;

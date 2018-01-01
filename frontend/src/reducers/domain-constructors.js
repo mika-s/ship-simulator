@@ -59,7 +59,7 @@ function Thruster(data) {
   this.maxPower = maxPower;
   this.location = location;
   this.misc = misc;
-  this.risetimes = ThrUtil.normalizeRisetimes(risetimes, thrusterType, misc.maxRudderAngle);
+  this.risetimes = ThrUtil.normalizeRisetimes(risetimes, thrusterType);
   this.pitchExponent = pitchExponent;
   this.pitchPowerExponent = pitchPowerExponent;
   this.rpmExponent = controlType === 'rpm' ? { positive: 2.0, negative: 2.0 } : { positive: 0.0, negative: 0.0 };

@@ -28,7 +28,7 @@ class WindSensor extends Component {
 }
 
 WindSensor.propTypes = {
-  windSensorData: PropTypes.object.isRequired,
+  windSensorData: PropTypes.objectOf(PropTypes.number).isRequired,
 };
 
 export default WindSensor;
