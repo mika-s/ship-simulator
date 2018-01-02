@@ -14,9 +14,9 @@ class VesselUtil {
     const {
       lpp, breadth, draft, blockCoefficient,
     } = dimensions;
-    const rhoWater = 1.024;
+    const ρWater = 1.024;
 
-    let displacement = rhoWater * blockCoefficient * lpp * breadth * draft;
+    let displacement = ρWater * blockCoefficient * lpp * breadth * draft;
     displacement = GeneralUtil.truncToDecimal(displacement, 2);
 
     return displacement;
@@ -55,12 +55,12 @@ class VesselUtil {
     const dragSway = 0.075 * lpp * draft;
     const dragYaw = (dragSway / (4 * lpp)) * (((lpp / 2.0) ** 4) + ((lpp / 2.0) ** 4));
 
-    const expRatio = { surge: 0.5, sway: 0.6, yaw: 0.5 };
+    const expValues = { surge: 0.5, sway: 0.6, yaw: 0.5 };
 
     const drag = {
-      surge: expRatio.surge * dragSurge,
-      sway: expRatio.sway * dragSway,
-      yaw: expRatio.yaw * dragYaw,
+      surge: expValues.surge * dragSurge,
+      sway: expValues.sway * dragSway,
+      yaw: expValues.yaw * dragYaw,
     };
 
     return drag;
@@ -113,7 +113,8 @@ class VesselUtil {
   }
 
   /**
-  * Calculate projected frontal wind area.
+  * Calculate projected frontal wind area. A simple multiplication of
+  * breadth and superstructure height, multiplied by an experience coefficient.
   * @param {number} breadth               - The vessel's breadth.
   * @param {number} superstructureHeight  - The height of the vessel's superstructure.
   * @returns {number}                     - The projected frontal area.
@@ -126,10 +127,11 @@ class VesselUtil {
   }
 
   /**
-  * Calculate projected frontal wind area.
+  * Calculate projected lateral wind area. A simple multiplication of
+  * loa and superstructure height, multiplied by an experience coefficient.
   * @param {number} loa                   - The vessel's length over all.
   * @param {number} superstructureHeight  - The height of the vessel's superstructure.
-  * @returns {number}                     - The projected frontal area.
+  * @returns {number}                     - The projected lateral area.
   */
   static calculateLateralWindArea(loa, superstructureHeight) {
     const areaCoefficient = 0.4;

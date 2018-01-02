@@ -13,11 +13,11 @@ class GeoUtil {
   static getPositionInLatLon(previousLatLonPos, newInMeterPos, previousInMeterPos) {
     const position = new LatLonSpherical(previousLatLonPos.latitude, previousLatLonPos.longitude);
 
-    const lonDelta = (newInMeterPos.longitude - previousInMeterPos.longitude);
-    const latDelta = (newInMeterPos.latitude - previousInMeterPos.latitude);
+    const lonΔ = (newInMeterPos.longitude - previousInMeterPos.longitude);
+    const latΔ = (newInMeterPos.latitude - previousInMeterPos.latitude);
 
-    const distance = Math.sqrt((lonDelta ** 2) + (latDelta ** 2));
-    const bearing = Math.atan2(lonDelta, latDelta) * (180.0 / Math.PI);
+    const distance = Math.sqrt((lonΔ ** 2) + (latΔ ** 2));
+    const bearing = Math.atan2(lonΔ, latΔ) * (180.0 / Math.PI);
 
     const newPosition = position.destinationPoint(distance, bearing);
 
