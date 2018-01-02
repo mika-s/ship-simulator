@@ -1,3 +1,4 @@
+import VesselUtil from '../reducers/vesselmodel/VesselUtil';
 import ThrUtil from './ship/ThrusterUtil';
 import SnsUtil from './ship/SensorUtil';
 import RfsUtil from './ship/ReferencesystemUtil';
@@ -92,6 +93,48 @@ function UiThruster(data) {
   this.demand = { rpm: 0.0, pitch: 0.0, azimuth: 0.0 };
 }
 
+function VesselModel(vesselModelInitialState, initialVessel) {
+  vesselModelInitialState.dimensions = initialVessel.dimensions;
+  vesselModelInitialState.model.position = initialVessel.model.position;
+  vesselModelInitialState.initialPosition = initialVessel.model.position;
+
+  vesselModelInitialState.dimensions.displacement =
+    VesselUtil.calculateDisplacement(vesselModelInitialState.dimensions);
+
+  vesselModelInitialState.mass = VesselUtil.calculateMass(
+    vesselModelInitialState.dimensions.displacement,
+    vesselModelInitialState.dimensions.lpp,
+  );
+
+  vesselModelInitialState.drag = VesselUtil.calculateDrag(
+    vesselModelInitialState.dimensions.lpp,
+    vesselModelInitialState.dimensions.breadth,
+    vesselModelInitialState.dimensions.draft,
+  );
+
+  // Set optional parameters.
+  if (!initialVessel.dimensions.loa) {
+    vesselModelInitialState.dimensions.loa = 1.1 * initialVessel.dimensions.lpp;
+  }
+  if (!initialVessel.wind || (initialVessel.wind && !initialVessel.wind.frontalArea)) {
+    vesselModelInitialState.wind.frontalArea = 400.0;
+  }
+  if (!initialVessel.wind || (initialVessel.wind && !initialVessel.wind.lateralArea)) {
+    vesselModelInitialState.wind.lateralArea = 1400.0;
+  }
+  if (!initialVessel.wind || (initialVessel.wind && !initialVessel.wind.vesselType)) {
+    vesselModelInitialState.wind.vesselType = 'Offshore supply vessel';
+  }
+  if (!initialVessel.wind || (initialVessel.wind && !initialVessel.wind.coefficientCalcType)) {
+    vesselModelInitialState.wind.coefficientCalcType = 'blendermann';
+  }
+  if (!initialVessel.wind || (initialVessel.wind && !initialVessel.wind.sL)) {
+    vesselModelInitialState.wind.sL = (1 / 4) * initialVessel.dimensions.lpp;
+  }
+
+  return vesselModelInitialState;
+}
+
 export {
   Gyrocompass,
   MRU,
@@ -99,4 +142,5 @@ export {
   GPS,
   Thruster,
   UiThruster,
+  VesselModel,
 };

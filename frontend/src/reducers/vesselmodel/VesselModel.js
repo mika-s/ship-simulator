@@ -50,28 +50,28 @@ class NewVesselModel {
     };
   }
 
-  static calculateForces(thrusters) {
-    const thrusterForces = {
+  static calculateForces(thrusters, windForces) {
+    const forces = {
       thrusters: { surge: 0.0, sway: 0.0, yaw: 0.0 },
-      wind: { surge: 0.0, sway: 0.0, yaw: 0.0 },
+      wind: windForces,
       current: { surge: 0.0, sway: 0.0, yaw: 0.0 },
     };
 
     for (let thrIdx = 0; thrIdx < thrusters.length; thrIdx += 1) {
       const thr = thrusters[thrIdx];
 
-      thrusterForces.thrusters.surge +=
+      forces.thrusters.surge +=
         thr.force * Math.cos(thr.feedback.azimuth * (Math.PI / 180.0));
 
-      thrusterForces.thrusters.sway +=
+      forces.thrusters.sway +=
         thr.force * Math.sin(thr.feedback.azimuth * (Math.PI / 180.0));
 
-      thrusterForces.thrusters.yaw +=
+      forces.thrusters.yaw +=
         (thr.force * thr.location.x * Math.sin(thr.feedback.azimuth * (Math.PI / 180.0))) +
         (thr.force * thr.location.y * Math.cos(thr.feedback.azimuth * (Math.PI / 180.0)));
     }
 
-    return thrusterForces;
+    return forces;
   }
 }
 

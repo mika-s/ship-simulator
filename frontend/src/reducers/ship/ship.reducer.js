@@ -4,7 +4,7 @@ import mruReducer from './mru.reducer';
 import thrusterReducer from './thruster.reducer';
 import windsensorReducer from './windsensor.reducer';
 
-export default function shipReducer(state, action, model, uiThrusters) {
+export default function shipReducer(state, action, model, uiThrusters, envWind) {
   return {
     ...state,
 
@@ -19,10 +19,7 @@ export default function shipReducer(state, action, model, uiThrusters) {
         mruReducer(mru, action, 0.0, 0.0)),
 
       windsensors: state.sensors.windsensors.map(windsensor =>
-        windsensorReducer(
-          windsensor, action, model,
-          { wind: { speed: 5.0, direction: 130.0 } },
-        )),
+        windsensorReducer(windsensor, action, model, envWind)),
     },
 
     referencesystems: {

@@ -11,7 +11,7 @@ export default function rootreducer(state = initialState, action) {
   let model;
 
   if (action.type === 'SIMULATE' || action.type === 'STOP_SIMULATION') {
-    forces = VesselModel.calculateForces(state.ship.thrusters);
+    forces = VesselModel.calculateForces(state.ship.thrusters, state.environment.wind.forces);
 
     model = VesselModel.calculatePosition(
       state.vesselmodel.mass,
@@ -28,8 +28,11 @@ export default function rootreducer(state = initialState, action) {
       return {
         ...state,
         simulation: simulationReducer(state.simulation, action),
-        environment: environmentReducer(state.environment, action),
-        ship: shipReducer(state.ship, action, model, state.ui.thrusters),
+        environment: environmentReducer(
+          state.environment, action, state.ui.wind, model.velocity,
+          model.position.heading, state.vesselmodel.dimensions, state.vesselmodel.wind,
+        ),
+        ship: shipReducer(state.ship, action, model, state.ui.thrusters, state.environment.wind),
         vesselmodel: vesselmodelReducer(state.vesselmodel, action, model, forces),
       };
     case 'PAUSE_SIMULATION':
@@ -45,6 +48,16 @@ export default function rootreducer(state = initialState, action) {
         vesselmodel: vesselmodelReducer(state.vesselmodel, action),
       };
     case 'SET_THRUSTER_DEMAND':
+      return {
+        ...state,
+        ui: uiReducer(state.ui, action),
+      };
+    case 'SET_WIND_SPEED':
+      return {
+        ...state,
+        ui: uiReducer(state.ui, action),
+      };
+    case 'SET_WIND_DIRECTION':
       return {
         ...state,
         ui: uiReducer(state.ui, action),

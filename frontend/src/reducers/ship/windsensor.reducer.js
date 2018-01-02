@@ -1,6 +1,6 @@
 import GeneralUtil from '../../util/GeneralUtil';
 
-function getRelativeSpeedAndDirection(modelSpeed, modelDirection, vesselSpeed, vesselHeading) {
+/* function getRelativeSpeedAndDirection(modelSpeed, modelDirection, vesselSpeed, vesselHeading) {
   let x = modelSpeed * Math.cos((
     modelDirection - vesselHeading) * (Math.PI / 180.0));
 
@@ -14,7 +14,7 @@ function getRelativeSpeedAndDirection(modelSpeed, modelDirection, vesselSpeed, v
     speed: Math.sqrt((x ** 2) + (y ** 2)),
     direction: Math.atan2(y, x) * (180.0 / Math.PI),
   };
-}
+} */
 
 function getSpeed(modelSpeed, modelDirection, vesselSpeed, vesselHeading) {
   const minSpeed = 0.0;
@@ -22,13 +22,13 @@ function getSpeed(modelSpeed, modelDirection, vesselSpeed, vesselHeading) {
   const minNoiseAmplitude = -0.5;
   const maxNoiseAmplitude = 0.5;
 
-  const relative = getRelativeSpeedAndDirection(
+  /* const relative = getRelativeSpeedAndDirection(
     modelSpeed, modelDirection,
     vesselSpeed, vesselHeading,
-  );
+  ); */
 
   // Add measurement noise.
-  let newSpeed = relative.speed +
+  let newSpeed = modelSpeed +
     GeneralUtil.getRandomBetween(minNoiseAmplitude, maxNoiseAmplitude);
 
   // Apply clip limits.
@@ -47,13 +47,13 @@ function getDirection(modelSpeed, modelDirection, vesselSpeed, vesselHeading) {
   const minNoiseAmplitude = -0.5;
   const maxNoiseAmplitude = 0.5;
 
-  const relative = getRelativeSpeedAndDirection(
+  /* const relative = getRelativeSpeedAndDirection(
     modelSpeed, modelDirection,
     vesselSpeed, vesselHeading,
-  );
+  ); */
 
   // Add measurement noise.
-  let newDirection = relative.direction +
+  let newDirection = modelDirection +
     GeneralUtil.getRandomBetween(minNoiseAmplitude, maxNoiseAmplitude);
 
   // Apply clip limits.
@@ -66,19 +66,19 @@ function getDirection(modelSpeed, modelDirection, vesselSpeed, vesselHeading) {
   return newDirection;
 }
 
-export default function windsensorReducer(state, action, model, environment) {
+export default function windsensorReducer(state, action, model, envWind) {
   switch (action.type) {
     case 'SIMULATE':
       return {
         ...state,
 
         speed: getSpeed(
-          environment.wind.speed, environment.wind.direction,
+          envWind.speed, envWind.direction,
           model.velocity, model.position.heading,
         ),
 
         direction: getDirection(
-          environment.wind.speed, environment.wind.direction,
+          envWind.speed, envWind.direction,
           model.velocity, model.position.heading,
         ),
       };
