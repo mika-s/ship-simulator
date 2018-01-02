@@ -1,10 +1,13 @@
 import { simulationState } from '../util/enums';
-import { Gyrocompass, MRU, Windsensor, GPS, Thruster, UiThruster } from './domain-constructors';
-import VesselUtil from '../reducers/vesselmodel/VesselUtil';
+import { Gyrocompass, MRU, Windsensor, GPS, Thruster, UiThruster, VesselModel } from './domain-constructors';
 import InitialVessel from '../Vessel.json';
 
 const uiInitialState = {
   thrusters: [],
+  wind: {
+    speed: 0.0,
+    direction: 0.0,
+  },
 };
 
 const simulatorInitialState = {
@@ -16,10 +19,20 @@ const environmentInitialState = {
   wind: {
     speed: 0.0,
     direction: 0.0,
+    forces: {
+      surge: 0.0,
+      sway: 0.0,
+      yaw: 0.0,
+    },
   },
   current: {
     speed: 0.0,
     direction: 0.0,
+    forces: {
+      surge: 0.0,
+      sway: 0.0,
+      yaw: 0.0,
+    },
   },
 };
 
@@ -35,7 +48,7 @@ const shipInitialState = {
   },
 };
 
-const vesselModelInitialState = {
+let vesselModelInitialState = {
   initialPosition: {
     latitude: 0.0,
     longitude: 0.0,
@@ -77,10 +90,19 @@ const vesselModelInitialState = {
   },
   dimensions: {
     lpp: 0.0,
+    loa: 0.0,
     breadth: 0.0,
     draft: 0.0,
     blockCoefficient: 0.0,
     displacement: 0.0,
+  },
+  wind: {
+    coefficientCalcType: '',
+    vesselType: '',
+    frontalArea: 0.0,
+    lateralArea: 0.0,
+    sL: 0.0,
+    superStructureHeight: 0.0,
   },
   mass: {
     surge: 0.0,
@@ -94,23 +116,7 @@ const vesselModelInitialState = {
   },
 };
 
-vesselModelInitialState.dimensions = InitialVessel.dimensions;
-vesselModelInitialState.model.position = InitialVessel.model.position;
-vesselModelInitialState.initialPosition = InitialVessel.model.position;
-
-vesselModelInitialState.dimensions.displacement =
-  VesselUtil.calculateDisplacement(vesselModelInitialState.dimensions);
-
-vesselModelInitialState.mass = VesselUtil.calculateMass(
-  vesselModelInitialState.dimensions.displacement,
-  vesselModelInitialState.dimensions.lpp,
-);
-
-vesselModelInitialState.drag = VesselUtil.calculateDrag(
-  vesselModelInitialState.dimensions.lpp,
-  vesselModelInitialState.dimensions.breadth,
-  vesselModelInitialState.dimensions.draft,
-);
+vesselModelInitialState = VesselModel(vesselModelInitialState, InitialVessel);
 
 for (let gcIdx = 0; gcIdx < InitialVessel.sensors.gyrocompasses.length; gcIdx += 1) {
   shipInitialState.sensors.gyrocompasses
