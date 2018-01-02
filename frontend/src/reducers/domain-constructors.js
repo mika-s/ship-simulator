@@ -114,13 +114,26 @@ function VesselModel(vesselModelInitialState, initialVessel) {
 
   // Set optional parameters.
   if (!initialVessel.dimensions.loa) {
-    vesselModelInitialState.dimensions.loa = 1.1 * initialVessel.dimensions.lpp;
+    vesselModelInitialState.dimensions.loa = 1.08 * initialVessel.dimensions.lpp;
+  }
+  if (!initialVessel.wind || (initialVessel.wind && !initialVessel.wind.superStructureHeight)) {
+    const hbExperienceRatio = 0.85; // height / breath
+    vesselModelInitialState.wind.superStructureHeight =
+      hbExperienceRatio * vesselModelInitialState.dimensions.breadth;
   }
   if (!initialVessel.wind || (initialVessel.wind && !initialVessel.wind.frontalArea)) {
-    vesselModelInitialState.wind.frontalArea = 400.0;
+    vesselModelInitialState.wind.frontalArea =
+      VesselUtil.calculateFrontalWindArea(
+        vesselModelInitialState.dimensions.breadth,
+        vesselModelInitialState.wind.superStructureHeight,
+      );
   }
   if (!initialVessel.wind || (initialVessel.wind && !initialVessel.wind.lateralArea)) {
-    vesselModelInitialState.wind.lateralArea = 1400.0;
+    vesselModelInitialState.wind.lateralArea =
+      VesselUtil.calculateLateralWindArea(
+        vesselModelInitialState.dimensions.loa,
+        vesselModelInitialState.wind.superStructureHeight,
+      );
   }
   if (!initialVessel.wind || (initialVessel.wind && !initialVessel.wind.vesselType)) {
     vesselModelInitialState.wind.vesselType = 'Offshore supply vessel';
@@ -129,7 +142,8 @@ function VesselModel(vesselModelInitialState, initialVessel) {
     vesselModelInitialState.wind.coefficientCalcType = 'blendermann';
   }
   if (!initialVessel.wind || (initialVessel.wind && !initialVessel.wind.sL)) {
-    vesselModelInitialState.wind.sL = (1 / 4) * initialVessel.dimensions.lpp;
+    const experienceRatio = 0.20;
+    vesselModelInitialState.wind.sL = experienceRatio * initialVessel.dimensions.lpp;
   }
 
   return vesselModelInitialState;

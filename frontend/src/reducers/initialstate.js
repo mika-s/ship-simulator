@@ -102,6 +102,7 @@ let vesselModelInitialState = {
     frontalArea: 0.0,
     lateralArea: 0.0,
     sL: 0.0,
+    superStructureHeight: 0.0,
   },
   mass: {
     surge: 0.0,

@@ -111,6 +111,32 @@ class VesselUtil {
   static transformTo0To2pi(angle) {
     return (angle % (2 * Math.PI)) + (angle < 0 ? (2 * Math.PI) : 0);
   }
+
+  /**
+  * Calculate projected frontal wind area.
+  * @param {number} breadth               - The vessel's breadth.
+  * @param {number} superstructureHeight  - The height of the vessel's superstructure.
+  * @returns {number}                     - The projected frontal area.
+  */
+  static calculateFrontalWindArea(breadth, superstructureHeight) {
+    const areaCoefficient = 0.8;
+    const frontalArea = areaCoefficient * breadth * superstructureHeight;
+
+    return frontalArea;
+  }
+
+  /**
+  * Calculate projected frontal wind area.
+  * @param {number} loa                   - The vessel's length over all.
+  * @param {number} superstructureHeight  - The height of the vessel's superstructure.
+  * @returns {number}                     - The projected frontal area.
+  */
+  static calculateLateralWindArea(loa, superstructureHeight) {
+    const areaCoefficient = 0.4;
+    const lateralArea = areaCoefficient * loa * superstructureHeight;
+
+    return lateralArea;
+  }
 }
 
 export default VesselUtil;
