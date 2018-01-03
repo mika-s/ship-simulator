@@ -18,6 +18,16 @@ const uiInitialState = {
   },
 };
 
+const timeseriesInitialState = {
+  model: {
+    position: {
+      latitude: [],
+      longitude: [],
+      heading: [],
+    },
+  },
+};
+
 const simulatorInitialState = {
   time: 0,
   simulationState: simulationState.STOPPED,
@@ -152,6 +162,7 @@ for (let thrIdx = 0; thrIdx < InitialVessel.thrusters.length; thrIdx += 1) {
 
 const initialState = {
   ui: uiInitialState,
+  timeseries: timeseriesInitialState,
   simulation: simulatorInitialState,
   environment: environmentInitialState,
   ship: shipInitialState,

@@ -4,6 +4,7 @@ import vesselmodelReducer from './vesselmodel/vesselmodel.reducer';
 import environmentReducer from './environment/environment.reducer';
 import shipReducer from './ship/ship.reducer';
 import simulationReducer from './simulation/simulation.reducer';
+import timeseriesReducer from './timeseries/timeseries.reducer';
 import uiReducer from './ui/ui.reducer';
 
 export default function rootreducer(state = initialState, action) {
@@ -27,6 +28,7 @@ export default function rootreducer(state = initialState, action) {
     case 'SIMULATE':
       return {
         ...state,
+        timeseries: timeseriesReducer(state.timeseries, action, model),
         simulation: simulationReducer(state.simulation, action),
         environment: environmentReducer(
           state.environment, action, state.ui.wind, model.velocity,
@@ -43,6 +45,7 @@ export default function rootreducer(state = initialState, action) {
     case 'STOP_SIMULATION':
       return {
         ...state,
+        timeseries: timeseriesReducer(state.timeseries, action),
         simulation: simulationReducer(state.simulation, action),
         ship: shipReducer(state.ship, action, model, state.ui.thrusters),
         vesselmodel: vesselmodelReducer(state.vesselmodel, action),
