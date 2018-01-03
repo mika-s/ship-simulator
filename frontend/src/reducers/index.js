@@ -62,6 +62,11 @@ export default function rootreducer(state = initialState, action) {
         ...state,
         ui: uiReducer(state.ui, action),
       };
+    case 'SET_DASHBOARD_PANE':
+      return {
+        ...state,
+        ui: uiReducer(state.ui, action),
+      };
     default:
       return state;
   }

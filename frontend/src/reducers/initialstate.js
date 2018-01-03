@@ -8,6 +8,14 @@ const uiInitialState = {
     speed: 0.0,
     direction: 0.0,
   },
+  dashboard: {
+    panes: {
+      1: 'heading',
+      2: 'sensors',
+      3: 'heading',
+      4: 'sensors',
+    },
+  },
 };
 
 const simulatorInitialState = {
