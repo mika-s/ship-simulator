@@ -22,14 +22,14 @@ class Dashboard extends Component {
     return (
       <div className="dashboard">
         <div className="row">
-          <div className="col-lg-6">
+          <div className="col-lg-6 pane">
             <Paneselector
               number={1}
               initialPane={this.props.panes[1]}
               changePane={this.changePane}
             />
           </div>
-          <div className="col-lg-6">
+          <div className="col-lg-6 pane">
             <Paneselector
               number={2}
               initialPane={this.props.panes[2]}
@@ -38,14 +38,14 @@ class Dashboard extends Component {
           </div>
         </div>
         <div className="row">
-          <div className="col-lg-6">
+          <div className="col-lg-6 pane">
             <Paneselector
               number={3}
               initialPane={this.props.panes[3]}
               changePane={this.changePane}
             />
           </div>
-          <div className="col-lg-6">
+          <div className="col-lg-6 pane">
             <Paneselector
               number={4}
               initialPane={this.props.panes[4]}

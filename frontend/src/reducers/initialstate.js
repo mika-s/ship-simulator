@@ -11,20 +11,25 @@ const uiInitialState = {
   dashboard: {
     panes: {
       1: 'heading',
-      2: 'sensors',
-      3: 'heading',
-      4: 'sensors',
+      2: 'rollpitch',
+      3: 'position',
+      4: 'thrusters',
     },
   },
 };
 
 const timeseriesInitialState = {
+  time: [],
   model: {
     position: {
       latitude: [],
       longitude: [],
       heading: [],
     },
+  },
+  sensors: {
+    roll: [],
+    pitch: [],
   },
 };
 

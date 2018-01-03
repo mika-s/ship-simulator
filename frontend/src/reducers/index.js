@@ -28,7 +28,10 @@ export default function rootreducer(state = initialState, action) {
     case 'SIMULATE':
       return {
         ...state,
-        timeseries: timeseriesReducer(state.timeseries, action, model),
+        timeseries: timeseriesReducer(
+          state.timeseries, action, state.simulation.time,
+          model, state.ship.sensors,
+        ),
         simulation: simulationReducer(state.simulation, action),
         environment: environmentReducer(
           state.environment, action, state.ui.wind, model.velocity,
