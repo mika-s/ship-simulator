@@ -8,6 +8,29 @@ const uiInitialState = {
     speed: 0.0,
     direction: 0.0,
   },
+  dashboard: {
+    panes: {
+      1: 'heading',
+      2: 'rollpitch',
+      3: 'position',
+      4: 'thrusters',
+    },
+  },
+};
+
+const timeseriesInitialState = {
+  time: [],
+  model: {
+    position: {
+      latitude: [],
+      longitude: [],
+      heading: [],
+    },
+  },
+  sensors: {
+    roll: [],
+    pitch: [],
+  },
 };
 
 const simulatorInitialState = {
@@ -144,6 +167,7 @@ for (let thrIdx = 0; thrIdx < InitialVessel.thrusters.length; thrIdx += 1) {
 
 const initialState = {
   ui: uiInitialState,
+  timeseries: timeseriesInitialState,
   simulation: simulatorInitialState,
   environment: environmentInitialState,
   ship: shipInitialState,
