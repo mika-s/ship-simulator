@@ -67,7 +67,7 @@ class NewVesselModel {
         thr.force * Math.sin(thr.feedback.azimuth * (Math.PI / 180.0));
 
       forces.thrusters.yaw +=
-        (thr.force * thr.location.x * Math.sin(thr.feedback.azimuth * (Math.PI / 180.0))) +
+        (thr.force * thr.location.x * Math.sin(thr.feedback.azimuth * (Math.PI / 180.0))) -
         (thr.force * thr.location.y * Math.cos(thr.feedback.azimuth * (Math.PI / 180.0)));
     }
 

@@ -16,6 +16,9 @@ const uiInitialState = {
       4: 'thrusters',
     },
   },
+  map: {
+    zoomlevel: 5,
+  },
 };
 
 const timeseriesInitialState = {

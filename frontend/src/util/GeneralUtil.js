@@ -1,6 +1,7 @@
 class GeneralUtil {
   /**
   * Get a random number between min and max.
+  * Can be equal min, but not max: [min, max).
   * @param {number} min    - Minimum value.
   * @param {number} max    - Maximum value.
   * @returns {number}      - A random number between min and max.
