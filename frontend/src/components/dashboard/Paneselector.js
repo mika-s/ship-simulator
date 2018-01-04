@@ -3,6 +3,8 @@ import PropTypes from 'prop-types';
 import { connect } from 'react-redux';
 import HeadingPane from './Heading.pane';
 import SensorPane from './Sensor.pane';
+import ThrustersPane from './Thrusters.pane';
+import PositionPane from './Position.pane';
 import './Dashboard.css';
 
 class Paneselector extends Component {
@@ -22,12 +24,17 @@ class Paneselector extends Component {
   render() {
     const {
       simulationTimeSeries, modelPositionSeries, rollSeries, pitchSeries,
+      thrusters,
     } = this.props;
 
     return (
       <div>
         <form className="form-inline">
-          <select className="form-control mb-2 mr-sm-2 mb-sm-0" defaultValue={this.props.initialPane} onChange={this.changePane}>
+          <select
+            className="form-control mb-2 mr-sm-2 mb-sm-0"
+            defaultValue={this.props.initialPane}
+            onChange={this.changePane}
+          >
             <option value="heading">Heading</option>
             <option value="position">Position</option>
             <option value="rollpitch">Roll and pitch</option>
@@ -47,6 +54,16 @@ class Paneselector extends Component {
             rollSeries={rollSeries}
             pitchSeries={pitchSeries}
           />}
+
+        {this.state.pane === 'thrusters' &&
+          <ThrustersPane thrusters={thrusters} />}
+
+        {this.state.pane === 'position' &&
+          <PositionPane
+            simulationTimeSeries={simulationTimeSeries}
+            latitudeSeries={modelPositionSeries.latitude}
+            longitudeSeries={modelPositionSeries.longitude}
+          />}
       </div>
     );
   }
@@ -57,6 +74,7 @@ const mapStateToProps = state => ({
   modelPositionSeries: state.timeseries.model.position,
   rollSeries: state.timeseries.sensors.roll,
   pitchSeries: state.timeseries.sensors.pitch,
+  thrusters: state.ship.thrusters,
 });
 
 const mapDispatchToProps = () => ({});
@@ -71,6 +89,7 @@ Paneselector.propTypes = {
   modelPositionSeries: PropTypes.objectOf(PropTypes.arrayOf(PropTypes.number)).isRequired,
   rollSeries: PropTypes.arrayOf(PropTypes.number).isRequired,
   pitchSeries: PropTypes.arrayOf(PropTypes.number).isRequired,
+  thrusters: PropTypes.arrayOf(PropTypes.object).isRequired,
 };
 
 export default ConnectedPaneselector;
