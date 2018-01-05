@@ -1,4 +1,4 @@
-import GeneralUtil from '../../util/GeneralUtil';
+import GeneralUtil from '../../util/general.util';
 
 function getPosition(model) {
   const minLatitude = -90.0;

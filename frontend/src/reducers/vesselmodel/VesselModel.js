@@ -1,5 +1,5 @@
-import VesselUtil from './VesselUtil';
-import GeoUtil from './GeoUtil';
+import VesselUtil from './vessel.util';
+import GeoUtil from './geo.util';
 
 class NewVesselModel {
   static calculatePosition(mass, drag, forces, nedPosition, nedPositionInMeters, velocity) {

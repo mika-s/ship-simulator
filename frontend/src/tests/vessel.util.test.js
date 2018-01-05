@@ -1,4 +1,4 @@
-import VesselUtil from '../reducers/vesselmodel/VesselUtil';
+import VesselUtil from '../reducers/vesselmodel/vessel.util';
 
 /* transformTo0To360() */
 

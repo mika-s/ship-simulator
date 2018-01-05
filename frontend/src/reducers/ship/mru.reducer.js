@@ -1,4 +1,4 @@
-import GeneralUtil from '../../util/GeneralUtil';
+import GeneralUtil from '../../util/general.util';
 
 function getRoll(roll) {
   const minRoll = -20.0;
