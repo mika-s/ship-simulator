@@ -8,4 +8,8 @@ const thrusterFeedbackState = {
   DECREASING_LT_RT: 5,
 };
 
-export { simulationState, thrusterFeedbackState };
+const motion = {
+  TRUE: 1, RELATIVE: 2,
+};
+
+export { simulationState, thrusterFeedbackState, motion };

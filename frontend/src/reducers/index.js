@@ -83,6 +83,11 @@ export default function rootreducer(state = initialState, action) {
         ...state,
         ui: uiReducer(state.ui, action),
       };
+    case 'TOGGLE_MOTION_TYPE':
+      return {
+        ...state,
+        ui: uiReducer(state.ui, action),
+      };
     default:
       return state;
   }

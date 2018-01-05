@@ -9,3 +9,9 @@ export function decreaseZoomlevel() {
     type: 'DEC_ZOOM_LEVEL',
   };
 }
+
+export function toggleMotion() {
+  return {
+    type: 'TOGGLE_MOTION_TYPE',
+  };
+}

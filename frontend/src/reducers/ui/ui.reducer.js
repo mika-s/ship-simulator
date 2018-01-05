@@ -1,3 +1,5 @@
+import { motion } from '../../util/enums';
+
 function incrementZoomlevel(oldZoomlevel) {
   const maxZoomlevel = 19;
 
@@ -62,6 +64,7 @@ export default function uiReducer(state, action) {
         ...state,
 
         map: {
+          ...state.map,
           zoomlevel: incrementZoomlevel(state.map.zoomlevel),
         },
       };
@@ -70,7 +73,17 @@ export default function uiReducer(state, action) {
         ...state,
 
         map: {
+          ...state.map,
           zoomlevel: decrementZoomlevel(state.map.zoomlevel),
+        },
+      };
+    case 'TOGGLE_MOTION_TYPE':
+      return {
+        ...state,
+
+        map: {
+          ...state.map,
+          motion: state.map.motion === motion.TRUE ? motion.RELATIVE : motion.TRUE,
         },
       };
     default:
