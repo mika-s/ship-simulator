@@ -21,6 +21,7 @@ class Map extends Component {
 
     this.calculateZoom = this.calculateZoom.bind(this);
     this.setRelative = this.setRelative.bind(this);
+    this.isOutsideMap = this.isOutsideMap.bind(this);
     this.updateMap = this.updateMap.bind(this);
     this.zoomIn = this.zoomIn.bind(this);
     this.zoomOut = this.zoomOut.bind(this);
@@ -33,14 +34,10 @@ class Map extends Component {
   }
 
   componentWillReceiveProps() {
-    const { latitude, longitude } = this.props.position;
-    if ((latitude[latitude.length - 1] >= this.state.edge.north ||
-      longitude[longitude.length - 1] >= this.state.edge.east) &&
-      this.props.motion === motion.TRUE) {
+    if (this.isOutsideMap() && this.props.motion === motion.TRUE) {
       this.zoom();
     }
 
-    // Adjust the zoom immdiatly when starting the simulation while being on the map page.
     if (this.props.simulationTime === 1 || this.props.motion === motion.RELATIVE) {
       this.zoom();
     }
@@ -50,6 +47,17 @@ class Map extends Component {
 
   setRelative() {
     this.props.toggleMotion();
+  }
+
+  isOutsideMap() {
+    const { latitude, longitude } = this.props.position;
+
+    const isOutsideNorth = latitude[latitude.length - 1] >= this.state.edge.north;
+    const isOutsideSouth = latitude[latitude.length - 1] <= this.state.edge.south;
+    const isOutsideEast = longitude[longitude.length - 1] >= this.state.edge.east;
+    const isOutsideWest = longitude[longitude.length - 1] <= this.state.edge.west;
+
+    return (isOutsideNorth || isOutsideSouth || isOutsideEast || isOutsideWest);
   }
 
   calculateZoom() {
@@ -93,7 +101,9 @@ class Map extends Component {
       this.setState({
         edge: {
           north: latitude[latitude.length - 1] + zoom,
+          south: latitude[latitude.length - 1] - zoom,
           east: longitude[latitude.length - 1] + zoom,
+          west: longitude[latitude.length - 1] - zoom,
         },
       });
     }
