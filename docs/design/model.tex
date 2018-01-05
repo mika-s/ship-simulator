@@ -29,7 +29,7 @@
 	\centering
 	{\scshape\LARGE Design description of the model \par}
 	\vspace{1cm}
-	{\scshape\Large Rev 0 \par}
+	{\scshape\Large Rev 0.1.0 \par}
 	\vspace{2cm}
 	\vfill
 
@@ -160,5 +160,25 @@ they can be merged together into one constant. $n$ can also be normalized such t
 \end{equation}
 %
 where $T_{K} = K D^4 K_n^2$.
+
+\section{Wind model}
+
+$\boldsymbol{\tau}_{wind}$  are wind forces that influence the vessel. The forces can be written as:
+
+\begin{equation}
+\label{eq:vindkrefter}
+\begin{aligned}
+	\boldsymbol{\tau}_{wind} &=
+		\left[ \begin{array}{ccc}
+			q \cdot C_X \cdot  A_f \\
+			q  \cdot C_Y \cdot A_l \\
+			q  \cdot C_N \cdot A_f \cdot Loa
+		\end{array} \right],
+\end{aligned}
+\end{equation}
+%
+where $C_X$, $C_Y$ og $C_N$ are wind coefficients (drag coefficients) in surge, sway og yaw, $A_f$ is projected frontal area and $A_l$ is projected lateral area.
+$q = \frac{1}{2} \cdot \rho_{air} \cdot V_{w,r}^2$, where $\rho_{air}$ is the density of air and $V_r$ is relative wind velocity.
+$C_X$, $C_Y$ og $C_N$ are typically found with emprical methods such as Blendermann. These are functions of relative wind velocity.
 
 \end{document}
