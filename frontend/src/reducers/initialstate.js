@@ -1,4 +1,4 @@
-import { simulationState } from '../util/enums';
+import { simulationState, motion } from '../util/enums';
 import { Gyrocompass, MRU, Windsensor, GPS, Thruster, UiThruster, VesselModel } from './domain-constructors';
 import InitialVessel from '../Vessel.json';
 
@@ -15,6 +15,10 @@ const uiInitialState = {
       3: 'position',
       4: 'thrusters',
     },
+  },
+  map: {
+    zoomlevel: 5, // 0 to 19
+    motion: motion.TRUE,
   },
 };
 

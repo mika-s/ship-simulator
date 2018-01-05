@@ -1,56 +1,63 @@
 import React, { Component } from 'react';
-import { connect } from 'react-redux';
 import PropTypes from 'prop-types';
 import update from 'immutability-helper';
 import { Scatter } from 'react-chartjs-2';
+import { connect } from 'react-redux';
+import { increaseZoomlevel, decreaseZoomlevel, toggleMotion } from '../../actions/ui.map.actions';
+import { motion } from '../../util/enums';
+import MapUtil from './MapUtil';
 import './Map.css';
 
 class Map extends Component {
   constructor() {
     super();
     this.state = {
-      graphData: {
-        labels: ['Scatter'],
-        datasets: [
-          {
-            label: 'Position',
-            fill: false,
-            backgroundColor: 'rgba(75,192,192,0.4)',
-            pointBorderColor: 'rgba(75,192,192,1)',
-            pointBackgroundColor: '#fff',
-            pointBorderWidth: 1,
-            pointHoverRadius: 5,
-            pointHoverBackgroundColor: 'rgba(75,192,192,1)',
-            pointHoverBorderColor: 'rgba(220,220,220,1)',
-            pointHoverBorderWidth: 2,
-            pointRadius: 1,
-            pointHitRadius: 10,
-            data: [],
-          },
-        ],
-      },
-      options: {
-        animation: {
-          duration: 0,
-        },
-        hover: {
-          animationDuration: 0,
-        },
-        responsiveAnimationDuration: 0,
-        elements: {
-          line: {
-            tension: 0,
-          },
-        },
-        scales: {
-          xAxes: [{ ticks: { min: 0.00, max: 10.00 } }],
-          yAxes: [{ ticks: { min: 0.00, max: 10.00 } }],
-        },
-      },
+      edge: { north: 0.0, east: 0.0 },
+      graphData: MapUtil.getInitialMapProperties(),
+      options: MapUtil.getInitialOptions(),
     };
+
+    this.calculateZoom = this.calculateZoom.bind(this);
+    this.setRelative = this.setRelative.bind(this);
+    this.updateMap = this.updateMap.bind(this);
+    this.zoomIn = this.zoomIn.bind(this);
+    this.zoomOut = this.zoomOut.bind(this);
+    this.zoom = this.zoom.bind(this);
   }
 
   componentWillMount() {
+    this.zoom();
+    this.updateMap();
+  }
+
+  componentWillReceiveProps() {
+    const { latitude } = this.props.position;
+    if (latitude[latitude.length - 1] >= this.state.edge.north &&
+      this.props.motion === motion.TRUE) {
+      console.log('north edge ', this.state.edge.north);
+      this.zoom();
+    }
+
+    // Adjust the zoom immdiatly when starting the simulation while being on the map page.
+    if (this.props.simulationTime === 1 || this.props.motion === motion.RELATIVE) {
+      this.zoom();
+    }
+
+    this.updateMap();
+  }
+
+  setRelative() {
+    this.props.toggleMotion();
+  }
+
+  calculateZoom() {
+    const zoomNumber = 0.001;
+    const { zoomlevel } = this.props;
+
+    return zoomNumber / (zoomlevel + 1);
+  }
+
+  updateMap() {
     const merged = [];
     for (let i = 0; i < this.props.position.latitude.length; i += 1) {
       merged.push({ x: this.props.position.longitude[i], y: this.props.position.latitude[i] });
@@ -65,33 +72,58 @@ class Map extends Component {
     });
   }
 
-  componentWillReceiveProps() {
-    const merged = [];
-    for (let i = 0; i < this.props.position.latitude.length; i += 1) {
-      merged.push({ x: this.props.position.longitude[i], y: this.props.position.latitude[i] });
+  zoomIn() {
+    this.props.increaseZoomlevel();
+    this.zoom();
+  }
+
+  zoomOut() {
+    this.props.decreaseZoomlevel();
+    this.zoom();
+  }
+
+  zoom() {
+    const { latitude, longitude } = this.props.position;
+    const zoom = this.calculateZoom();
+
+    // Find and store the edges of the map.
+    if (this.props.motion === motion.TRUE) {
+      this.setState({
+        edge: {
+          north: latitude[latitude.length - 1] + zoom,
+          east: longitude[latitude.length - 1] + zoom,
+        },
+      });
     }
 
     this.setState({
-      graphData: update(this.state.graphData, {
-        datasets: {
-          0: { data: { $set: merged } },
-        },
-      }),
       options: update(this.state.options, {
         scales: {
           xAxes: {
             0: {
               ticks: {
-                min: { $set: merged.length > 0 ? merged[merged.length - 1].x - 0.001 : 0 },
-                max: { $set: merged.length > 0 ? merged[merged.length - 1].x + 0.001 : 0 },
+                min: {
+                  $set: longitude.length > 0 ?
+                    longitude[longitude.length - 1] - zoom : 0,
+                },
+                max: {
+                  $set: longitude.length > 0 ?
+                    longitude[longitude.length - 1] + zoom : 0,
+                },
               },
             },
           },
           yAxes: {
             0: {
               ticks: {
-                min: { $set: merged.length > 0 ? merged[merged.length - 1].y - 0.001 : 0 },
-                max: { $set: merged.length > 0 ? merged[merged.length - 1].y + 0.001 : 0 },
+                min: {
+                  $set: latitude.length > 0 ?
+                    latitude[latitude.length - 1] - zoom : 0,
+                },
+                max: {
+                  $set: latitude.length > 0 ?
+                    latitude[latitude.length - 1] + zoom : 0,
+                },
               },
             },
           },
@@ -104,25 +136,68 @@ class Map extends Component {
     return (
       <div className="map">
         <h1>Map</h1>
-        <Scatter
-          options={this.state.options}
-          data={this.state.graphData}
-        />
+        <div className="row">
+          <div className="col-lg-6">
+            <form className="form-inline" style={{ marginTop: 20 }}>
+              <input
+                type="button"
+                onClick={this.zoomIn}
+                value="+"
+                className="btn btn-secondary btn-sm zoom-button"
+              />
+              {this.props.zoomlevel}x
+              <input
+                type="button"
+                onClick={this.zoomOut}
+                value="-"
+                className="btn btn-secondary btn-sm zoom-button"
+              />
+            </form>
+          </div>
+          <div className="col-lg-6">
+            <form className="form-inline" style={{ marginTop: 20 }}>
+              <input
+                type="button"
+                onClick={this.setRelative}
+                value={this.props.motion === motion.TRUE ? 'True motion' : 'Relative motion'}
+                className="btn btn-secondary btn-sm relative-button"
+              />
+            </form>
+          </div>
+        </div>
+        <div className="row map-plot">
+          <div className="col-lg-12">
+            <Scatter options={this.state.options} data={this.state.graphData} />
+          </div>
+        </div>
       </div>
     );
   }
 }
 
 const mapStateToProps = state => ({
+  simulationTime: state.simulation.time,
   position: state.timeseries.model.position,
+  zoomlevel: state.ui.map.zoomlevel,
+  motion: state.ui.map.motion,
 });
 
-const mapDispatchToProps = () => ({});
+const mapDispatchToProps = dispatch => ({
+  increaseZoomlevel: () => dispatch(increaseZoomlevel()),
+  decreaseZoomlevel: () => dispatch(decreaseZoomlevel()),
+  toggleMotion: () => dispatch(toggleMotion()),
+});
 
 const ConnectedMap = connect(mapStateToProps, mapDispatchToProps)(Map);
 
 Map.propTypes = {
+  simulationTime: PropTypes.number.isRequired,
   position: PropTypes.objectOf(PropTypes.arrayOf(PropTypes.number)).isRequired,
+  zoomlevel: PropTypes.number.isRequired,
+  motion: PropTypes.number.isRequired,
+  increaseZoomlevel: PropTypes.func.isRequired,
+  decreaseZoomlevel: PropTypes.func.isRequired,
+  toggleMotion: PropTypes.func.isRequired,
 };
 
 export default ConnectedMap;

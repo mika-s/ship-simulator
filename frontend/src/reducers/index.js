@@ -73,6 +73,21 @@ export default function rootreducer(state = initialState, action) {
         ...state,
         ui: uiReducer(state.ui, action),
       };
+    case 'INC_ZOOM_LEVEL':
+      return {
+        ...state,
+        ui: uiReducer(state.ui, action),
+      };
+    case 'DEC_ZOOM_LEVEL':
+      return {
+        ...state,
+        ui: uiReducer(state.ui, action),
+      };
+    case 'TOGGLE_MOTION_TYPE':
+      return {
+        ...state,
+        ui: uiReducer(state.ui, action),
+      };
     default:
       return state;
   }
