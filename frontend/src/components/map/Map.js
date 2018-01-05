@@ -12,7 +12,9 @@ class Map extends Component {
   constructor() {
     super();
     this.state = {
-      edge: { north: 0.0, east: 0.0 },
+      edge: {
+        north: 0.0, south: 0.0, east: 0.0, west: 0.0,
+      },
       graphData: MapUtil.getInitialMapProperties(),
       options: MapUtil.getInitialOptions(),
     };
@@ -31,10 +33,10 @@ class Map extends Component {
   }
 
   componentWillReceiveProps() {
-    const { latitude } = this.props.position;
-    if (latitude[latitude.length - 1] >= this.state.edge.north &&
+    const { latitude, longitude } = this.props.position;
+    if ((latitude[latitude.length - 1] >= this.state.edge.north ||
+      longitude[longitude.length - 1] >= this.state.edge.east) &&
       this.props.motion === motion.TRUE) {
-      console.log('north edge ', this.state.edge.north);
       this.zoom();
     }
 
@@ -156,12 +158,38 @@ class Map extends Component {
           </div>
           <div className="col-lg-6">
             <form className="form-inline" style={{ marginTop: 20 }}>
-              <input
-                type="button"
-                onClick={this.setRelative}
-                value={this.props.motion === motion.TRUE ? 'True motion' : 'Relative motion'}
-                className="btn btn-secondary btn-sm relative-button"
-              />
+              {this.props.motion === motion.TRUE &&
+                <div>
+                  <input
+                    type="button"
+                    value="True motion"
+                    className="btn btn-secondary btn-sm relative-button"
+                    disabled
+                  />
+                  <input
+                    type="button"
+                    onClick={this.setRelative}
+                    value="Relative motion"
+                    className="btn btn-outline-secondary btn-sm relative-button"
+                  />
+                </div>
+              }
+              {this.props.motion === motion.RELATIVE &&
+                <div>
+                  <input
+                    type="button"
+                    onClick={this.setRelative}
+                    value="True motion"
+                    className="btn btn-outline-secondary btn-sm relative-button"
+                  />
+                  <input
+                    type="button"
+                    value="Relative motion"
+                    className="btn btn-secondary btn-sm relative-button"
+                    disabled
+                  />
+                </div>
+              }
             </form>
           </div>
         </div>

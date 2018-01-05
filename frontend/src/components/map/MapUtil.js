@@ -34,6 +34,7 @@ class MapUtil {
       },
       legend: { display: false },
       tooltips: { enabled: false },
+      showLines: true,
     };
   }
 }
