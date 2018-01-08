@@ -2,20 +2,7 @@ import timeseriesReducer from '../timeseries.reducer';
 import initialState from '../initialstate';
 
 it('should return the initial state when no action', () => {
-  expect(timeseriesReducer(initialState, {})).toEqual({
-    time: [],
-    model: {
-      position: {
-        latitude: [],
-        longitude: [],
-        heading: [],
-      },
-    },
-    sensors: {
-      roll: [],
-      pitch: [],
-    },
-  });
+  expect(timeseriesReducer(initialState, {})).toEqual(initialState);
 });
 
 it('should handle SIMULATE', () => {

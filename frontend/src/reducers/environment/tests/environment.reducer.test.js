@@ -2,18 +2,7 @@ import environmentReducer from '../environment.reducer';
 import initialState from '../initialstate';
 
 it('should return the initial state when no action', () => {
-  expect(environmentReducer(initialState, {})).toEqual({
-    wind: {
-      speed: 0.0,
-      direction: 0.0,
-      forces: { surge: 0.0, sway: 0.0, yaw: 0.0 },
-    },
-    current: {
-      speed: 0.0,
-      direction: 0.0,
-      forces: { surge: 0.0, sway: 0.0, yaw: 0.0 },
-    },
-  });
+  expect(environmentReducer(initialState, {})).toEqual(initialState);
 });
 
 it('should handle SIMULATE', () => {

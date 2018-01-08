@@ -26,5 +26,12 @@
   "proxy": "http://localhost:8080",
   "devDependencies": {
     "redux-devtools": "^3.4.1"
+  },
+  "jest": {
+    "collectCoverageFrom" : [
+      "src/**/*.{js,jsx}",
+      "!**/node_modules/**",
+      "!**/vendor/**"
+    ]
   }
 }
