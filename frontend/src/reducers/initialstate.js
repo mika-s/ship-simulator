@@ -1,4 +1,5 @@
 import { motion } from '../util/enums';
+import environmentInitialState from './environment/initialstate';
 import simulatorInitialState from './simulation/initialstate';
 import timeseriesInitialState from './timeseries/initialstate';
 import Gyrocompass from './constructors/gyrocompass';
@@ -32,27 +33,6 @@ const uiInitialState = {
   map: {
     zoomlevel: 5, // 0 to 19
     motion: motion.TRUE,
-  },
-};
-
-const environmentInitialState = {
-  wind: {
-    speed: 0.0,
-    direction: 0.0,
-    forces: {
-      surge: 0.0,
-      sway: 0.0,
-      yaw: 0.0,
-    },
-  },
-  current: {
-    speed: 0.0,
-    direction: 0.0,
-    forces: {
-      surge: 0.0,
-      sway: 0.0,
-      yaw: 0.0,
-    },
   },
 };
 
