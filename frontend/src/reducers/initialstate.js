@@ -1,4 +1,6 @@
-import { simulationState, motion } from '../util/enums';
+import { motion } from '../util/enums';
+import simulatorInitialState from './simulation/initialstate';
+import timeseriesInitialState from './timeseries/initialstate';
 import Gyrocompass from './constructors/gyrocompass';
 import MRU from './constructors/mru';
 import Windsensor from './constructors/windsensor';
@@ -31,26 +33,6 @@ const uiInitialState = {
     zoomlevel: 5, // 0 to 19
     motion: motion.TRUE,
   },
-};
-
-const timeseriesInitialState = {
-  time: [],
-  model: {
-    position: {
-      latitude: [],
-      longitude: [],
-      heading: [],
-    },
-  },
-  sensors: {
-    roll: [],
-    pitch: [],
-  },
-};
-
-const simulatorInitialState = {
-  time: 0,
-  simulationState: simulationState.STOPPED,
 };
 
 const environmentInitialState = {

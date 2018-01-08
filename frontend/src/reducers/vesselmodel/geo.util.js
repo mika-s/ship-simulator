@@ -1,4 +1,4 @@
-import { LatLonSpherical } from 'geodesy';
+import { LatLonEllipsoidal } from 'geodesy';
 
 class GeoUtil {
   /**
@@ -11,7 +11,7 @@ class GeoUtil {
   *                                       and longitude in degrees.
   */
   static getPositionInLatLon(previousLatLonPos, newInMeterPos, previousInMeterPos) {
-    const position = new LatLonSpherical(previousLatLonPos.latitude, previousLatLonPos.longitude);
+    const position = new LatLonEllipsoidal(previousLatLonPos.latitude, previousLatLonPos.longitude);
 
     const lonΔ = (newInMeterPos.longitude - previousInMeterPos.longitude);
     const latΔ = (newInMeterPos.latitude - previousInMeterPos.latitude);
