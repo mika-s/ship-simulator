@@ -1,4 +1,4 @@
-import WindUtil from './wind/WindUtil';
+import WindUtil from './wind/wind.util';
 
 export default function environmentReducer(
   state, action, uiWind, vesselSpeed,

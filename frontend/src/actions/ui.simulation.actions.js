@@ -15,3 +15,12 @@ export function setWindDirection(direction) {
     },
   };
 }
+
+export function setPosition(position) {
+  return {
+    type: 'SET_INITIAL_POSITION',
+    payload: {
+      position,
+    },
+  };
+}

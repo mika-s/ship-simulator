@@ -7,6 +7,7 @@ class MapUtil {
           label: 'Position',
           fill: false,
           backgroundColor: 'rgba(75,192,192,0.4)',
+          borderColor: 'rgba(75,192,192,0.8)',
           pointBorderColor: 'rgba(75,192,192,1)',
           pointBackgroundColor: '#fff',
           pointBorderWidth: 1,
@@ -34,6 +35,7 @@ class MapUtil {
       },
       legend: { display: false },
       tooltips: { enabled: false },
+      showLines: true,
     };
   }
 }

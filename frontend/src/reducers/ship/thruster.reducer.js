@@ -1,4 +1,4 @@
-import ThrUtil from './ThrusterUtil';
+import ThrUtil from './thruster.util';
 import { thrusterFeedbackState } from '../../util/enums';
 
 function getForces(thruster) {

@@ -1,3 +1,5 @@
+[![Build Status](https://travis-ci.org/mika-s/ship-simulator.svg?branch=production)](https://travis-ci.org/mika-s/ship-simulator)
+
 This is a project that's trying to create a realistic ship simulator in Javascript.
 The goal is to make the simulator mimic a real ship as much as possible, not to
 be a game.

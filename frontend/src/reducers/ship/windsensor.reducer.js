@@ -1,4 +1,4 @@
-import GeneralUtil from '../../util/GeneralUtil';
+import GeneralUtil from '../../util/general.util';
 
 /* function getRelativeSpeedAndDirection(modelSpeed, modelDirection, vesselSpeed, vesselHeading) {
   let x = modelSpeed * Math.cos((

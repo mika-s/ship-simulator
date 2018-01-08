@@ -12,13 +12,16 @@ class Map extends Component {
   constructor() {
     super();
     this.state = {
-      edge: { north: 0.0, east: 0.0 },
+      edge: {
+        north: 0.0, south: 0.0, east: 0.0, west: 0.0,
+      },
       graphData: MapUtil.getInitialMapProperties(),
       options: MapUtil.getInitialOptions(),
     };
 
     this.calculateZoom = this.calculateZoom.bind(this);
     this.setRelative = this.setRelative.bind(this);
+    this.isOutsideMap = this.isOutsideMap.bind(this);
     this.updateMap = this.updateMap.bind(this);
     this.zoomIn = this.zoomIn.bind(this);
     this.zoomOut = this.zoomOut.bind(this);
@@ -31,14 +34,10 @@ class Map extends Component {
   }
 
   componentWillReceiveProps() {
-    const { latitude } = this.props.position;
-    if (latitude[latitude.length - 1] >= this.state.edge.north &&
-      this.props.motion === motion.TRUE) {
-      console.log('north edge ', this.state.edge.north);
+    if (this.isOutsideMap() && this.props.motion === motion.TRUE) {
       this.zoom();
     }
 
-    // Adjust the zoom immdiatly when starting the simulation while being on the map page.
     if (this.props.simulationTime === 1 || this.props.motion === motion.RELATIVE) {
       this.zoom();
     }
@@ -48,6 +47,17 @@ class Map extends Component {
 
   setRelative() {
     this.props.toggleMotion();
+  }
+
+  isOutsideMap() {
+    const { latitude, longitude } = this.props.position;
+
+    const isOutsideNorth = latitude[latitude.length - 1] >= this.state.edge.north;
+    const isOutsideSouth = latitude[latitude.length - 1] <= this.state.edge.south;
+    const isOutsideEast = longitude[longitude.length - 1] >= this.state.edge.east;
+    const isOutsideWest = longitude[longitude.length - 1] <= this.state.edge.west;
+
+    return (isOutsideNorth || isOutsideSouth || isOutsideEast || isOutsideWest);
   }
 
   calculateZoom() {
@@ -91,7 +101,9 @@ class Map extends Component {
       this.setState({
         edge: {
           north: latitude[latitude.length - 1] + zoom,
+          south: latitude[latitude.length - 1] - zoom,
           east: longitude[latitude.length - 1] + zoom,
+          west: longitude[latitude.length - 1] - zoom,
         },
       });
     }
@@ -156,12 +168,38 @@ class Map extends Component {
           </div>
           <div className="col-lg-6">
             <form className="form-inline" style={{ marginTop: 20 }}>
-              <input
-                type="button"
-                onClick={this.setRelative}
-                value={this.props.motion === motion.TRUE ? 'True motion' : 'Relative motion'}
-                className="btn btn-secondary btn-sm relative-button"
-              />
+              {this.props.motion === motion.TRUE &&
+                <div>
+                  <input
+                    type="button"
+                    value="True motion"
+                    className="btn btn-secondary btn-sm relative-button"
+                    disabled
+                  />
+                  <input
+                    type="button"
+                    onClick={this.setRelative}
+                    value="Relative motion"
+                    className="btn btn-outline-secondary btn-sm relative-button"
+                  />
+                </div>
+              }
+              {this.props.motion === motion.RELATIVE &&
+                <div>
+                  <input
+                    type="button"
+                    onClick={this.setRelative}
+                    value="True motion"
+                    className="btn btn-outline-secondary btn-sm relative-button"
+                  />
+                  <input
+                    type="button"
+                    value="Relative motion"
+                    className="btn btn-secondary btn-sm relative-button"
+                    disabled
+                  />
+                </div>
+              }
             </form>
           </div>
         </div>
