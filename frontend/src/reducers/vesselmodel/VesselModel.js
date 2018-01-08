@@ -1,7 +1,7 @@
 import VesselUtil from './vessel.util';
 import GeoUtil from './geo.util';
 
-class NewVesselModel {
+class VesselModel {
   static calculatePosition(mass, drag, forces, nedPosition, nedPositionInMeters, velocity) {
     const Tsu = forces.thrusters.surge + forces.wind.surge + forces.current.surge;
     const Tsw = forces.thrusters.sway + forces.wind.sway + forces.current.sway;
@@ -75,4 +75,4 @@ class NewVesselModel {
   }
 }
 
-export default NewVesselModel;
+export default VesselModel;

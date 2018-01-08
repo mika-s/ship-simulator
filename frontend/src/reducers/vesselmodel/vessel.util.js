@@ -123,7 +123,7 @@ class VesselUtil {
     const areaCoefficient = 0.8;
     const frontalArea = areaCoefficient * breadth * superstructureHeight;
 
-    return frontalArea;
+    return GeneralUtil.truncToDecimal(frontalArea, 2);
   }
 
   /**
@@ -137,7 +137,7 @@ class VesselUtil {
     const areaCoefficient = 0.4;
     const lateralArea = areaCoefficient * loa * superstructureHeight;
 
-    return lateralArea;
+    return GeneralUtil.truncToDecimal(lateralArea, 2);
   }
 }
 

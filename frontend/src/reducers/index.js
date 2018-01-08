@@ -38,7 +38,10 @@ export default function rootreducer(state = initialState, action) {
           model.position.heading, state.vesselmodel.dimensions, state.vesselmodel.wind,
         ),
         ship: shipReducer(state.ship, action, model, state.ui.thrusters, state.environment.wind),
-        vesselmodel: vesselmodelReducer(state.vesselmodel, action, model, forces),
+        vesselmodel: vesselmodelReducer(
+          state.vesselmodel, action,
+          model, forces, state.ui.position,
+        ),
       };
     case 'PAUSE_SIMULATION':
       return {
@@ -51,7 +54,10 @@ export default function rootreducer(state = initialState, action) {
         timeseries: timeseriesReducer(state.timeseries, action),
         simulation: simulationReducer(state.simulation, action),
         ship: shipReducer(state.ship, action, model, state.ui.thrusters),
-        vesselmodel: vesselmodelReducer(state.vesselmodel, action),
+        vesselmodel: vesselmodelReducer(
+          state.vesselmodel, action,
+          model, forces, state.ui.position,
+        ),
       };
     case 'SET_THRUSTER_DEMAND':
       return {
@@ -66,6 +72,15 @@ export default function rootreducer(state = initialState, action) {
     case 'SET_WIND_DIRECTION':
       return {
         ...state,
+        ui: uiReducer(state.ui, action),
+      };
+    case 'SET_INITIAL_POSITION':
+      return {
+        ...state,
+        vesselmodel: vesselmodelReducer(
+          state.vesselmodel, action,
+          model, forces, state.ui.position,
+        ),
         ui: uiReducer(state.ui, action),
       };
     case 'SET_DASHBOARD_PANE':

@@ -47,6 +47,12 @@ export default function uiReducer(state, action) {
           direction: action.payload.direction,
         },
       };
+    case 'SET_INITIAL_POSITION':
+      return {
+        ...state,
+
+        position: action.payload.position,
+      };
     case 'SET_DASHBOARD_PANE':
       return {
         ...state,

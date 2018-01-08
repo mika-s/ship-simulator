@@ -14,6 +14,11 @@ const uiInitialState = {
     speed: 0.0,
     direction: 0.0,
   },
+  position: {
+    latitude: 0.0,
+    longitude: 0.0,
+    heading: 0.0,
+  },
   dashboard: {
     panes: {
       1: 'heading',
@@ -82,11 +87,6 @@ const shipInitialState = {
 };
 
 let vesselModelInitialState = {
-  initialPosition: {
-    latitude: 0.0,
-    longitude: 0.0,
-    heading: 0.0,
-  },
   model: {
     position: {
       latitude: 0.0,
@@ -150,6 +150,7 @@ let vesselModelInitialState = {
 };
 
 vesselModelInitialState = VesselModel(vesselModelInitialState, InitialVessel);
+uiInitialState.position = InitialVessel.model.position;
 
 for (let gcIdx = 0; gcIdx < InitialVessel.sensors.gyrocompasses.length; gcIdx += 1) {
   shipInitialState.sensors.gyrocompasses
