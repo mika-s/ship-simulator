@@ -1,5 +1,7 @@
 import timeseriesReducer from '../timeseries.reducer';
-import initialState from '../initialstate';
+import getInitialState from '../initialstate';
+
+const initialState = getInitialState();
 
 it('should return the initial state when no action', () => {
   expect(timeseriesReducer(initialState, {})).toEqual(initialState);

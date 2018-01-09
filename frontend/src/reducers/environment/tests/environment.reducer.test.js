@@ -1,5 +1,7 @@
 import environmentReducer from '../environment.reducer';
-import initialState from '../initialstate';
+import getInitialState from '../initialstate';
+
+const initialState = getInitialState();
 
 it('should return the initial state when no action', () => {
   expect(environmentReducer(initialState, {})).toEqual(initialState);

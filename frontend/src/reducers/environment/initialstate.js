@@ -19,4 +19,8 @@ const environmentInitialState = {
   },
 };
 
-export default environmentInitialState;
+function getInitialState() {
+  return environmentInitialState;
+}
+
+export default getInitialState;

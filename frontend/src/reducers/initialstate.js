@@ -1,125 +1,18 @@
 import environmentInitialState from './environment/initialstate';
 import simulatorInitialState from './simulation/initialstate';
+import shipInitialState from './ship/initialstate';
 import timeseriesInitialState from './timeseries/initialstate';
+import vesselModelInitialState from './vesselmodel/initialstate';
 import uiInitialState from './ui/initialstate';
-import Gyrocompass from './constructors/gyrocompass';
-import MRU from './constructors/mru';
-import Windsensor from './constructors/windsensor';
-import UiThruster from './constructors/uithruster';
-import VesselModel from './constructors/vesselmodel';
-import GPS from './constructors/gps';
-import Thruster from './constructors/thruster';
 import InitialVessel from '../Vessel.json';
 
-const shipInitialState = {
-  thrusters: [],
-  sensors: {
-    gyrocompasses: [],
-    mrus: [],
-    windsensors: [],
-  },
-  referencesystems: {
-    gpses: [],
-  },
-};
-
-let vesselModelInitialState = {
-  model: {
-    position: {
-      latitude: 0.0,
-      longitude: 0.0,
-      heading: 0.0,
-    },
-    positionInMeters: {
-      latitude: 0.0,
-      longitude: 0.0,
-      heading: 0.0,
-    },
-    velocity: {
-      u: 0.0,
-      v: 0.0,
-      r: 0.0,
-    },
-  },
-  forces: {
-    thrusters: {
-      surge: 0.0,
-      sway: 0.0,
-      yaw: 0.0,
-    },
-    wind: {
-      surge: 0.0,
-      sway: 0.0,
-      yaw: 0.0,
-    },
-    current: {
-      surge: 0.0,
-      sway: 0.0,
-      yaw: 0.0,
-    },
-  },
-  dimensions: {
-    lpp: 0.0,
-    loa: 0.0,
-    breadth: 0.0,
-    draft: 0.0,
-    blockCoefficient: 0.0,
-    displacement: 0.0,
-  },
-  wind: {
-    coefficientCalcType: '',
-    vesselType: '',
-    frontalArea: 0.0,
-    lateralArea: 0.0,
-    sL: 0.0,
-    superStructureHeight: 0.0,
-  },
-  mass: {
-    surge: 0.0,
-    sway: 0.0,
-    yaw: 0.0,
-  },
-  drag: {
-    surge: 0.0,
-    sway: 0.0,
-    yaw: 0.0,
-  },
-};
-
-vesselModelInitialState = VesselModel(vesselModelInitialState, InitialVessel);
-uiInitialState.position = InitialVessel.model.position;
-
-for (let gcIdx = 0; gcIdx < InitialVessel.sensors.gyrocompasses.length; gcIdx += 1) {
-  shipInitialState.sensors.gyrocompasses
-    .push(new Gyrocompass(InitialVessel.sensors.gyrocompasses[gcIdx]));
-}
-
-for (let mruIdx = 0; mruIdx < InitialVessel.sensors.mrus.length; mruIdx += 1) {
-  shipInitialState.sensors.mrus.push(new MRU(InitialVessel.sensors.mrus[mruIdx]));
-}
-
-for (let wsIdx = 0; wsIdx < InitialVessel.sensors.windsensors.length; wsIdx += 1) {
-  shipInitialState.sensors.windsensors
-    .push(new Windsensor(InitialVessel.sensors.windsensors[wsIdx]));
-}
-
-for (let gpsIdx = 0; gpsIdx < InitialVessel.referencesystems.gpses.length; gpsIdx += 1) {
-  shipInitialState.referencesystems.gpses
-    .push(new GPS(InitialVessel.referencesystems.gpses[gpsIdx]));
-}
-
-for (let thrIdx = 0; thrIdx < InitialVessel.thrusters.length; thrIdx += 1) {
-  shipInitialState.thrusters.push(new Thruster(InitialVessel.thrusters[thrIdx]));
-  uiInitialState.thrusters.push(new UiThruster(InitialVessel.thrusters[thrIdx]));
-}
-
 const initialState = {
-  ui: uiInitialState,
-  timeseries: timeseriesInitialState,
-  simulation: simulatorInitialState,
-  environment: environmentInitialState,
-  ship: shipInitialState,
-  vesselmodel: vesselModelInitialState,
+  ui: uiInitialState(InitialVessel),
+  timeseries: timeseriesInitialState(),
+  simulation: simulatorInitialState(),
+  environment: environmentInitialState(),
+  ship: shipInitialState(InitialVessel),
+  vesselmodel: vesselModelInitialState(InitialVessel),
 };
 
 export default initialState;

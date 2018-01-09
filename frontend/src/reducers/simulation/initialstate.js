@@ -5,4 +5,8 @@ const simulatorInitialState = {
   simulationState: simulationState.STOPPED,
 };
 
-export default simulatorInitialState;
+function getInitialState() {
+  return simulatorInitialState;
+}
+
+export default getInitialState;
