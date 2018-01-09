@@ -3,10 +3,10 @@ import blendermann from './blendermann';
 class WindUtil {
   /**
   * Calculate the wind forces acting on a vessel.
-  * @param {number} windSpeed     - Wind speed.
-  * @param {number} windDirection - Wind direction.
-  * @param {object} vesselSpeed   - Vessel speed object with u, v, and r.
-  * @param {number} vesselHeading - Heading of the vessel.
+  * @param {number} windSpeed     - Wind speed in m/s.
+  * @param {number} windDirection - Wind direction in degrees.
+  * @param {object} vesselSpeed   - Vessel speed object with u, v, and r in m/s.
+  * @param {number} vesselHeading - Heading of the vessel in radians.
   * @param {object} dimensions    - Dimension object.
   * @param {object} windParams    - Wind parameter object.
   * @returns {object}             - Wind forces in surge, sway and yaw.

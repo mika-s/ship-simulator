@@ -1,4 +1,7 @@
-import { simulationState, motion } from '../util/enums';
+import environmentInitialState from './environment/initialstate';
+import simulatorInitialState from './simulation/initialstate';
+import timeseriesInitialState from './timeseries/initialstate';
+import uiInitialState from './ui/initialstate';
 import Gyrocompass from './constructors/gyrocompass';
 import MRU from './constructors/mru';
 import Windsensor from './constructors/windsensor';
@@ -7,72 +10,6 @@ import VesselModel from './constructors/vesselmodel';
 import GPS from './constructors/gps';
 import Thruster from './constructors/thruster';
 import InitialVessel from '../Vessel.json';
-
-const uiInitialState = {
-  thrusters: [],
-  wind: {
-    speed: 0.0,
-    direction: 0.0,
-  },
-  position: {
-    latitude: 0.0,
-    longitude: 0.0,
-    heading: 0.0,
-  },
-  dashboard: {
-    panes: {
-      1: 'heading',
-      2: 'rollpitch',
-      3: 'position',
-      4: 'thrusters',
-    },
-  },
-  map: {
-    zoomlevel: 5, // 0 to 19
-    motion: motion.TRUE,
-  },
-};
-
-const timeseriesInitialState = {
-  time: [],
-  model: {
-    position: {
-      latitude: [],
-      longitude: [],
-      heading: [],
-    },
-  },
-  sensors: {
-    roll: [],
-    pitch: [],
-  },
-};
-
-const simulatorInitialState = {
-  time: 0,
-  simulationState: simulationState.STOPPED,
-};
-
-const environmentInitialState = {
-  wind: {
-    speed: 0.0,
-    direction: 0.0,
-    forces: {
-      surge: 0.0,
-      sway: 0.0,
-      yaw: 0.0,
-    },
-  },
-  current: {
-    speed: 0.0,
-    direction: 0.0,
-    forces: {
-      surge: 0.0,
-      sway: 0.0,
-      yaw: 0.0,
-    },
-  },
-};
 
 const shipInitialState = {
   thrusters: [],

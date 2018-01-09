@@ -1,6 +1,6 @@
 {
   "name": "frontend",
-  "version": "0.1.1",
+  "version": "0.1.2",
   "private": true,
   "dependencies": {
     "chart.js": "^2.7.1",
@@ -26,5 +26,12 @@
   "proxy": "http://localhost:8080",
   "devDependencies": {
     "redux-devtools": "^3.4.1"
+  },
+  "jest": {
+    "collectCoverageFrom" : [
+      "src/**/*.{js,jsx}",
+      "!**/node_modules/**",
+      "!**/vendor/**"
+    ]
   }
 }
