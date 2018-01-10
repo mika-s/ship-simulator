@@ -3,7 +3,7 @@ import WindUtil from './wind/wind.util';
 
 export default function environmentReducer(
   state, action, uiCurrent, uiWind, vesselSpeed,
-  vesselHeading, dimensions, windParams, drag,
+  vesselHeading, rotationSpeed, dimensions, windParams, drag,
 ) {
   switch (action.type) {
     case 'SIMULATE':
@@ -12,7 +12,7 @@ export default function environmentReducer(
         current: {
           forces: CurrentUtil.calculateForces(
             state.current.speed, state.current.direction,
-            vesselHeading, dimensions, drag,
+            vesselHeading, rotationSpeed, dimensions, drag,
           ),
           speed: uiCurrent.speed,
           direction: uiCurrent.direction,

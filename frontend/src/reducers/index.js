@@ -38,8 +38,8 @@ export default function rootreducer(state = initialState, action) {
         simulation: simulationReducer(state.simulation, action),
         environment: environmentReducer(
           state.environment, action, state.ui.current, state.ui.wind, model.velocity,
-          model.position.heading, state.vesselmodel.dimensions, state.vesselmodel.wind,
-          state.vesselmodel.drag,
+          model.position.heading, model.velocity.r, state.vesselmodel.dimensions,
+          state.vesselmodel.wind, state.vesselmodel.drag,
         ),
         ship: shipReducer(state.ship, action, model, state.ui.thrusters, state.environment.wind),
         vesselmodel: vesselmodelReducer(

@@ -49,8 +49,10 @@ windsensor.direction
 
 ## Reference systems
 
-gps.number
-gps.position.latitude
-gps.position.longitude
+| Variable               | Dimension  | Unit  | Description                            |
+|------------------------|------------|-------|----------------------------------------|
+| gps.number             | -          | -     | GPS number.                            |
+| gps.position.latitude  | angle      | °     | The read latitude in decimal degrees.  |
+| gps.position.longitude | angle      | °     | The read longitude in decimal degrees. |
 
 ## Thrusters

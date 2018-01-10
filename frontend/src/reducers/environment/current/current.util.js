@@ -7,13 +7,14 @@ class CurrentUtil {
   * @param {number} currentSpeed     - Current speed in m/s.
   * @param {number} currentDirection - Current direction in degrees.
   * @param {number} vesselHeading    - Heading of the vessel in radians.
+  * @param {number} rotationSpeed    - Rotation speed of the vessel, in rad/s.
   * @param {object} dimensions       - Dimension object.
   * @param {object} drag             - The drag coefficients object.
   * @returns {object}                - Current forces in surge, sway and yaw.
   */
   static calculateForces(
-    currentSpeed, currentDirection,
-    vesselHeading, dimensions, // drag,
+    currentSpeed, currentDirection, vesselHeading, rotationSpeed,
+    dimensions, drag,
   ) {
     const currentDirectionInRad = currentDirection * (Math.PI / 180.0);
     const ρ = 1024.0; // kg/m^3
@@ -37,7 +38,7 @@ class CurrentUtil {
     return {
       surge: q * coefficients.CX * frontalArea,
       sway: q * coefficients.CY * lateralArea,
-      yaw: q * coefficients.CN * lateralArea * dimensions.loa,
+      yaw: (q * coefficients.CN * lateralArea * dimensions.loa) - (drag.yaw * rotationSpeed),
     };
   }
 }
