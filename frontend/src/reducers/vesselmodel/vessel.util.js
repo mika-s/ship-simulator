@@ -1,144 +1,80 @@
-import GeneralUtil from '../../util/general.util';
+import KinematicsUtil from './kinematics.util';
+import GeoUtil from './geo.util';
 
-class VesselUtil {
-  /**
-  * Calculate the displacement of a vessel.
-  * @param {object} dimensions       - Object containing:
-  * @param {number} lpp              - Length between perpendiculars.
-  * @param {number} breadth          - Breadth.
-  * @param {number} draft            - Draft.
-  * @param {number} blockCoefficient - The block coefficient.
-  * @returns {number}                - The vessel's displacement in metric tons.
-  */
-  static calculateDisplacement(dimensions) {
-    const {
-      lpp, breadth, draft, blockCoefficient,
-    } = dimensions;
-    const ρWater = 1.024;
+class VesselModel {
+  static calculatePosition(mass, drag, forces, position) {
+    const { position: nedPosition, positionInMeters: nedPositionInMeters, velocity } = position;
 
-    let displacement = ρWater * blockCoefficient * lpp * breadth * draft;
-    displacement = GeneralUtil.truncToDecimal(displacement, 2);
+    const Tsu = forces.thrusters.surge + forces.wind.surge + forces.current.surge;
+    const Tsw = forces.thrusters.sway + forces.wind.sway + forces.current.sway;
+    const Tya = forces.thrusters.yaw + forces.wind.yaw + forces.current.yaw;
 
-    return displacement;
-  }
-
-  /**
-  * Calculate the mass (displacement + added mass) of a vessel in surge, sway and yaw.
-  * @param {number} displacement     - The vessel's displacement.
-  * @param {number} lpp              - Length between perpendiculars.
-  * @returns {object}                - An object containing the vessel's mass.
-  *                                  - fields: surge, sway, yaw.
-  */
-  static calculateMass(displacement, lpp) {
-    // const r66 = (1 / 4) * lpp;
-
-    const mass = {
-      surge: 1.2 * displacement,
-      sway: 1.8 * displacement,
-      // yaw: 0.5 * displacement * (r66 ** 2),
-      yaw: displacement * ((lpp / 3) ** 2),
+    const nuDot = {
+      surge: (Tsu - (drag.surge * (Math.sign(velocity.u) * (velocity.u ** 2.0)))) / mass.surge,
+      sway: (Tsw - (drag.sway * (Math.sign(velocity.v) * (velocity.v ** 2.0)))) / mass.sway,
+      yaw: (Tya - (drag.yaw * (Math.sign(velocity.r) * (velocity.r ** 2.0)))) / mass.yaw,
     };
 
-    return mass;
-  }
-
-  /**
-  * Calculate the drag of a vessel in surge, sway and yaw.
-  * @param {number} lpp       - Length between perpendiculars.
-  * @param {number} breadth   - Breadth.
-  * @param {number} draft     - Draft.
-  * @returns {object}         - An object containing the vessel's drag.
-  *                           - fields: surge, sway, yaw.
-  */
-  static calculateDrag(lpp, breadth, draft) {
-    const dragSurge = 0.05 * breadth * draft;
-    const dragSway = 0.075 * lpp * draft;
-    const dragYaw = (dragSway / (4 * lpp)) * (((lpp / 2.0) ** 4) + ((lpp / 2.0) ** 4));
-
-    const expValues = { surge: 0.5, sway: 0.6, yaw: 0.5 };
-
-    const drag = {
-      surge: expValues.surge * dragSurge,
-      sway: expValues.sway * dragSway,
-      yaw: expValues.yaw * dragYaw,
+    const newVelocity = {
+      u: velocity.u + nuDot.surge,
+      v: velocity.v + nuDot.sway,
+      r: velocity.r + nuDot.yaw,
     };
 
-    return drag;
+    const nedVelocity = KinematicsUtil.transformBODYToNED({
+      surge: newVelocity.u,
+      sway: newVelocity.v,
+      heading: nedPosition.heading,
+    });
+
+    const newNedPositionInMeters = {
+      latitude: nedPositionInMeters.latitude + nedVelocity.latitude,
+      longitude: nedPositionInMeters.longitude + nedVelocity.longitude,
+      heading: KinematicsUtil.transformTo0To2pi(nedPositionInMeters.heading + velocity.r),
+    };
+
+    const newPosition = GeoUtil.getPositionInLatLon(
+      nedPosition,
+      newNedPositionInMeters,
+      nedPositionInMeters,
+    );
+
+    const newNedPosition = {
+      latitude: newPosition.latitude,
+      longitude: newPosition.longitude,
+      heading: newNedPositionInMeters.heading,
+    };
+
+    return {
+      position: newNedPosition,
+      positionInMeters: newNedPositionInMeters,
+      velocity: newVelocity,
+    };
   }
 
-  /**
-  * Transform from NED to BODY. I.e. latitude, longitude, heading to surge, sway, heading.
-  * @param {object} bodyPostion   - Object containing latitude, longitude, heading (rad).
-  * @returns {object}             - Object containing surge, sway, heading.
-  */
-  static transformNEDToBODY(nedPosition) {
-    const { latitude, longitude, heading } = nedPosition;
+  static calculateForces(thrusters, windForces, currentForces) {
+    const forces = {
+      thrusters: { surge: 0.0, sway: 0.0, yaw: 0.0 },
+      wind: windForces,
+      current: currentForces,
+    };
 
-    const surge = (Math.cos(heading) * latitude) + (Math.sin(heading) * longitude);
-    const sway = -(Math.sin(heading) * latitude) + (Math.cos(heading) * longitude);
+    for (let thrIdx = 0; thrIdx < thrusters.length; thrIdx += 1) {
+      const thr = thrusters[thrIdx];
 
-    return { surge, sway, heading };
-  }
+      forces.thrusters.surge +=
+        thr.force * Math.cos(thr.feedback.azimuth * (Math.PI / 180.0));
 
-  /**
-  * Transform from BODY to NED. I.e. surge, sway, heading to latitude, longitude, heading.
-  * @param {object} bodyPostion   - Object containing surge (m), sway (m), heading (rad).
-  * @returns {object}             - Object containing latitude, longitude, heading.
-  */
-  static transformBODYToNED(bodyPostion) {
-    const { surge, sway, heading } = bodyPostion;
+      forces.thrusters.sway +=
+        thr.force * Math.sin(thr.feedback.azimuth * (Math.PI / 180.0));
 
-    const latitude = (Math.cos(heading) * surge) - (Math.sin(heading) * sway);
-    const longitude = (Math.sin(heading) * surge) + (Math.cos(heading) * sway);
+      forces.thrusters.yaw +=
+        (thr.force * thr.location.x * Math.sin(thr.feedback.azimuth * (Math.PI / 180.0))) -
+        (thr.force * thr.location.y * Math.cos(thr.feedback.azimuth * (Math.PI / 180.0)));
+    }
 
-    return { latitude, longitude, heading };
-  }
-
-  /**
-  * Transform an angle in the range -Inf,Inf to 0,360°.
-  * @param {number} angle     - The angle to transform.
-  * @returns {number}         - The angle transformed.
-  */
-  static transformTo0To360(angle) {
-    return (angle % 360) + (angle < 0 ? 360 : 0);
-  }
-
-  /**
-  * Transform an angle in the range -Inf,Inf to 0,2π.
-  * @param {number} angle     - The angle to transform.
-  * @returns {number}         - The angle transformed.
-  */
-  static transformTo0To2pi(angle) {
-    return (angle % (2 * Math.PI)) + (angle < 0 ? (2 * Math.PI) : 0);
-  }
-
-  /**
-  * Calculate projected frontal wind area. A simple multiplication of
-  * breadth and superstructure height, multiplied by an experience coefficient.
-  * @param {number} breadth               - The vessel's breadth.
-  * @param {number} superstructureHeight  - The height of the vessel's superstructure.
-  * @returns {number}                     - The projected frontal area.
-  */
-  static calculateFrontalWindArea(breadth, superstructureHeight) {
-    const areaCoefficient = 0.8;
-    const frontalArea = areaCoefficient * breadth * superstructureHeight;
-
-    return GeneralUtil.truncToDecimal(frontalArea, 2);
-  }
-
-  /**
-  * Calculate projected lateral wind area. A simple multiplication of
-  * loa and superstructure height, multiplied by an experience coefficient.
-  * @param {number} loa                   - The vessel's length over all.
-  * @param {number} superstructureHeight  - The height of the vessel's superstructure.
-  * @returns {number}                     - The projected lateral area.
-  */
-  static calculateLateralWindArea(loa, superstructureHeight) {
-    const areaCoefficient = 0.4;
-    const lateralArea = areaCoefficient * loa * superstructureHeight;
-
-    return GeneralUtil.truncToDecimal(lateralArea, 2);
+    return forces;
   }
 }
 
-export default VesselUtil;
+export default VesselModel;

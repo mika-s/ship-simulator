@@ -26,6 +26,32 @@ it('should create an action to set wind direction in the UI block', () => {
   expect(actions.setWindDirection(direction)).toEqual(expectedAction);
 });
 
+it('should create an action to set current speed in the UI block', () => {
+  const speed = 0.1;
+
+  const expectedAction = {
+    type: 'SET_CURRENT_SPEED',
+    payload: {
+      speed,
+    },
+  };
+
+  expect(actions.setCurrentSpeed(speed)).toEqual(expectedAction);
+});
+
+it('should create an action to set current direction in the UI block', () => {
+  const direction = 36.0;
+
+  const expectedAction = {
+    type: 'SET_CURRENT_DIRECTION',
+    payload: {
+      direction,
+    },
+  };
+
+  expect(actions.setCurrentDirection(direction)).toEqual(expectedAction);
+});
+
 it('should create an action to set position in the UI and vesselmodel block', () => {
   const position = {
     latitude: 5.0,

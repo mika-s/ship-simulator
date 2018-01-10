@@ -1,7 +1,7 @@
 import GeneralUtil from '../../util/general.util';
 
 function updateArray(oldArray, newValue) {
-  const secondToSave = 30;
+  const secondToSave = 60;
 
   const newArray = oldArray.slice();
 

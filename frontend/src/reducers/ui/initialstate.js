@@ -3,6 +3,10 @@ import UiThruster from '../constructors/uithruster';
 
 const uiInitialState = {
   thrusters: [],
+  current: {
+    speed: 0.0,
+    direction: 0.0,
+  },
   wind: {
     speed: 0.0,
     direction: 0.0,

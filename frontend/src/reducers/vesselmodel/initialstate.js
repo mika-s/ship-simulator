@@ -60,6 +60,7 @@ const vesselModelInitialState = {
     surge: 0.0,
     sway: 0.0,
     yaw: 0.0,
+    yawSway: 0.0,
   },
 };
 

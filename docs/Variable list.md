@@ -21,11 +21,18 @@
 
 ## Environment
 
-wind.speed
-wind.direction
-
-current.speed
-current.direction
+| Variable              | Dimension  | Unit  | Description                         |
+|-----------------------|------------|-------|-------------------------------------|
+| wind.speed            | speed      | m/s   | The wind speed.                     |
+| wind.direction        | angle      | °     | The direction of the wind.          |
+| wind.forces.surge     | force      | T     | Force due to the wind, in surge.    |
+| wind.forces.sway      | force      | T     | Force due to the wind, in sway.     |
+| wind.forces.yaw       | moment     | Tm    | Moment due to the wind, in yaw.     |
+| current.speed         | speed      | m/s   | The current speed.                  |
+| current.direction     | angle      | °     | The current direction.              |
+| current.forces.surge  | force      | T     | Force due to the current, in surge. |
+| current.forces.sway   | force      | T     | Force due to the current, in sway.  |
+| current.forces.yaw    | moment     | Tm    | Moment due to the current, in yaw.  |
 
 ## Sensors
 

@@ -51,7 +51,7 @@
 \label{eq:vessel_model}
 \begin{aligned}
 	\boldsymbol{\dot{\eta}} &= \boldsymbol{R} (\psi) \boldsymbol{\nu} \\
-	(\boldsymbol{M}_{RB} + \boldsymbol{M}_A) \boldsymbol{\dot{\nu}}_r + \boldsymbol{D} \boldsymbol{\nu}_r |\boldsymbol{\nu_r}| &= \boldsymbol{\tau}_{thr} + \boldsymbol{\tau}_{wind} + \boldsymbol{\tau}_{ext}
+	(\boldsymbol{M}_{RB} + \boldsymbol{M}_A) \boldsymbol{\dot{\nu}} + \boldsymbol{D} \boldsymbol{\nu} |\boldsymbol{\nu}| &= \boldsymbol{\tau}_{thr} + \boldsymbol{\tau}_{wind} + \boldsymbol{\tau}_{current} + \boldsymbol{\tau}_{ext}
 \end{aligned}
 \end{equation}
 \\
@@ -128,13 +128,12 @@ Rotation from vessel coordinates (BODY) to Earth coordinates (NED) can be done w
 \end{equation}
 %
 where $\psi$ is the heading of the vessel. $\boldsymbol{\eta} = [N, E, \psi]^{\top}$ is the position in North, East and heading. $\boldsymbol{\nu} = [u, v, r]^{\top}$ 
-is velocity in surge, sway and yaw. $\boldsymbol{\nu}_c = [u_c, v_c, r_c]^{\top}$ is current velocity in surge, sway and yaw. 
-$\boldsymbol{\nu}_r = \boldsymbol{\nu} - \boldsymbol{\nu}_c$is then relative vessel velocity.
+is velocity in surge, sway and yaw.
 
 
 \section{Thruster model}
 
-The force that a single thruster can give can be written as
+The force that a single thruster can use can be written as
 
 \begin{equation}
 	T = K_T \rho D^4 n^2,
@@ -160,6 +159,8 @@ they can be merged together into one constant. $n$ can also be normalized such t
 \end{equation}
 %
 where $T_{K} = K D^4 K_n^2$.
+%
+This model is suitable for bollard pull condition, i.e. zero water speed through the propeller other than the self-induced speed.
 
 \section{Wind model}
 
@@ -180,5 +181,7 @@ $\boldsymbol{\tau}_{wind}$  are wind forces that influence the vessel. The force
 where $C_X$, $C_Y$ og $C_N$ are wind coefficients (drag coefficients) in surge, sway og yaw, $A_f$ is projected frontal area and $A_l$ is projected lateral area.
 $q = \frac{1}{2} \cdot \rho_{air} \cdot V_{w,r}^2$, where $\rho_{air}$ is the density of air and $V_r$ is relative wind velocity.
 $C_X$, $C_Y$ og $C_N$ are typically found with emprical methods such as Blendermann. These are functions of relative wind velocity.
+
+\section{Current model}
 
 \end{document}

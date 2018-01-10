@@ -25,7 +25,7 @@ class WindUtil {
 
     const windDirectionInRads = windDirection * (Math.PI / 180.0);
 
-    const ρW = 1.225; // kg/m^3
+    const ρ = 1.225; // kg/m^3
 
     const cartWindSpeed = {
       surge: windSpeed * Math.cos(windDirectionInRads - vesselHeading),
@@ -68,7 +68,7 @@ class WindUtil {
       throw new Error('Wrong wind force calculation coefficient type supplied: ', windParams.coefficientCalcType);
     }
 
-    const q = 0.5 * ρW * (relativeWindSpeed ** 2);
+    const q = 0.5 * ρ * (relativeWindSpeed ** 2);
 
     return {
       surge: (10 ** -3) * q * coefficients.CX * windParams.frontalArea,
