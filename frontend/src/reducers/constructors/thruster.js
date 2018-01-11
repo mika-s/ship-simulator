@@ -1,4 +1,60 @@
-import ThrUtil from '../ship/thruster.util';
+/**
+* Calculate maximum force, both directions, using IMCA's rules.
+* @param {string} type              - Thruster type: tunnel, azimuth, propeller or waterjet.
+* @param {object} maxPowerPositive  - Maximum power, positive and negative direction.
+* @returns {object}                 - Object containing max force in pos. and neg. direction.
+* @returns {number}                 - Maximum force in positive direction.
+* @returns {number}                 - Maximum force in negative direction.
+*/
+function calculateMaxForce(type, maxPower) {
+  const grav = 9.81;
+  const hpPerKw = 1.36332;
+
+  let conversionFactorPositive;
+  let conversionFactorNegative;
+
+  if (type === 'tunnel') {
+    conversionFactorPositive = 11.0 * (10 ** -3) * hpPerKw * grav;
+    conversionFactorNegative = -11.0 * (10 ** -3) * hpPerKw * grav;
+  } else if (type === 'azimuth') {
+    conversionFactorPositive = 13.0 * (10 ** -3) * hpPerKw * grav;
+    conversionFactorNegative = -8.0 * (10 ** -3) * hpPerKw * grav;
+  } else if (type === 'propeller') {
+    conversionFactorPositive = 13.0 * (10 ** -3) * hpPerKw * grav;
+    conversionFactorNegative = -0.7 * conversionFactorPositive;
+  } else if (type === 'waterjet') {
+    conversionFactorPositive = 8.0 * (10 ** -3) * hpPerKw * grav;
+    conversionFactorNegative = 0.0;
+  } else {
+    throw new Error('Illegal thruster type.');
+  }
+
+  const maxForcePositive = conversionFactorPositive * (maxPower.positive / 9.81);
+  const maxForceNegative = conversionFactorNegative * (maxPower.negative / 9.81);
+
+  return { positive: maxForcePositive, negative: maxForceNegative };
+}
+
+/**
+* Convert risetimes from %/s and °/s to factor/s.
+* @param {object} risetimes   - The risetimes object.
+* @returns {object}           - The risetimes object with converted values.
+*/
+function normalizeRisetimes(risetimes) {
+  const convertedRisetimes = JSON.parse(JSON.stringify(risetimes));
+
+  if (convertedRisetimes.rpm) {
+    convertedRisetimes.rpm.positive /= 100.0;
+    convertedRisetimes.rpm.negative /= 100.0;
+  }
+
+  if (convertedRisetimes.pitch) {
+    convertedRisetimes.pitch.positive /= 100.0;
+    convertedRisetimes.pitch.negative /= 100.0;
+  }
+
+  return convertedRisetimes;
+}
 
 function assertThrusterConstructorInput(
   number, name, thrusterType, controlType,
@@ -169,13 +225,13 @@ function Thruster(data) {
   this.maxPower = maxPower;
   this.location = location;
   this.misc = misc;
-  this.risetimes = ThrUtil.normalizeRisetimes(risetimes, thrusterType);
+  this.risetimes = normalizeRisetimes(risetimes, thrusterType);
   this.pitchExponent = pitchExponent;
   this.pitchPowerExponent = pitchPowerExponent;
   this.rpmExponent = controlType === 'rpm' ? { positive: 2.0, negative: 2.0 } : { positive: 0.0, negative: 0.0 };
   this.rpmPowerExponent = controlType === 'rpm' ? { positive: 3.0, negative: 3.0 } : { positive: 0.0, negative: 0.0 };
 
-  this.maxForce = ThrUtil.calculateMaxForce(thrusterType, maxPower);
+  this.maxForce = calculateMaxForce(thrusterType, maxPower);
 
   this.force = 0.0;
   this.power = 0.0;
