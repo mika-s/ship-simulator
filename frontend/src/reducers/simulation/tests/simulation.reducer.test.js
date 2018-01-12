@@ -1,6 +1,8 @@
 import simulationReducer from '../simulation.reducer';
-import initialState from '../initialstate';
+import getInitialState from '../initialstate';
 import { simulationState } from '../../../util/enums';
+
+const initialState = getInitialState();
 
 it('should return the initial state when no action', () => {
   expect(simulationReducer(initialState, {})).toEqual(initialState);

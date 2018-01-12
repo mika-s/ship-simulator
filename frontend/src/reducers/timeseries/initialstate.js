@@ -13,4 +13,8 @@ const timeseriesInitialState = {
   },
 };
 
-export default timeseriesInitialState;
+function getInitialState() {
+  return timeseriesInitialState;
+}
+
+export default getInitialState;

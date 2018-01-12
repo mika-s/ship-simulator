@@ -2,7 +2,7 @@ function assertWindsensorConstructorInput(number, speed, direction) {
   const minNumber = 1;
   const maxNumber = 20;
   const minSpeed = 0.0;
-  const maxSpeed = 360.0;
+  const maxSpeed = 50.0;
   const minDirection = 0.0;
   const maxDirection = 360.0;
 

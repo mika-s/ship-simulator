@@ -21,29 +21,38 @@
 
 ## Environment
 
-wind.speed
-wind.direction
-
-current.speed
-current.direction
+| Variable              | Dimension  | Unit  | Description                         |
+|-----------------------|------------|-------|-------------------------------------|
+| wind.speed            | speed      | m/s   | The wind speed.                     |
+| wind.direction        | angle      | °     | The direction of the wind.          |
+| wind.forces.surge     | force      | T     | Force due to the wind, in surge.    |
+| wind.forces.sway      | force      | T     | Force due to the wind, in sway.     |
+| wind.forces.yaw       | moment     | Tm    | Moment due to the wind, in yaw.     |
+| current.speed         | speed      | m/s   | The current speed.                  |
+| current.direction     | angle      | °     | The current direction.              |
+| current.forces.surge  | force      | T     | Force due to the current, in surge. |
+| current.forces.sway   | force      | T     | Force due to the current, in sway.  |
+| current.forces.yaw    | moment     | Tm    | Moment due to the current, in yaw.  |
 
 ## Sensors
 
-gyrocompass.number
-gyrocompass.heading
-
-mru.number
-mru.roll
-mru.pitch
-
-windsensor.number
-windsensor.speed
-windsensor.direction
+| Variable               | Dimension  | Unit  | Description                                         |
+|------------------------|------------|-------|-----------------------------------------------------|
+| gyrocompass.number     | -          | -     | Gyrocompass number.                                 |
+| gyrocompass.heading    | angle      | °     | The vessel's heading as read from the gyrocompass.  |
+| mru.number             | -          | -     | MRU number.                                         |
+| mru.roll               | angle      | °     | The roll of the vessel as read from the MRU.        |
+| mru.pitch              | angle      | °     | The pitch of the vessel as read from the MRU.       |
+| windsensor.number      | -          | -     | MRU number.                                         |
+| windsensor.speed       | speed      | m/s   | The wind speed as read from the wind sensor.        |
+| windsensor.direction   | angle      | °     | The wind direction as read from the wind sensor.    |
 
 ## Reference systems
 
-gps.number
-gps.position.latitude
-gps.position.longitude
+| Variable               | Dimension  | Unit  | Description                            |
+|------------------------|------------|-------|----------------------------------------|
+| gps.number             | -          | -     | GPS number.                            |
+| gps.position.latitude  | angle      | °     | The read latitude in decimal degrees.  |
+| gps.position.longitude | angle      | °     | The read longitude in decimal degrees. |
 
 ## Thrusters

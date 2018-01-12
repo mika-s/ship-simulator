@@ -29,6 +29,24 @@ export default function uiReducer(state, action) {
           return thruster;
         }),
       };
+    case 'SET_CURRENT_SPEED':
+      return {
+        ...state,
+
+        current: {
+          ...state.current,
+          speed: action.payload.speed,
+        },
+      };
+    case 'SET_CURRENT_DIRECTION':
+      return {
+        ...state,
+
+        current: {
+          ...state.current,
+          direction: action.payload.direction,
+        },
+      };
     case 'SET_WIND_SPEED':
       return {
         ...state,

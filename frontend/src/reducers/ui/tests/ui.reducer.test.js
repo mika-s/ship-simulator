@@ -1,9 +1,9 @@
-import thrusters from './testdata';
+import mockInitialVesselModel from './testdata';
 import uiReducer from '../ui.reducer';
-import initialState from '../initialstate';
+import getInitialState from '../initialstate';
 import { motion } from '../../../util/enums';
 
-initialState.thrusters = thrusters;
+const initialState = getInitialState(mockInitialVesselModel);
 
 it('should handle SET_THRUSTER_DEMAND', () => {
   const action = {

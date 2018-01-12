@@ -13,3 +13,15 @@ So,
 In the environment reducer the wind speed and direction is set from the UI wind
 speed and direction during SIMULATE. Should maybe read from UI wind only when
 SET_WIND_SPEED and SET_WIND_DIRECTION is used.
+
+The root reducer should be split in simulation and UI stuff.
+
+The UI reducer should be split into several subreducers.
+
+Find a suitable value for dragYawSway.
+
+Find better current load methods in general.
+
+## Code
+
+Move KinematicsUtil to a general folder.

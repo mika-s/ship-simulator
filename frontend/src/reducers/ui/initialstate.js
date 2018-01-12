@@ -1,7 +1,12 @@
 import { motion } from '../../util/enums';
+import UiThruster from '../constructors/uithruster';
 
 const uiInitialState = {
   thrusters: [],
+  current: {
+    speed: 0.0,
+    direction: 0.0,
+  },
   wind: {
     speed: 0.0,
     direction: 0.0,
@@ -25,4 +30,14 @@ const uiInitialState = {
   },
 };
 
-export default uiInitialState;
+function getInitialState(InitialVessel) {
+  uiInitialState.position = InitialVessel.model.position;
+
+  for (let thrIdx = 0; thrIdx < InitialVessel.thrusters.length; thrIdx += 1) {
+    uiInitialState.thrusters.push(new UiThruster(InitialVessel.thrusters[thrIdx]));
+  }
+
+  return uiInitialState;
+}
+
+export default getInitialState;

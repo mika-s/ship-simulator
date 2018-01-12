@@ -1,5 +1,5 @@
 import initialState from './initialstate';
-import VesselModel from './vesselmodel/VesselModel';
+import VesselModel from './vesselmodel/vessel.util';
 import vesselmodelReducer from './vesselmodel/vesselmodel.reducer';
 import environmentReducer from './environment/environment.reducer';
 import shipReducer from './ship/ship.reducer';
@@ -12,15 +12,18 @@ export default function rootreducer(state = initialState, action) {
   let model;
 
   if (action.type === 'SIMULATE' || action.type === 'STOP_SIMULATION') {
-    forces = VesselModel.calculateForces(state.ship.thrusters, state.environment.wind.forces);
+    forces = VesselModel.calculateForces(
+      state.ship.thrusters,
+      state.environment.wind.forces,
+      state.environment.current.forces,
+    );
 
     model = VesselModel.calculatePosition(
       state.vesselmodel.mass,
       state.vesselmodel.drag,
       forces,
-      state.vesselmodel.model.position,
-      state.vesselmodel.model.positionInMeters,
-      state.vesselmodel.model.velocity,
+      state.vesselmodel.model,
+      state.environment.current,
     );
   }
 
@@ -34,8 +37,9 @@ export default function rootreducer(state = initialState, action) {
         ),
         simulation: simulationReducer(state.simulation, action),
         environment: environmentReducer(
-          state.environment, action, state.ui.wind, model.velocity,
-          model.position.heading, state.vesselmodel.dimensions, state.vesselmodel.wind,
+          state.environment, action, state.ui.current, state.ui.wind, model.velocity,
+          model.position.heading, model.velocity.r, state.vesselmodel.dimensions,
+          state.vesselmodel.wind, state.vesselmodel.drag,
         ),
         ship: shipReducer(state.ship, action, model, state.ui.thrusters, state.environment.wind),
         vesselmodel: vesselmodelReducer(
@@ -70,6 +74,16 @@ export default function rootreducer(state = initialState, action) {
         ui: uiReducer(state.ui, action),
       };
     case 'SET_WIND_DIRECTION':
+      return {
+        ...state,
+        ui: uiReducer(state.ui, action),
+      };
+    case 'SET_CURRENT_SPEED':
+      return {
+        ...state,
+        ui: uiReducer(state.ui, action),
+      };
+    case 'SET_CURRENT_DIRECTION':
       return {
         ...state,
         ui: uiReducer(state.ui, action),
