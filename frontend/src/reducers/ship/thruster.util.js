@@ -1,6 +1,12 @@
 import { thrusterFeedbackState } from '../../util/enums';
+import KinematicsUtil from '../vesselmodel/kinematics.util';
 
 class ThrusterUtil {
+  /**
+  * Get the thruster force.
+  * @param {object} thruster   - The thruster object.
+  * @returns {number}          - The force delivered by the thruster.
+  */
   static getForces(thruster) {
     let rpmPart;
     let pitchPart;
@@ -34,6 +40,11 @@ class ThrusterUtil {
     return newForce;
   }
 
+  /**
+  * Get the thruster power.
+  * @param {object} thruster   - The thruster object.
+  * @returns {number}          - The consumed power of the thruster.
+  */
   static getPower(thruster) {
     let rpmPart;
     let pitchPart;
@@ -67,6 +78,12 @@ class ThrusterUtil {
     return newPower;
   }
 
+  /**
+  * Set the thruster demands.
+  * @param {object} thruster   - The thruster object.
+  * @param {object} demand     - The demand object with demands in rpm, pitch and azimuth.
+  * @returns {object}          - Object with thruster demands in rpm, pitch and azimuth.
+  */
   static setDemand(thruster, demand) {
     return {
       ...demand,
@@ -74,6 +91,11 @@ class ThrusterUtil {
     };
   }
 
+  /**
+  * Get the thruster feedbacks.
+  * @param {object} thruster   - The thruster object.
+  * @returns {object}          - Object with thruster feedback in rpm, pitch and azimuth.
+  */
   static getFeedback(thruster) {
     const newFeedback = { rpm: 0.0, pitch: 0.0 };
     const { controlType: type } = thruster;
@@ -104,8 +126,14 @@ class ThrusterUtil {
 
     if (ThrusterUtil.isAzi(thruster.thrusterType)) {
       const aziDifference = thruster.demand.azimuth - thruster.feedback.azimuth;
+
+      // Find shortest distance.
+      const ccw = aziDifference > 0 ? aziDifference - 360.0 : aziDifference;
+      const cw = aziDifference > 0 ? aziDifference : 360 + aziDifference;
+      const chosenAziDiff = Math.abs(ccw) < Math.abs(cw) ? ccw : cw;
+
       const aziFeedbackState =
-        ThrusterUtil.getFeedbackState(aziDifference, thruster.risetimes.azimuth);
+        ThrusterUtil.getFeedbackState(chosenAziDiff, thruster.risetimes.azimuth);
       const { positive: rtPosAzi, negative: rtNegAzi } = thruster.risetimes.azimuth;
 
       switch (aziFeedbackState) {
@@ -131,6 +159,8 @@ class ThrusterUtil {
       newFeedback.azimuth = thruster.feedback.azimuth;
     }
 
+    newFeedback.azimuth = KinematicsUtil.transformTo0To360(newFeedback.azimuth);
+
     return newFeedback;
   }
 
@@ -145,8 +175,9 @@ class ThrusterUtil {
 
   /**
   * Get the state of the thruster feedback.
-  * @param {string} thrusterType   - Type of thruster.
-  * @returns {boolean}             - true if azimuth can be changed, false otherwise.
+  * @param {number} difference   - Difference between demand and feedback.
+  * @param {object} risetimes    - Object of risetimes.
+  * @returns {enum}              - Demand/feedback state of the thruster.
   */
   static getFeedbackState(difference, risetimes) {
     const { positive: rtPos, negative: rtNeg } = risetimes;
@@ -163,6 +194,8 @@ class ThrusterUtil {
       state = thrusterFeedbackState.DECREASING_BY_RT;
     } else if (difference < 0 && difference >= rtNeg) {
       state = thrusterFeedbackState.DECREASING_LT_RT;
+    } else {
+      throw new Error('Illegal state');
     }
 
     return state;
