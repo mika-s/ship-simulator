@@ -10,10 +10,21 @@ import Settings from './components/settings/Settings';
 import SimulatorControl from './components/simulator-control/Simulator-control';
 import Menu from './components/menu/Menu';
 
+const menu = [
+  { name: 'Dashboard', href: '/' },
+  { name: 'Map', href: '/map' },
+  { name: 'Control', href: '/control' },
+  { name: 'Power', href: '/power' },
+  { name: 'Thrusters', href: '/thrusters' },
+  { name: 'Sensors', href: '/sensors' },
+  { name: 'Reference systems', href: '/reference-systems' },
+  { name: 'Settings', href: '/settings' },
+];
+
 const App = () =>
   (
     <div className="container">
-      <Menu />
+      <Menu items={menu} />
 
       <main>
         <SimulatorControl />
