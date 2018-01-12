@@ -1,4 +1,4 @@
-import KinematicsUtil from './kinematics.util';
+import KinematicsUtil from '../../util/kinematics.util';
 import GeoUtil from './geo.util';
 
 class VesselModel {
