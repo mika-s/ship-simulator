@@ -1,7 +1,7 @@
 import React, { Component } from 'react';
 import { connect } from 'react-redux';
 import PropTypes from 'prop-types';
-import GPS from '../gps/GPS';
+import GPS from './GPS';
 import './ReferenceSystems.css';
 
 class ReferenceSystems extends Component {

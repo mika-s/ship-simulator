@@ -1,5 +1,5 @@
 import { thrusterFeedbackState } from '../../util/enums';
-import KinematicsUtil from '../vesselmodel/kinematics.util';
+import KinematicsUtil from '../../util/kinematics.util';
 
 class ThrusterUtil {
   /**

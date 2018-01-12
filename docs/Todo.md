@@ -16,12 +16,6 @@ SET_WIND_SPEED and SET_WIND_DIRECTION is used.
 
 The root reducer should be split in simulation and UI stuff.
 
-The UI reducer should be split into several subreducers.
-
 Find a suitable value for dragYawSway.
 
 Find better current load methods in general.
-
-## Code
-
-Move KinematicsUtil to a general folder.

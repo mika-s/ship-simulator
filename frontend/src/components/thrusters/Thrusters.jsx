@@ -2,7 +2,7 @@ import React, { Component } from 'react';
 import PropTypes from 'prop-types';
 import { connect } from 'react-redux';
 import { setThrusterDemand } from '../../actions/ui.thruster.actions';
-import Thruster from '../thruster/Thruster';
+import Thruster from './Thruster';
 import './Thrusters.css';
 
 class Thrusters extends Component {

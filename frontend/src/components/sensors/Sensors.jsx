@@ -1,9 +1,9 @@
 import React, { Component } from 'react';
 import { connect } from 'react-redux';
 import PropTypes from 'prop-types';
-import GyroCompass from '../gyrocompass/GyroCompass';
-import MruSensor from '../mrusensor/MruSensor';
-import WindSensor from '../windsensor/WindSensor';
+import GyroCompass from './GyroCompass';
+import MruSensor from './MruSensor';
+import WindSensor from './WindSensor';
 import './Sensors.css';
 
 class Sensors extends Component {

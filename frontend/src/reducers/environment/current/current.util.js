@@ -1,4 +1,4 @@
-import KinematicsUtil from '../../vesselmodel/kinematics.util';
+import KinematicsUtil from '../../../util/kinematics.util';
 import { maxBasedTrigonometric } from './trigonometric';
 
 class CurrentUtil {
