@@ -1,6 +1,5 @@
 import React, { Component } from 'react';
 import PropTypes from 'prop-types';
-import './GyroCompass.css';
 
 class GyroCompass extends Component {
   constructor() {

@@ -1,6 +1,5 @@
 import React, { Component } from 'react';
 import PropTypes from 'prop-types';
-import './GPS.css';
 
 class GPS extends Component {
   constructor() {

@@ -1,6 +1,5 @@
 import React, { Component } from 'react';
 import PropTypes from 'prop-types';
-import './MruSensor.css';
 
 class MruSensor extends Component {
   constructor() {
