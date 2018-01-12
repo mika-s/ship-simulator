@@ -53,18 +53,3 @@ it('transformTo0To2pi(5.5π) = 3/2π', () => {
   const transformedAngle = KinematicsUtil.transformTo0To2pi(5.5 * Math.PI);
   expect(transformedAngle).toBeCloseTo((3 / 2) * Math.PI, 5);
 });
-
-/* calculateFrontalWindArea() */
-
-it('calculateFrontalWindArea(20, 25) = 400', () => {
-  const area = KinematicsUtil.calculateFrontalWindArea(20, 25);
-  expect(area).toEqual(400);
-});
-
-/* calculateLateralWindArea() */
-
-it('calculateLateralWindArea(100, 25) = 1000', () => {
-  const area = KinematicsUtil.calculateLateralWindArea(100, 25);
-  expect(area).toEqual(1000);
-});
-
