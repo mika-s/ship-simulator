@@ -1,6 +1,7 @@
 import React, { Component } from 'react';
 import PropTypes from 'prop-types';
 import LinearSlider from '../LinearSlider/LinearSlider';
+import LinearGauge from '../LinearGauge/LinearGauge';
 import './TunnelThruster.css';
 
 class TunnelThruster extends Component {
@@ -19,15 +20,33 @@ class TunnelThruster extends Component {
   }
 
   render() {
-    const { demand, controlType } = this.props.thrusterData;
+    const {
+      name, demand, feedback, controlType,
+    } = this.props.thrusterData;
 
     return (
       <div className="tunnel-thruster">
-        <LinearSlider
-          initialValue={demand[controlType]}
-          orientation="horizontal"
-          changeDemand={this.changeDemand}
-        />
+        <div className="card">
+          <div className="card-block">
+            <h4 className="card-title">{name}</h4>
+          </div>
+          <ul className="list-group list-group-flush">
+            <li className="list-group-item">
+              <LinearSlider
+                initialValue={demand[controlType]}
+                orientation="horizontal"
+                changeDemand={this.changeDemand}
+              />
+            </li>
+            <li className="list-group-item">
+              <LinearGauge
+                value={feedback[controlType]}
+                orientation="horizontal"
+                disabled
+              />
+            </li>
+          </ul>
+        </div>
       </div>
     );
   }

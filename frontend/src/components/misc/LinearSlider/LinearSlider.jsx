@@ -26,20 +26,27 @@ class LinearSlider extends Component {
 
   render() {
     const {
-      orientation, min, max,
+      orientation, min, max, disabled,
     } = this.props;
 
     return (
       <div className={orientation === 'vertical' ? 'linear-slider-vertical' : 'linear-slider-horizontal'}>
-        <input
-          type="range"
-          min={min}
-          max={max}
-          value={this.state.value}
-          onChange={this.handleOnChange}
-          onMouseUp={this.handleOnMouseUp}
-        />
-        {this.state.value}
+        <div className="row">
+          <div className="col-lg-6">
+            <input
+              type="range"
+              min={min}
+              max={max}
+              value={this.state.value}
+              onChange={this.handleOnChange}
+              onMouseUp={this.handleOnMouseUp}
+              disabled={disabled}
+            />
+          </div>
+          <div className="col-lg-6">
+            {this.state.value}
+          </div>
+        </div>
       </div>
     );
   }
@@ -48,11 +55,13 @@ class LinearSlider extends Component {
 LinearSlider.defaultProps = {
   min: -100,
   max: 100,
+  disabled: false,
 };
 
 LinearSlider.propTypes = {
   min: PropTypes.number,
   max: PropTypes.number,
+  disabled: PropTypes.bool,
   orientation: PropTypes.string.isRequired,
   initialValue: PropTypes.number.isRequired,
   changeDemand: PropTypes.func.isRequired,

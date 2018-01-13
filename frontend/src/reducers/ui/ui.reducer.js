@@ -15,6 +15,6 @@ export default function uiReducer(state, action) {
     position: positionReducer(state.position, action),
     dashboard: dashboardReducer(state.dashboard, action),
     map: mapReducer(state.map, action),
-    control: controlReducer(state.map, action),
+    control: controlReducer(state.control, action),
   };
 }

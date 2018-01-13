@@ -1,5 +1,6 @@
+import { vesselControlMode } from '../../util/enums';
+
 export default function controlReducer(state, action, uiControl) {
-  console.log(uiControl);
   switch (action.type) {
     case 'SIMULATE':
       return {
@@ -9,7 +10,7 @@ export default function controlReducer(state, action, uiControl) {
     case 'STOP_SIMULATION':
       return {
         ...state,
-        mode: 0,
+        mode: vesselControlMode.LEVER,
       };
     default:
       return state;

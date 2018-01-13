@@ -7,7 +7,7 @@ import { vesselControlMode } from '../../util/enums';
 import Lever from './Lever';
 import './Control.css';
 
-class Settings extends Component {
+class Control extends Component {
   constructor() {
     super();
     this.state = {};
@@ -70,7 +70,7 @@ class Settings extends Component {
 }
 
 const mapStateToProps = state => ({
-  uiMode: state.ui.control.mode,
+  // uiMode: state.ui.control.mode,
   mode: state.control.mode,
   thrusters: state.ship.thrusters,
 });
@@ -80,13 +80,14 @@ const mapDispatchToProps = dispatch => ({
   setThrusterDemand: (number, type, demand) => dispatch(setThrusterDemand(number, type, demand)),
 });
 
-const ConnectedSettings = connect(mapStateToProps, mapDispatchToProps)(Settings);
+const ConnectedControl = connect(mapStateToProps, mapDispatchToProps)(Control);
 
-Settings.propTypes = {
+Control.propTypes = {
+  // uiMode: PropTypes.number.isRequired,
   mode: PropTypes.number.isRequired,
   thrusters: PropTypes.arrayOf(PropTypes.object).isRequired,
   setControlMode: PropTypes.func.isRequired,
   setThrusterDemand: PropTypes.func.isRequired,
 };
 
-export default ConnectedSettings;
+export default ConnectedControl;
