@@ -10,6 +10,7 @@ import Thrusters from './components/thrusters/Thrusters';
 import Settings from './components/settings/Settings';
 import SimulatorControl from './components/simulator-control/Simulator-control';
 import Menu from './components/menu/Menu';
+import './App.css';
 
 const menu = [
   { name: 'Dashboard', href: '/' },

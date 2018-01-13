@@ -37,13 +37,11 @@ class Control extends Component {
   }
 
   render() {
-    const { mode, thrusters } = this.props;
+    const { thrusters } = this.props;
 
     return (
       <div className="settings">
         <h2>Control</h2>
-        <h3>Modes</h3>
-        {mode}
         <form className="form-inline" style={{ marginTop: 20 }}>
           <input
             type="button"

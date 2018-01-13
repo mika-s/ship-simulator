@@ -1,3 +1,10 @@
-.tunnel-thruster {
-  width: 300px;
+/* .tunnel-thruster {
+  width: 400px;
+} */
+
+.description-column {
+  padding-left: 0px !important;
+  padding-right: 0px !important;
+  margin-left: 0px !important;
+  margin-right: 0px !important;
 }

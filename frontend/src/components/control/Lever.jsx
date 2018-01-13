@@ -14,7 +14,6 @@ class Lever extends Component {
 
     return (
       <div className="settings">
-        <h4>Lever</h4>
         <div className="thruster-slider">
           <TunnelThruster
             thrusterData={thrusters[0]}

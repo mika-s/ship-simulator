@@ -31,8 +31,8 @@ class LinearSlider extends Component {
 
     return (
       <div className={orientation === 'vertical' ? 'linear-slider-vertical' : 'linear-slider-horizontal'}>
-        <div className="row">
-          <div className="col-lg-6">
+        <div className="row no-padding">
+          <div className="col-lg-9">
             <input
               type="range"
               min={min}
@@ -43,8 +43,8 @@ class LinearSlider extends Component {
               disabled={disabled}
             />
           </div>
-          <div className="col-lg-6">
-            {this.state.value}
+          <div className="col-lg-3">
+            {this.state.value} %
           </div>
         </div>
       </div>

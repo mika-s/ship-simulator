@@ -26,26 +26,35 @@ class TunnelThruster extends Component {
 
     return (
       <div className="tunnel-thruster">
-        <div className="card">
-          <div className="card-block">
-            <h4 className="card-title">{name}</h4>
+        <div className="card w-25">
+          <div className="card-body">
+            <h5 className="card-title">{name}</h5>
+
+            <div className="row no-padding">
+              <div className="col-lg-5">
+                Demand:
+              </div>
+              <div className="col-lg-7">
+                <LinearSlider
+                  initialValue={demand[controlType]}
+                  orientation="horizontal"
+                  changeDemand={this.changeDemand}
+                />
+              </div>
+            </div>
+            <div className="row no-padding">
+              <div className="col-lg-5">
+                Feedback:
+              </div>
+              <div className="col-lg-7">
+                <LinearGauge
+                  value={feedback[controlType]}
+                  orientation="horizontal"
+                  disabled
+                />
+              </div>
+            </div>
           </div>
-          <ul className="list-group list-group-flush">
-            <li className="list-group-item">
-              <LinearSlider
-                initialValue={demand[controlType]}
-                orientation="horizontal"
-                changeDemand={this.changeDemand}
-              />
-            </li>
-            <li className="list-group-item">
-              <LinearGauge
-                value={feedback[controlType]}
-                orientation="horizontal"
-                disabled
-              />
-            </li>
-          </ul>
         </div>
       </div>
     );
