@@ -4,6 +4,7 @@ import windReducer from './wind.reducer';
 import mapReducer from './map.reducer';
 import positionReducer from './position.reducer';
 import thrusterReducer from './thruster.reducer';
+import controlReducer from './control.reducer';
 
 export default function uiReducer(state, action) {
   return {
@@ -14,5 +15,6 @@ export default function uiReducer(state, action) {
     position: positionReducer(state.position, action),
     dashboard: dashboardReducer(state.dashboard, action),
     map: mapReducer(state.map, action),
+    control: controlReducer(state.map, action),
   };
 }

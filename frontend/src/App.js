@@ -1,6 +1,7 @@
 import React from 'react';
 import { Switch, Route } from 'react-router-dom';
 import Dashboard from './components/dashboard/Dashboard';
+import Control from './components/control/Control';
 import Map from './components/map/Map';
 import Power from './components/power/Power';
 import Sensors from './components/sensors/Sensors';
@@ -32,6 +33,7 @@ const App = () =>
         <Switch>
           <Route exact path="/" component={Dashboard} />
           <Route path="/map" component={Map} />
+          <Route path="/control" component={Control} />
           <Route path="/power" component={Power} />
           <Route path="/sensors" component={Sensors} />
           <Route path="/reference-systems" component={ReferenceSystems} />

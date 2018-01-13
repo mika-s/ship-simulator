@@ -1,5 +1,6 @@
 import initialState from './initialstate';
 import VesselModel from './vesselmodel/vessel.util';
+import controlReducer from './control/control.reducer';
 import vesselmodelReducer from './vesselmodel/vesselmodel.reducer';
 import environmentReducer from './environment/environment.reducer';
 import shipReducer from './ship/ship.reducer';
@@ -31,6 +32,8 @@ export default function rootreducer(state = initialState, action) {
     case 'SIMULATE':
       return {
         ...state,
+
+        control: controlReducer(state.control, action, state.ui.control),
         timeseries: timeseriesReducer(
           state.timeseries, action, state.simulation.time,
           model, state.ship.sensors,
@@ -113,6 +116,11 @@ export default function rootreducer(state = initialState, action) {
         ui: uiReducer(state.ui, action),
       };
     case 'TOGGLE_MOTION_TYPE':
+      return {
+        ...state,
+        ui: uiReducer(state.ui, action),
+      };
+    case 'SET_CONTROL_MODE':
       return {
         ...state,
         ui: uiReducer(state.ui, action),

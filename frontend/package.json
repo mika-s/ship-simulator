@@ -1,6 +1,6 @@
 {
   "name": "frontend",
-  "version": "0.1.4",
+  "version": "0.1.5",
   "private": true,
   "dependencies": {
     "chart.js": "^2.7.1",
@@ -28,7 +28,7 @@
     "redux-devtools": "^3.4.1"
   },
   "jest": {
-    "collectCoverageFrom" : [
+    "collectCoverageFrom": [
       "src/**/*.{js,jsx}",
       "!**/node_modules/**",
       "!**/vendor/**"
