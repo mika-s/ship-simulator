@@ -28,7 +28,6 @@ class TunnelThruster extends Component {
         <div className="card">
           <div className="card-body">
             <h5 className="card-title">{name}</h5>
-
             <div className="row no-padding">
               <div className="col-lg-5" style={{ fontSize: '70%' }}>
                 Demand

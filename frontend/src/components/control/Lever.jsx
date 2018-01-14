@@ -40,14 +40,6 @@ class Lever extends Component {
   constructor() {
     super();
     this.state = {};
-
-    this.key = 100;
-    this.getKey = this.getKey.bind(this);
-  }
-
-  getKey() {
-    this.key += 1;
-    return this.key;
   }
 
   render() {
@@ -65,7 +57,7 @@ class Lever extends Component {
             thrusters[thrIdx].location.y === layout.grid[rowIdx][colIdx].y) {
             isThrusterColumn = true;
             cols.push(
-              <div className={`col-lg-${columnWidth}`} key={this.getKey()}>
+              <div className={`col-lg-${columnWidth}`} key={colIdx * 100}>
                 {thrusters[thrIdx].thrusterType === 'tunnel' &&
                   <TunnelThruster
                     thrusterData={thrusters[thrIdx]}
@@ -83,11 +75,11 @@ class Lever extends Component {
         }
 
         if (!isThrusterColumn) {
-          cols.push(<div className={`col-lg-${columnWidth}`} key={this.getKey()} />);
+          cols.push(<div className={`col-lg-${columnWidth}`} key={colIdx * 100} />);
         }
       }
 
-      rows.push(<div className="row" key={this.getKey()}>{cols}</div>);
+      rows.push(<div className="row" key={rowIdx * 10}>{cols}</div>);
     }
 
     return (
