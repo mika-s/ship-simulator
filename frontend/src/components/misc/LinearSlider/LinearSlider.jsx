@@ -16,7 +16,8 @@ class LinearSlider extends Component {
   handleOnChange = (event) => {
     event.preventDefault();
     const { value } = event.target;
-    this.setState({ value });
+    const valueAsFloat = Number.parseFloat(value);
+    this.setState({ value: valueAsFloat });
   }
 
   handleOnMouseUp = (event) => {
@@ -28,6 +29,8 @@ class LinearSlider extends Component {
     const {
       orientation, min, max, disabled,
     } = this.props;
+
+    const displayValue = this.state.value.toFixed(0);
 
     let output;
     if (orientation === 'vertical') {
@@ -48,7 +51,7 @@ class LinearSlider extends Component {
           </div>
           <div className="row no-padding">
             <div className="col-lg-12">
-              {this.state.value} %
+              {displayValue} %
             </div>
           </div>
         </div>
@@ -69,7 +72,7 @@ class LinearSlider extends Component {
               />
             </div>
             <div className="col-lg-3">
-              {this.state.value} %
+              {displayValue} %
             </div>
           </div>
         </div>

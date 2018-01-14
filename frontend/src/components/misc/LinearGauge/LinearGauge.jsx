@@ -13,6 +13,8 @@ class LinearGauge extends Component {
       orientation, min, max, disabled, value,
     } = this.props;
 
+    const displayValue = (value * 100).toFixed(0);
+
     let output;
     if (orientation === 'vertical') {
       output = (
@@ -30,7 +32,7 @@ class LinearGauge extends Component {
           </div>
           <div className="row no-padding">
             <div className="col-lg-12">
-              {value} %
+              {displayValue} %
             </div>
           </div>
         </div>
@@ -49,7 +51,7 @@ class LinearGauge extends Component {
               />
             </div>
             <div className="col-lg-3">
-              {value} %
+              {displayValue} %
             </div>
           </div>
         </div>
