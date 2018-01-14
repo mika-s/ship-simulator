@@ -25,7 +25,7 @@ class TunnelThruster extends Component {
 
     return (
       <div className="tunnel-thruster">
-        <div className="card w-25">
+        <div className="card">
           <div className="card-body">
             <h5 className="card-title">{name}</h5>
 

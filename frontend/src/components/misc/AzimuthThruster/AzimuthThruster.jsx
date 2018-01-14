@@ -25,7 +25,7 @@ class AzimuthThruster extends Component {
 
     return (
       <div className="azimuth-thruster">
-        <div className="card w-25">
+        <div className="card">
           <div className="card-body" style={{ paddingRight: 0 }}>
             <h5 className="card-title">{name}</h5>
 
