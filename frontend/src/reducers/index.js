@@ -58,6 +58,7 @@ export default function rootreducer(state = initialState, action) {
     case 'STOP_SIMULATION':
       return {
         ...state,
+        control: controlReducer(state.control, action, state.ui.control),
         timeseries: timeseriesReducer(state.timeseries, action),
         simulation: simulationReducer(state.simulation, action),
         ship: shipReducer(state.ship, action, model, state.ui.thrusters),
@@ -65,6 +66,7 @@ export default function rootreducer(state = initialState, action) {
           state.vesselmodel, action,
           model, forces, state.ui.position,
         ),
+        ui: uiReducer(state.ui, action),
       };
     case 'SET_THRUSTER_DEMAND':
       return {

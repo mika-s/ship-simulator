@@ -19,3 +19,5 @@ The root reducer should be split in simulation and UI stuff.
 Find a suitable value for dragYawSway.
 
 Find better current load methods in general.
+
+Fix current model with respect to drag.yaw * velocity.r.

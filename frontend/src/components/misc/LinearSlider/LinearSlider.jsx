@@ -29,26 +29,54 @@ class LinearSlider extends Component {
       orientation, min, max, disabled,
     } = this.props;
 
-    return (
-      <div className={orientation === 'vertical' ? 'linear-slider-vertical' : 'linear-slider-horizontal'}>
-        <div className="row no-padding">
-          <div className="col-lg-9">
-            <input
-              type="range"
-              min={min}
-              max={max}
-              value={this.state.value}
-              onChange={this.handleOnChange}
-              onMouseUp={this.handleOnMouseUp}
-              disabled={disabled}
-            />
+    let output;
+    if (orientation === 'vertical') {
+      output = (
+        <div className="linear-slider-vertical">
+          <div className="row no-padding">
+            <div className="col-lg-12" style={{ height: 150 }}>
+              <input
+                type="range"
+                min={min}
+                max={max}
+                value={this.state.value}
+                onChange={this.handleOnChange}
+                onMouseUp={this.handleOnMouseUp}
+                disabled={disabled}
+              />
+            </div>
           </div>
-          <div className="col-lg-3">
-            {this.state.value} %
+          <div className="row no-padding">
+            <div className="col-lg-12">
+              {this.state.value} %
+            </div>
           </div>
         </div>
-      </div>
-    );
+      );
+    } else {
+      output = (
+        <div className="linear-slider-horizontal">
+          <div className="row no-padding">
+            <div className="col-lg-9">
+              <input
+                type="range"
+                min={min}
+                max={max}
+                value={this.state.value}
+                onChange={this.handleOnChange}
+                onMouseUp={this.handleOnMouseUp}
+                disabled={disabled}
+              />
+            </div>
+            <div className="col-lg-3">
+              {this.state.value} %
+            </div>
+          </div>
+        </div>
+      );
+    }
+
+    return output;
   }
 }
 

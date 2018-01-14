@@ -13,24 +13,50 @@ class LinearGauge extends Component {
       orientation, min, max, disabled, value,
     } = this.props;
 
-    return (
-      <div className={orientation === 'vertical' ? 'linear-slider-vertical' : 'linear-slider-horizontal'}>
-        <div className="row no-padding">
-          <div className="col-lg-9">
-            <input
-              type="range"
-              min={min}
-              max={max}
-              value={value * 100}
-              disabled={disabled}
-            />
+    let output;
+    if (orientation === 'vertical') {
+      output = (
+        <div className="linear-slider-vertical">
+          <div className="row no-padding" style={{ height: 150 }}>
+            <div className="col-lg-12">
+              <input
+                type="range"
+                min={min}
+                max={max}
+                value={value * 100}
+                disabled={disabled}
+              />
+            </div>
           </div>
-          <div className="col-lg-3">
-            {value} %
+          <div className="row no-padding">
+            <div className="col-lg-12">
+              {value} %
+            </div>
           </div>
         </div>
-      </div>
-    );
+      );
+    } else {
+      output = (
+        <div className="linear-slider-horizontal">
+          <div className="row no-padding">
+            <div className="col-lg-9">
+              <input
+                type="range"
+                min={min}
+                max={max}
+                value={value * 100}
+                disabled={disabled}
+              />
+            </div>
+            <div className="col-lg-3">
+              {value} %
+            </div>
+          </div>
+        </div>
+      );
+    }
+
+    return output;
   }
 }
 
