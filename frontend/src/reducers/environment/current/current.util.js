@@ -14,7 +14,7 @@ class CurrentUtil {
   */
   static calculateForces(
     currentSpeed, currentDirection, vesselHeading, rotationSpeed,
-    dimensions, drag,
+    dimensions, // drag,
   ) {
     const currentDirectionInRad = currentDirection * (Math.PI / 180.0);
     const ρ = 1024.0; // kg/m^3
@@ -38,7 +38,7 @@ class CurrentUtil {
     return {
       surge: q * coefficients.CX * frontalArea,
       sway: q * coefficients.CY * lateralArea,
-      yaw: (q * coefficients.CN * lateralArea * dimensions.loa) - (drag.yaw * rotationSpeed),
+      yaw: (q * coefficients.CN * lateralArea * dimensions.loa),
     };
   }
 }

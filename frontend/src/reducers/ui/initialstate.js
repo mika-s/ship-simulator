@@ -1,4 +1,4 @@
-import { motion } from '../../util/enums';
+import { motion, vesselControlMode } from '../../util/enums';
 import UiThruster from '../constructors/uithruster';
 
 const uiInitialState = {
@@ -27,6 +27,9 @@ const uiInitialState = {
   map: {
     zoomlevel: 5, // 0 to 19
     motion: motion.TRUE,
+  },
+  control: {
+    mode: vesselControlMode.LEVER,
   },
 };
 

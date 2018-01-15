@@ -7,6 +7,13 @@ export default function thrusterReducer(state, action) {
         }
         return thruster;
       });
+    case 'STOP_SIMULATION':
+      return state.map((thruster) => {
+        thruster.demand.rpm = 0.0;
+        thruster.demand.pitch = 0.0;
+        thruster.demand.azimuth = 0.0;
+        return thruster;
+      });
     default:
       return state;
   }

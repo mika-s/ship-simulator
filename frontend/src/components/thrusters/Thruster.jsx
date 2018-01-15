@@ -3,7 +3,7 @@ import PropTypes from 'prop-types';
 import Azimuth from './Azimuth';
 import Pitch from './Pitch';
 import Rpm from './Rpm';
-import './Thruster.css';
+import './Thrusters.css';
 
 class Thruster extends Component {
   constructor() {
@@ -25,7 +25,7 @@ class Thruster extends Component {
           <h4 className="card-title">{name}</h4>
           <h6 className="card-subtitle mb-2 text-muted">No. {number}</h6>
           <div className="card-text">
-            <table className="typeTable">
+            <table className="type-table">
               <tbody>
                 <tr>
                   <td>Thruster type:</td>
@@ -77,7 +77,19 @@ class Thruster extends Component {
 }
 
 Thruster.propTypes = {
-  thrusterData: PropTypes.object.isRequired,
+  thrusterData: PropTypes.shape({
+    number: PropTypes.number,
+    name: PropTypes.string,
+    thrusterType: PropTypes.string,
+    controlType: PropTypes.string,
+    maxPower: PropTypes.object,
+    location: PropTypes.object,
+    risetimes: PropTypes.object,
+    force: PropTypes.number,
+    power: PropTypes.number,
+    demand: PropTypes.object,
+    feedback: PropTypes.object,
+  }).isRequired,
   setThrusterDemand: PropTypes.func.isRequired,
 };
 
