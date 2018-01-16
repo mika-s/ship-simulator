@@ -28,7 +28,7 @@ class KinematicsUtil {
   }
 
   /**
-  * Transform an angle in the range -Inf,Inf to 0,360°.
+  * Transform an angle in the range -∞,∞ to 0,360°.
   * @param {number} angle     - The angle to transform.
   * @returns {number}         - The angle transformed.
   */
@@ -37,7 +37,7 @@ class KinematicsUtil {
   }
 
   /**
-  * Transform an angle in the range -Inf,Inf to 0,2π.
+  * Transform an angle in the range -∞,∞ to 0,2π.
   * @param {number} angle     - The angle to transform.
   * @returns {number}         - The angle transformed.
   */

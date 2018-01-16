@@ -15,7 +15,7 @@ app.use((req, res, next) => {
   next();
 });
 
-app.use(express.static(path.join(__dirname, 'dist')));
+app.use(express.static(path.join(__dirname, 'frontend/build')));
 app.use(express.json());
 
 app.set('port', process.env.PORT || 8080);

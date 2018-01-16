@@ -18,7 +18,7 @@ class LinearGauge extends Component {
     let output;
     if (orientation === 'vertical') {
       output = (
-        <div className="linear-slider-vertical">
+        <div className="linear-gauge-vertical">
           <div className="row no-padding" style={{ height: 150 }}>
             <div className="col-lg-12">
               <input
@@ -39,7 +39,7 @@ class LinearGauge extends Component {
       );
     } else {
       output = (
-        <div className="linear-slider-horizontal">
+        <div className="linear-gauge-horizontal">
           <div className="row no-padding">
             <div className="col-lg-9">
               <input

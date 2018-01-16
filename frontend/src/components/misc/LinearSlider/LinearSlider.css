@@ -12,3 +12,11 @@
   transform-origin: 75px 75px;
   transform: rotate(-90deg);
 }
+
+.linear-slider-vertical input:hover {
+  cursor: pointer;
+}
+
+.linear-slider-horizontal input:hover {
+  cursor: pointer;
+}

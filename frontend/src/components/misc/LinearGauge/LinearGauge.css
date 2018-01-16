@@ -1,11 +1,11 @@
-.linear-slider-vertical {
+.linear-gauge-vertical {
   display: inline-block;
   width: 20px;
   height: 150px;
   padding: 0;
 }
 
-.linear-slider-vertical input {
+.linear-gauge-vertical input {
   width: 150px;
   height: 20px;
   margin: 0;

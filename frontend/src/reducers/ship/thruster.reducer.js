@@ -16,12 +16,12 @@ export default function thrusterReducer(state, action, demand) {
         demand: {
           rpm: 0.0,
           pitch: 0.0,
-          azimuth: ThrUtil.isAzi(state.thrusterType) ? state.demand.azimuth : 0.0,
+          azimuth: ThrUtil.isAzi(state.thrusterType) ? 0.0 : state.demand.azimuth,
         },
         feedback: {
           rpm: 0.0,
           pitch: 0.0,
-          azimuth: ThrUtil.isAzi(state.thrusterType) ? state.feedback.azimuth : 0.0,
+          azimuth: ThrUtil.isAzi(state.thrusterType) ? 0.0 : state.feedback.azimuth,
         },
         force: 0.0,
         power: 0.0,

@@ -1,9 +1,10 @@
 {
   "name": "frontend",
-  "version": "0.1.5",
+  "version": "0.2.0",
   "private": true,
   "dependencies": {
     "chart.js": "^2.7.1",
+    "d3": "^4.12.2",
     "geodesy": "^1.1.2",
     "immutability-helper": "^2.6.2",
     "prop-types": "^15.6.0",
