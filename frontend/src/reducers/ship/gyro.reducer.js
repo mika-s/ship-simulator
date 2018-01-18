@@ -1,4 +1,4 @@
-import GeneralUtil from '../../util/general.util';
+import { getRandomBetween, truncToDecimal } from '../../util/general.util';
 
 function getHeading(modelHeading) {
   const minHeading = 0.0;
@@ -8,7 +8,7 @@ function getHeading(modelHeading) {
 
   // Add measurement noise.
   let newHeading = modelHeading +
-    GeneralUtil.getRandomBetween(minNoiseAmplitude, maxNoiseAmplitude);
+    getRandomBetween(minNoiseAmplitude, maxNoiseAmplitude);
 
   // Apply clip limits.
   newHeading = Math.min(newHeading, maxHeading);
@@ -18,7 +18,7 @@ function getHeading(modelHeading) {
   newHeading *= (180.0 / Math.PI);
 
   // Remove unnecessary decimals. Keep 1.
-  newHeading = GeneralUtil.truncToDecimal(newHeading, 1);
+  newHeading = truncToDecimal(newHeading, 1);
 
   return newHeading;
 }

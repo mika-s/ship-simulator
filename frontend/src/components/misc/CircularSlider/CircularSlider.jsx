@@ -1,7 +1,7 @@
 import React, { Component } from 'react';
 import PropTypes from 'prop-types';
 import * as d3 from 'd3';
-import KinematicsUtil from '../../../util/kinematics.util';
+import { transformTo0To360 } from '../../../util/kinematics.util';
 import './CircularSlider.css';
 
 class CircularSlider extends Component {
@@ -41,7 +41,7 @@ class CircularSlider extends Component {
 
     function dragended() {
       const angle =
-        KinematicsUtil.transformTo0To360(Math.atan2(d3.event.x, -d3.event.y) * (180.0 / Math.PI));
+        transformTo0To360(Math.atan2(d3.event.x, -d3.event.y) * (180.0 / Math.PI));
       changeDemand(Math.round(angle));
 
       d3.select(this).classed('dragging', false);

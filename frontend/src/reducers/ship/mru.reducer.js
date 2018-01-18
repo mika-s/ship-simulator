@@ -1,4 +1,4 @@
-import GeneralUtil from '../../util/general.util';
+import { getRandomBetween, truncToDecimal } from '../../util/general.util';
 
 function getRoll(roll) {
   const minRoll = -20.0;
@@ -7,14 +7,14 @@ function getRoll(roll) {
   const maxNoiseAmplitude = 0.05;
 
   // Add measurement noise.
-  let newRoll = roll + GeneralUtil.getRandomBetween(minNoiseAmplitude, maxNoiseAmplitude);
+  let newRoll = roll + getRandomBetween(minNoiseAmplitude, maxNoiseAmplitude);
 
   // Apply clip limits.
   newRoll = Math.min(newRoll, maxRoll);
   newRoll = Math.max(newRoll, minRoll);
 
   // Remove unnecessary decimals. Keep 2.
-  newRoll = GeneralUtil.truncToDecimal(newRoll, 2);
+  newRoll = truncToDecimal(newRoll, 2);
 
   return newRoll;
 }
@@ -25,14 +25,14 @@ function getPitch(pitch) {
   const minNoiseAmplitude = -0.05;
   const maxNoiseAmplitude = 0.05;
 
-  let newPitch = pitch + GeneralUtil.getRandomBetween(minNoiseAmplitude, maxNoiseAmplitude);
+  let newPitch = pitch + getRandomBetween(minNoiseAmplitude, maxNoiseAmplitude);
 
   // Apply clip limits.
   newPitch = Math.min(newPitch, maxPitch);
   newPitch = Math.max(newPitch, minPitch);
 
   // Remove unnecessary decimals. Keep 2.
-  newPitch = GeneralUtil.truncToDecimal(newPitch, 2);
+  newPitch = truncToDecimal(newPitch, 2);
 
   return newPitch;
 }

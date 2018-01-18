@@ -22,7 +22,6 @@ class AzimuthThruster extends Component {
   }
 
   changeAziDemand(value) {
-    console.log('change azi demand ', value);
     const { number } = this.props.thrusterData;
 
     this.props.setThrusterDemand(number, 'azimuth', value);

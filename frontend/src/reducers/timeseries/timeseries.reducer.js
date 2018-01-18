@@ -1,4 +1,4 @@
-import GeneralUtil from '../../util/general.util';
+import { truncToDecimal } from '../../util/general.util';
 
 function updateArray(oldArray, newValue) {
   const secondToSave = 60;
@@ -28,7 +28,7 @@ export default function timeseriesReducer(state, action, time, model, sensors) {
             longitude: updateArray(state.model.position.longitude, model.position.longitude),
             heading: updateArray(
               state.model.position.heading,
-              GeneralUtil.truncToDecimal(model.position.heading * (180.0 / Math.PI), 2),
+              truncToDecimal(model.position.heading * (180.0 / Math.PI), 2),
             ),
           },
         },

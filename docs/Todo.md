@@ -12,8 +12,6 @@ Find a suitable value for dragYawSway.
 Find better current load methods in general.
 Fix current model with respect to drag.yaw * velocity.r.
 
-Move util functions out of classes.
-
 ## Structure
 
 VesselModel --> UI --> set store

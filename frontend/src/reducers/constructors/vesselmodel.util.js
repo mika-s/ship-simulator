@@ -1,4 +1,4 @@
-import GeneralUtil from '../../util/general.util';
+import { truncToDecimal } from '../../util/general.util';
 
 /**
 * Calculate the displacement of a vessel.
@@ -16,7 +16,7 @@ export function calculateDisplacement(dimensions) {
   const ρWater = 1.024;
 
   let displacement = ρWater * blockCoefficient * lpp * breadth * draft;
-  displacement = GeneralUtil.truncToDecimal(displacement, 2);
+  displacement = truncToDecimal(displacement, 2);
 
   return displacement;
 }
@@ -80,7 +80,7 @@ export function calculateFrontalWindArea(breadth, superstructureHeight) {
   const areaCoefficient = 0.8;
   const frontalArea = areaCoefficient * breadth * superstructureHeight;
 
-  return GeneralUtil.truncToDecimal(frontalArea, 2);
+  return truncToDecimal(frontalArea, 2);
 }
 
 /**
@@ -94,5 +94,5 @@ export function calculateLateralWindArea(loa, superstructureHeight) {
   const areaCoefficient = 0.4;
   const lateralArea = areaCoefficient * loa * superstructureHeight;
 
-  return GeneralUtil.truncToDecimal(lateralArea, 2);
+  return truncToDecimal(lateralArea, 2);
 }
