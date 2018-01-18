@@ -6,3 +6,12 @@ export function setControlMode(mode) {
     },
   };
 }
+
+export function setAutopilotHeading(heading) {
+  return {
+    type: 'SET_AUTOPILOT_HEADING',
+    payload: {
+      heading,
+    },
+  };
+}

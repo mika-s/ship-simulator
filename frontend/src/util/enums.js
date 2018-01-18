@@ -12,6 +12,6 @@ const motion = {
   TRUE: 1, RELATIVE: 2,
 };
 
-const vesselControlMode = { STANDBY: 1, LEVER: 2 };
+const vesselControlMode = { STANDBY: 1, LEVER: 2, AUTOPILOT: 3 };
 
 export { simulationState, thrusterFeedbackState, motion, vesselControlMode };

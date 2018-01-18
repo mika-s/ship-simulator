@@ -29,7 +29,10 @@ const uiInitialState = {
     motion: motion.TRUE,
   },
   control: {
-    mode: vesselControlMode.LEVER,
+    mode: vesselControlMode.AUTOPILOT,
+    autopilot: {
+      heading: 0.0,
+    },
   },
 };
 

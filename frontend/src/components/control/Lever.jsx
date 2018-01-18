@@ -83,7 +83,7 @@ class Lever extends Component {
     }
 
     return (
-      <div className="settings">
+      <div className="lever">
         <div className="thrusters">
           {rows}
         </div>

@@ -5,6 +5,14 @@ export default function controlReducer(state, action) {
         ...state,
         mode: action.payload.mode,
       };
+    case 'SET_AUTOPILOT_HEADING':
+      return {
+        ...state,
+        autopilot: {
+          ...state.autopilot,
+          heading: action.payload.heading,
+        },
+      };
     default:
       return state;
   }

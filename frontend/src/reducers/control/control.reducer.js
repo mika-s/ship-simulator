@@ -6,11 +6,15 @@ export default function controlReducer(state, action, uiControl) {
       return {
         ...state,
         mode: uiControl.mode,
+        autopilot: {
+          ...state.autopilot,
+          heading: uiControl.autopilot.heading,
+        },
       };
     case 'STOP_SIMULATION':
       return {
         ...state,
-        mode: vesselControlMode.LEVER,
+        mode: vesselControlMode.AUTOPILOT,
       };
     default:
       return state;

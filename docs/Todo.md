@@ -12,6 +12,8 @@ Find a suitable value for dragYawSway.
 Find better current load methods in general.
 Fix current model with respect to drag.yaw * velocity.r.
 
+Make all forms controller (thruster stuff).
+
 ## Structure
 
 VesselModel --> UI --> set store
