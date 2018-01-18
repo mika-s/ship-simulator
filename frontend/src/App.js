@@ -8,7 +8,7 @@ import Sensors from './components/sensors/Sensors';
 import ReferenceSystems from './components/reference-systems/ReferenceSystems';
 import Thrusters from './components/thrusters/Thrusters';
 import Settings from './components/settings/Settings';
-import SimulatorControl from './components/simulator-control/Simulator-control';
+import SimulatorControl from './components/simulator-control/SimulatorControl';
 import Menu from './components/menu/Menu';
 import './App.css';
 
