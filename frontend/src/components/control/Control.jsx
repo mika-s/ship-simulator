@@ -68,7 +68,6 @@ class Control extends Component {
 }
 
 const mapStateToProps = state => ({
-  // uiMode: state.ui.control.mode,
   mode: state.control.mode,
   thrusters: state.ship.thrusters,
 });
@@ -81,7 +80,6 @@ const mapDispatchToProps = dispatch => ({
 const ConnectedControl = connect(mapStateToProps, mapDispatchToProps)(Control);
 
 Control.propTypes = {
-  // uiMode: PropTypes.number.isRequired,
   mode: PropTypes.number.isRequired,
   thrusters: PropTypes.arrayOf(PropTypes.object).isRequired,
   setControlMode: PropTypes.func.isRequired,

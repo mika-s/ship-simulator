@@ -14,14 +14,14 @@ class LinearSlider extends Component {
     this.handleOnMouseUp = this.handleOnMouseUp.bind(this);
   }
 
-  handleOnChange = (event) => {
+  handleOnChange(event) {
     event.preventDefault();
     const { value } = event.target;
     const valueAsFloat = Number.parseFloat(value);
     this.setState({ value: valueAsFloat });
   }
 
-  handleOnMouseUp = (event) => {
+  handleOnMouseUp(event) {
     event.preventDefault();
     this.props.changeDemand(this.state.value);
   }

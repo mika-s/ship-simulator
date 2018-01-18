@@ -3,9 +3,9 @@ import PropTypes from 'prop-types';
 import { connect } from 'react-redux';
 import { simulate, pauseSimulation, stopSimulation } from '../../actions/simulation.actions';
 import { simulationState } from '../../util/enums';
-import './Simulator-control.css';
+import './SimulatorControl.css';
 
-class SimulatorControl extends Component {
+export class UnconnectedSimulatorControl extends Component {
   constructor() {
     super();
     this.state = {};
@@ -84,9 +84,9 @@ const mapDispatchToProps = dispatch => ({
   onStopClick: () => dispatch(stopSimulation()),
 });
 
-const ConnectedSimulatorControl = connect(mapStateToProps, mapDispatchToProps)(SimulatorControl);
+const SimulatorControl = connect(mapStateToProps, mapDispatchToProps)(UnconnectedSimulatorControl);
 
-SimulatorControl.propTypes = {
+UnconnectedSimulatorControl.propTypes = {
   time: PropTypes.number.isRequired,
   state: PropTypes.number.isRequired,
   onSimulateClick: PropTypes.func.isRequired,
@@ -94,4 +94,4 @@ SimulatorControl.propTypes = {
   onStopClick: PropTypes.func.isRequired,
 };
 
-export default ConnectedSimulatorControl;
+export default SimulatorControl;

@@ -1,5 +1,5 @@
 import initialState from './initialstate';
-import VesselModel from './vesselmodel/vessel.util';
+import { calculateForces, calculatePosition } from './vesselmodel/vessel.util';
 import controlReducer from './control/control.reducer';
 import vesselmodelReducer from './vesselmodel/vesselmodel.reducer';
 import environmentReducer from './environment/environment.reducer';
@@ -13,13 +13,13 @@ export default function rootreducer(state = initialState, action) {
   let model;
 
   if (action.type === 'SIMULATE' || action.type === 'STOP_SIMULATION') {
-    forces = VesselModel.calculateForces(
+    forces = calculateForces(
       state.ship.thrusters,
       state.environment.wind.forces,
       state.environment.current.forces,
     );
 
-    model = VesselModel.calculatePosition(
+    model = calculatePosition(
       state.vesselmodel.mass,
       state.vesselmodel.drag,
       forces,

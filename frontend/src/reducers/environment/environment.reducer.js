@@ -1,5 +1,5 @@
-import CurrentUtil from './current/current.util';
-import WindUtil from './wind/wind.util';
+import { calculateForces as calculateCurrentForces } from './current/current.util';
+import { calculateForces as calculateWindForces } from './wind/wind.util';
 
 export default function environmentReducer(
   state, action, uiCurrent, uiWind, vesselSpeed,
@@ -10,7 +10,7 @@ export default function environmentReducer(
       return {
         ...state,
         current: {
-          forces: CurrentUtil.calculateForces(
+          forces: calculateCurrentForces(
             state.current.speed, state.current.direction,
             vesselHeading, vesselSpeed.r, dimensions, drag,
           ),
@@ -19,7 +19,7 @@ export default function environmentReducer(
         },
         wind: {
           ...state.wind,
-          forces: WindUtil.calculateForces(
+          forces: calculateWindForces(
             state.wind.speed, state.wind.direction,
             vesselSpeed, vesselHeading, dimensions, windParams,
           ),

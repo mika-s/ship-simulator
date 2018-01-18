@@ -1,0 +1,26 @@
+.circumference {
+  fill: #fff;
+  stroke: #e1dcd2;
+  stroke-width: 5px;
+}
+
+.dotD circle:hover {
+  cursor: pointer;
+}
+
+.dotD circle {
+  fill: #1c74b8;
+  stroke: #1c74b8;
+  stroke-width: 1.5px;
+}
+
+.dotD circle.dragging {
+  fill: #3b64d4;
+  stroke: #0530ec;
+}
+
+.dotF circle {
+  fill: #b8551c;
+  stroke: #b8551c;
+  stroke-width: 1.5px;
+}

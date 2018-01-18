@@ -1,14 +1,17 @@
 import React, { Component } from 'react';
 import PropTypes from 'prop-types';
+import CircularSlider from '../CircularSlider/CircularSlider';
 import LinearSlider from '../LinearSlider/LinearSlider';
 import LinearGauge from '../LinearGauge/LinearGauge';
 
 class AzimuthThruster extends Component {
   constructor(props) {
     super(props);
-    this.state = {};
+    this.state = {
+    };
 
     this.changeDemand = this.changeDemand.bind(this);
+    this.changeAziDemand = this.changeAziDemand.bind(this);
   }
 
   changeDemand(value) {
@@ -18,16 +21,22 @@ class AzimuthThruster extends Component {
     this.props.setThrusterDemand(number, controlType, demandFactor);
   }
 
+  changeAziDemand(value) {
+    const { number } = this.props.thrusterData;
+
+    this.props.setThrusterDemand(number, 'azimuth', value);
+  }
+
   render() {
     const {
-      name, demand, feedback, controlType,
+      name, number, demand, feedback, controlType,
     } = this.props.thrusterData;
 
     return (
       <div className="azimuth-thruster">
         <div className="card">
-          <div className="card-body" style={{ paddingRight: 0 }}>
-            <h5 className="card-title">{name}</h5>
+          <div className="card-body" style={{ paddingRight: 0, paddingLeft: 0, paddingBottom: 0 }}>
+            <h5 className="card-title" style={{ paddingLeft: 15 }}>{name}</h5>
 
             <div className="row no-padding">
               <div className="col-lg-7" />
@@ -40,7 +49,14 @@ class AzimuthThruster extends Component {
             </div>
 
             <div className="row no-padding">
-              <div className="col-lg-8" />
+              <div className="col-lg-8">
+                <CircularSlider
+                  number={number}
+                  demand={demand.azimuth}
+                  feedback={feedback.azimuth}
+                  changeDemand={this.changeAziDemand}
+                />
+              </div>
               <div className="col-lg-2">
                 <LinearSlider
                   initialValue={demand[controlType]}

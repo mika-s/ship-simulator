@@ -1,4 +1,4 @@
-import GeneralUtil from '../../util/general.util';
+import { getRandomBetween, truncToDecimal } from '../../util/general.util';
 
 /* function getRelativeSpeedAndDirection(modelSpeed, modelDirection, vesselSpeed, vesselHeading) {
   let x = modelSpeed * Math.cos((
@@ -29,14 +29,14 @@ function getSpeed(modelSpeed, modelDirection, vesselSpeed, vesselHeading) {
 
   // Add measurement noise.
   let newSpeed = modelSpeed +
-    GeneralUtil.getRandomBetween(minNoiseAmplitude, maxNoiseAmplitude);
+    getRandomBetween(minNoiseAmplitude, maxNoiseAmplitude);
 
   // Apply clip limits.
   newSpeed = Math.min(newSpeed, maxSpeed);
   newSpeed = Math.max(newSpeed, minSpeed);
 
   // Remove unnecessary decimals. Keep 2.
-  newSpeed = GeneralUtil.truncToDecimal(newSpeed, 2);
+  newSpeed = truncToDecimal(newSpeed, 2);
 
   return newSpeed;
 }
@@ -54,14 +54,14 @@ function getDirection(modelSpeed, modelDirection, vesselSpeed, vesselHeading) {
 
   // Add measurement noise.
   let newDirection = modelDirection +
-    GeneralUtil.getRandomBetween(minNoiseAmplitude, maxNoiseAmplitude);
+    getRandomBetween(minNoiseAmplitude, maxNoiseAmplitude);
 
   // Apply clip limits.
   newDirection = Math.min(newDirection, maxDirection);
   newDirection = Math.max(newDirection, minDirection);
 
   // Remove unnecessary decimals. Keep 2.
-  newDirection = GeneralUtil.truncToDecimal(newDirection, 2);
+  newDirection = truncToDecimal(newDirection, 2);
 
   return newDirection;
 }

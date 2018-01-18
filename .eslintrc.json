@@ -5,6 +5,7 @@
         "no-param-reassign": [2, { "props": false }],
         "consistent-return": "off",
         "no-underscore-dangle": "off",
+        "import/prefer-default-export": "off",
         "react/jsx-filename-extension": [1, { "extensions": [".js", ".jsx"] }],
         "jsx-a11y/anchor-is-valid": [ "error", {
             "components": [ "Link" ],

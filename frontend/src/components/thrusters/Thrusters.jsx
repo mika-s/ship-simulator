@@ -5,7 +5,7 @@ import { setThrusterDemand } from '../../actions/ui.thruster.actions';
 import Thruster from './Thruster';
 import './Thrusters.css';
 
-class Thrusters extends Component {
+export class UnconnectedThrusters extends Component {
   constructor() {
     super();
     this.state = {};
@@ -36,11 +36,11 @@ const mapDispatchToProps = dispatch => ({
   setThrusterDemand: (number, type, demand) => dispatch(setThrusterDemand(number, type, demand)),
 });
 
-const ConnectedThrusters = connect(mapStateToProps, mapDispatchToProps)(Thrusters);
+const Thrusters = connect(mapStateToProps, mapDispatchToProps)(UnconnectedThrusters);
 
-Thrusters.propTypes = {
+UnconnectedThrusters.propTypes = {
   thrusters: PropTypes.arrayOf(PropTypes.object).isRequired,
   setThrusterDemand: PropTypes.func.isRequired,
 };
 
-export default ConnectedThrusters;
+export default Thrusters;

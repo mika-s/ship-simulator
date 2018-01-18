@@ -1,4 +1,4 @@
-import GeneralUtil from '../../util/general.util';
+import { getRandomBetween, truncToDecimal } from '../../util/general.util';
 
 function getPosition(model) {
   const minLatitude = -90.0;
@@ -10,10 +10,10 @@ function getPosition(model) {
 
   // Add measurement noise.
   let newLatitude = model.position.latitude +
-    GeneralUtil.getRandomBetween(minNoiseAmplitude, maxNoiseAmplitude);
+    getRandomBetween(minNoiseAmplitude, maxNoiseAmplitude);
 
   let newLongitude = model.position.longitude +
-    GeneralUtil.getRandomBetween(minNoiseAmplitude, maxNoiseAmplitude);
+    getRandomBetween(minNoiseAmplitude, maxNoiseAmplitude);
 
   // Apply clip limits.
   newLatitude = Math.min(newLatitude, maxLatitude);
@@ -23,8 +23,8 @@ function getPosition(model) {
   newLongitude = Math.max(newLongitude, minLongitude);
 
   // Remove unnecessary decimals. Keep 6.
-  newLatitude = GeneralUtil.truncToDecimal(newLatitude, 6);
-  newLongitude = GeneralUtil.truncToDecimal(newLongitude, 6);
+  newLatitude = truncToDecimal(newLatitude, 6);
+  newLongitude = truncToDecimal(newLongitude, 6);
 
   return {
     latitude: newLatitude,
