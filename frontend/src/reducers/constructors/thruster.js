@@ -1,3 +1,5 @@
+import { vesselControlMode } from '../../util/enums';
+
 /**
 * Calculate maximum force, both directions, using IMCA's rules.
 * @param {string} type              - Thruster type: tunnel, azimuth, propeller or waterjet.
@@ -230,6 +232,7 @@ function Thruster(data) {
   this.pitchPowerExponent = pitchPowerExponent;
   this.rpmExponent = controlType === 'rpm' ? { positive: 2.0, negative: 2.0 } : { positive: 0.0, negative: 0.0 };
   this.rpmPowerExponent = controlType === 'rpm' ? { positive: 3.0, negative: 3.0 } : { positive: 0.0, negative: 0.0 };
+  this.mode = vesselControlMode.AUTOPILOT;
 
   this.maxForce = calculateMaxForce(thrusterType, maxPower);
 

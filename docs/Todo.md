@@ -17,3 +17,7 @@ Make all forms controller (thruster stuff).
 ## Structure
 
 VesselModel --> UI --> set store
+
+VesselModel calculations in middleware?
+
+Should there be a separate UI module in the store?

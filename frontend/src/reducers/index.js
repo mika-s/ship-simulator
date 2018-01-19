@@ -44,7 +44,10 @@ export default function rootreducer(state = initialState, action) {
           model.position.heading, state.vesselmodel.dimensions,
           state.vesselmodel.wind, state.vesselmodel.drag,
         ),
-        ship: shipReducer(state.ship, action, model, state.ui.thrusters, state.environment.wind),
+        ship: shipReducer(
+          state.ship, action, model, state.control,
+          state.ui.thrusters, state.environment.wind,
+        ),
         vesselmodel: vesselmodelReducer(
           state.vesselmodel, action,
           model, forces, state.ui.position,
@@ -61,12 +64,12 @@ export default function rootreducer(state = initialState, action) {
         control: controlReducer(state.control, action, state.ui.control),
         timeseries: timeseriesReducer(state.timeseries, action),
         simulation: simulationReducer(state.simulation, action),
-        ship: shipReducer(state.ship, action, model, state.ui.thrusters),
+        ship: shipReducer(state.ship, action, model, state.control, state.ui.thrusters),
         vesselmodel: vesselmodelReducer(
           state.vesselmodel, action,
           model, forces, state.ui.position,
         ),
-        ui: uiReducer(state.ui, action),
+        ui: uiReducer(state.ui, action, state.control),
       };
     case 'SET_THRUSTER_DEMAND':
       return {
@@ -128,6 +131,16 @@ export default function rootreducer(state = initialState, action) {
         ui: uiReducer(state.ui, action),
       };
     case 'SET_AUTOPILOT_HEADING':
+      return {
+        ...state,
+        ui: uiReducer(state.ui, action),
+      };
+    case 'SET_AUTOPILOT_SPEED':
+      return {
+        ...state,
+        ui: uiReducer(state.ui, action),
+      };
+    case 'TOGGLE_AUTOPILOT':
       return {
         ...state,
         ui: uiReducer(state.ui, action),

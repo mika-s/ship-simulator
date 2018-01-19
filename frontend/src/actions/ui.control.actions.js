@@ -15,3 +15,18 @@ export function setAutopilotHeading(heading) {
     },
   };
 }
+
+export function setAutopilotSpeed(speed) {
+  return {
+    type: 'SET_AUTOPILOT_SPEED',
+    payload: {
+      speed,
+    },
+  };
+}
+
+export function toggleAutopilot() {
+  return {
+    type: 'TOGGLE_AUTOPILOT',
+  };
+}

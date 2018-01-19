@@ -31,7 +31,9 @@ const uiInitialState = {
   control: {
     mode: vesselControlMode.AUTOPILOT,
     autopilot: {
+      active: false,
       heading: 0.0,
+      speed: 0.0,
     },
   },
 };

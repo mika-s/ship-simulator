@@ -1,5 +1,3 @@
-import { vesselControlMode } from '../../util/enums';
-
 export default function controlReducer(state, action, uiControl) {
   switch (action.type) {
     case 'SIMULATE':
@@ -8,13 +6,10 @@ export default function controlReducer(state, action, uiControl) {
         mode: uiControl.mode,
         autopilot: {
           ...state.autopilot,
+          active: uiControl.autopilot.active,
           heading: uiControl.autopilot.heading,
+          speed: uiControl.autopilot.speed,
         },
-      };
-    case 'STOP_SIMULATION':
-      return {
-        ...state,
-        mode: vesselControlMode.AUTOPILOT,
       };
     default:
       return state;
