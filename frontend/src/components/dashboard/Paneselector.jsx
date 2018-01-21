@@ -5,6 +5,7 @@ import HeadingPane from './Heading.pane';
 import SensorPane from './Sensor.pane';
 import ThrustersPane from './Thrusters.pane';
 import PositionPane from './Position.pane';
+import GpsSpeedPane from './GpsSpeed.pane';
 import './Dashboard.css';
 
 class Paneselector extends Component {
@@ -24,7 +25,7 @@ class Paneselector extends Component {
   render() {
     const {
       simulationTimeSeries, modelPositionSeries, rollSeries, pitchSeries,
-      thrusters,
+      speedSeries, thrusters,
     } = this.props;
 
     return (
@@ -39,6 +40,7 @@ class Paneselector extends Component {
             <option value="position">Position</option>
             <option value="rollpitch">Roll and pitch</option>
             <option value="thrusters">Thrusters</option>
+            <option value="gpsspeed">GPS speed</option>
           </select>
         </form>
 
@@ -64,6 +66,12 @@ class Paneselector extends Component {
             latitudeSeries={modelPositionSeries.latitude}
             longitudeSeries={modelPositionSeries.longitude}
           />}
+
+        {this.state.pane === 'gpsspeed' &&
+          <GpsSpeedPane
+            simulationTimeSeries={simulationTimeSeries}
+            speedSeries={speedSeries}
+          />}
       </div>
     );
   }
@@ -74,6 +82,7 @@ const mapStateToProps = state => ({
   modelPositionSeries: state.timeseries.model.position,
   rollSeries: state.timeseries.sensors.roll,
   pitchSeries: state.timeseries.sensors.pitch,
+  speedSeries: state.timeseries.referencesystems.speed,
   thrusters: state.ship.thrusters,
 });
 
@@ -89,6 +98,7 @@ Paneselector.propTypes = {
   modelPositionSeries: PropTypes.objectOf(PropTypes.arrayOf(PropTypes.number)).isRequired,
   rollSeries: PropTypes.arrayOf(PropTypes.number).isRequired,
   pitchSeries: PropTypes.arrayOf(PropTypes.number).isRequired,
+  speedSeries: PropTypes.arrayOf(PropTypes.number).isRequired,
   thrusters: PropTypes.arrayOf(PropTypes.object).isRequired,
 };
 

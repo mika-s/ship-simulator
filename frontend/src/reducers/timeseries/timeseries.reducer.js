@@ -15,7 +15,7 @@ function updateArray(oldArray, newValue) {
   return newArray;
 }
 
-export default function timeseriesReducer(state, action, time, model, sensors) {
+export default function timeseriesReducer(state, action, time, model, sensors, referencesystems) {
   switch (action.type) {
     case 'SIMULATE':
       return {
@@ -36,6 +36,9 @@ export default function timeseriesReducer(state, action, time, model, sensors) {
           roll: updateArray(state.sensors.roll, sensors.mrus[0].roll),
           pitch: updateArray(state.sensors.pitch, sensors.mrus[0].pitch),
         },
+        referencesystems: {
+          speed: updateArray(state.referencesystems.speed, referencesystems.gpses[0].speed),
+        },
       };
     case 'STOP_SIMULATION':
       return {
@@ -53,6 +56,10 @@ export default function timeseriesReducer(state, action, time, model, sensors) {
         sensors: {
           roll: [],
           pitch: [],
+        },
+
+        referencesystems: {
+          speed: [],
         },
       };
     default:

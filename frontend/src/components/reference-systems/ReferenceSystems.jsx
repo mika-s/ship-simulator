@@ -24,8 +24,10 @@ class ReferenceSystems extends Component {
               <tbody>
                 <tr>
                   <td style={{ width: '10%' }}>#</td>
-                  <td style={{ width: '45%' }}>Latitude</td>
-                  <td style={{ width: '45%' }}>Longitude</td>
+                  <td style={{ width: '20%' }}>Latitude</td>
+                  <td style={{ width: '20%' }}>Longitude</td>
+                  <td style={{ width: '20%' }}>Speed</td>
+                  <td style={{ width: '20%' }}>Direction</td>
                 </tr>
                 {gpsElements}
               </tbody>

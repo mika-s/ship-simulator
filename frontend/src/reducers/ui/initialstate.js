@@ -19,7 +19,7 @@ const uiInitialState = {
   dashboard: {
     panes: {
       1: 'heading',
-      2: 'rollpitch',
+      2: 'gpsspeed',
       3: 'position',
       4: 'thrusters',
     },

@@ -34,7 +34,7 @@ class UnconnectedControl extends Component {
 
   render() {
     const {
-      thrusters, active, heading, velocity,
+      thrusters, active, heading, speed,
     } = this.props;
 
     return (
@@ -70,7 +70,7 @@ class UnconnectedControl extends Component {
           <Autopilot
             active={active}
             initialHeading={heading}
-            initialSpeed={velocity.u}
+            initialSpeed={speed}
             thrusters={thrusters}
             setAutopilotHeading={this.props.setAutopilotHeading}
             setAutopilotSpeed={this.props.setAutopilotSpeed}
@@ -87,7 +87,7 @@ const mapStateToProps = state => ({
   thrusters: state.ship.thrusters,
   active: state.control.autopilot.active,
   heading: state.ui.control.autopilot.heading,
-  velocity: state.vesselmodel.model.velocity,
+  speed: state.ui.control.autopilot.speed,
 });
 
 const mapDispatchToProps = dispatch => ({
@@ -105,7 +105,7 @@ UnconnectedControl.propTypes = {
   thrusters: PropTypes.arrayOf(PropTypes.object).isRequired,
   active: PropTypes.bool.isRequired,
   heading: PropTypes.number.isRequired,
-  velocity: PropTypes.objectOf(PropTypes.number).isRequired,
+  speed: PropTypes.number.isRequired,
   setControlMode: PropTypes.func.isRequired,
   setThrusterDemand: PropTypes.func.isRequired,
   setAutopilotHeading: PropTypes.func.isRequired,

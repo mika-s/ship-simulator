@@ -1,4 +1,5 @@
 import initialState from './initialstate';
+import { calculateDemands } from './control/control.util';
 import { calculateForces, calculatePosition } from './vesselmodel/vessel.util';
 import controlReducer from './control/control.reducer';
 import vesselmodelReducer from './vesselmodel/vesselmodel.reducer';
@@ -9,10 +10,21 @@ import timeseriesReducer from './timeseries/timeseries.reducer';
 import uiReducer from './ui/ui.reducer';
 
 export default function rootreducer(state = initialState, action) {
+  let demands = [];
   let forces = { thrusters: 0, wind: 0, current: 0 };
   let model = { position: 0, positionInMeters: 0, velocity: 0 };
 
   if (action.type === 'SIMULATE' || action.type === 'STOP_SIMULATION') {
+    // Controller
+    demands = calculateDemands(
+      state.control,
+      state.ship.sensors.gyrocompasses,
+      state.ship.referencesystems.gpses,
+      state.ship.thrusters,
+      state.ui.thrusters,
+    );
+
+    // Model
     forces = calculateForces(
       state.ship.thrusters,
       state.environment.wind.forces,
@@ -34,7 +46,7 @@ export default function rootreducer(state = initialState, action) {
     control: controlReducer(state.control, action, state.ui.control),
     timeseries: timeseriesReducer(
       state.timeseries, action, state.simulation.time,
-      model, state.ship.sensors,
+      model, state.ship.sensors, state.ship.referencesystems,
     ),
     simulation: simulationReducer(state.simulation, action),
     environment: environmentReducer(
@@ -44,7 +56,7 @@ export default function rootreducer(state = initialState, action) {
     ),
     ship: shipReducer(
       state.ship, action, model, state.control,
-      state.ui.thrusters, state.environment.wind,
+      demands, state.environment.wind,
     ),
     vesselmodel: vesselmodelReducer(
       state.vesselmodel, action,
