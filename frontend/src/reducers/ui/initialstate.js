@@ -18,10 +18,22 @@ const uiInitialState = {
   },
   dashboard: {
     panes: {
-      1: 'heading',
-      2: 'gpsspeed',
-      3: 'position',
-      4: 'thrusters',
+      1: {
+        type: 'heading',
+        isAutoAxis: true,
+      },
+      2: {
+        type: 'gpsspeed',
+        isAutoAxis: true,
+      },
+      3: {
+        type: 'position',
+        isAutoAxis: true,
+      },
+      4: {
+        type: 'thrusters',
+        isAutoAxis: true,
+      },
     },
   },
   map: {

@@ -58,6 +58,7 @@ class PositionPane extends Component {
         ],
       },
       options: {
+        maintainAspectRatio: false,
         animation: {
           duration: 0,
         },
@@ -113,6 +114,7 @@ class PositionPane extends Component {
     return (
       <Line
         width={400}
+        height={277}
         options={this.state.options}
         data={this.state.graphData}
       />

@@ -5,10 +5,23 @@ export default function dashboardReducer(state, action) {
         ...state,
         panes: {
           ...state.panes,
-          [action.payload.number]: action.payload.pane,
+          [action.payload.number]: {
+            ...state.panes[action.payload.number],
+            type: action.payload.pane,
+          },
         },
       };
-
+    case 'TOGGLE_AUTO_AXIS':
+      return {
+        ...state,
+        panes: {
+          ...state.panes,
+          [action.payload.number]: {
+            ...state.panes[action.payload.number],
+            isAutoAxis: !state.panes[action.payload.number].isAutoAxis,
+          },
+        },
+      };
     default:
       return state;
   }

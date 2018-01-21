@@ -14,6 +14,8 @@ Fix current model with respect to drag.yaw * velocity.r.
 
 Make all forms controller (thruster stuff).
 
+Improve high-speed model.
+
 ## Structure
 
 VesselModel --> UI --> set store

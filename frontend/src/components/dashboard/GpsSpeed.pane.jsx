@@ -35,6 +35,7 @@ class GpsSpeedPane extends Component {
         ],
       },
       options: {
+        maintainAspectRatio: false,
         animation: {
           duration: 0,
         },
@@ -73,6 +74,7 @@ class GpsSpeedPane extends Component {
     return (
       <Line
         width={400}
+        height={277}
         options={this.state.options}
         data={this.state.graphData}
       />
@@ -81,6 +83,7 @@ class GpsSpeedPane extends Component {
 }
 
 GpsSpeedPane.propTypes = {
+  isAutoAxis: PropTypes.bool.isRequired,
   simulationTimeSeries: PropTypes.arrayOf(PropTypes.number).isRequired,
   speedSeries: PropTypes.arrayOf(PropTypes.number).isRequired,
 };

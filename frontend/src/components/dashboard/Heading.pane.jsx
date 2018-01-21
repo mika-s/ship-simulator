@@ -35,6 +35,7 @@ class HeadingPane extends Component {
         ],
       },
       options: {
+        maintainAspectRatio: false,
         animation: {
           duration: 0,
         },
@@ -73,6 +74,7 @@ class HeadingPane extends Component {
     return (
       <Line
         width={400}
+        height={277}
         options={this.state.options}
         data={this.state.graphData}
       />

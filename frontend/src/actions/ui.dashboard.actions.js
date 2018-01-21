@@ -7,3 +7,13 @@ export function setDashboardPane(number, pane) {
     },
   };
 }
+
+export function toggleAutoAxis(number) {
+  return {
+    type: 'TOGGLE_AUTO_AXIS',
+    payload: {
+      number,
+    },
+  };
+}
+

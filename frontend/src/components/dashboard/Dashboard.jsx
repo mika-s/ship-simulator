@@ -1,7 +1,7 @@
 import React, { Component } from 'react';
 import PropTypes from 'prop-types';
 import { connect } from 'react-redux';
-import { setDashboardPane } from '../../actions/ui.dashboard.actions';
+import { setDashboardPane, toggleAutoAxis } from '../../actions/ui.dashboard.actions';
 import Paneselector from './Paneselector';
 import './Dashboard.css';
 
@@ -11,11 +11,16 @@ class Dashboard extends Component {
     this.state = {};
 
     this.changePane = this.changePane.bind(this);
+    this.toggleAutoAxis = this.toggleAutoAxis.bind(this);
   }
 
   changePane(event, number) {
     const newPane = event.target.value;
     this.props.setDashboardPane(number, newPane);
+  }
+
+  toggleAutoAxis(number) {
+    this.props.toggleAutoAxis(number);
   }
 
   render() {
@@ -25,15 +30,19 @@ class Dashboard extends Component {
           <div className="col-lg-6 pane">
             <Paneselector
               number={1}
-              initialPane={this.props.panes[1]}
+              initialPane={this.props.panes[1].type}
+              initialSettings={{ isAutoAxis: this.props.panes[1].isAutoAxis }}
               changePane={this.changePane}
+              toggleAutoAxis={this.toggleAutoAxis}
             />
           </div>
           <div className="col-lg-6 pane">
             <Paneselector
               number={2}
-              initialPane={this.props.panes[2]}
+              initialPane={this.props.panes[2].type}
+              initialSettings={{ isAutoAxis: this.props.panes[2].isAutoAxis }}
               changePane={this.changePane}
+              toggleAutoAxis={this.toggleAutoAxis}
             />
           </div>
         </div>
@@ -41,15 +50,19 @@ class Dashboard extends Component {
           <div className="col-lg-6 pane">
             <Paneselector
               number={3}
-              initialPane={this.props.panes[3]}
+              initialPane={this.props.panes[3].type}
+              initialSettings={{ isAutoAxis: this.props.panes[3].isAutoAxis }}
               changePane={this.changePane}
+              toggleAutoAxis={this.toggleAutoAxis}
             />
           </div>
           <div className="col-lg-6 pane">
             <Paneselector
               number={4}
-              initialPane={this.props.panes[4]}
+              initialPane={this.props.panes[4].type}
+              initialSettings={{ isAutoAxis: this.props.panes[4].isAutoAxis }}
               changePane={this.changePane}
+              toggleAutoAxis={this.toggleAutoAxis}
             />
           </div>
         </div>
@@ -64,13 +77,18 @@ const mapStateToProps = state => ({
 
 const mapDispatchToProps = dispatch => ({
   setDashboardPane: (number, pane) => dispatch(setDashboardPane(number, pane)),
+  toggleAutoAxis: number => dispatch(toggleAutoAxis(number)),
 });
 
 const ConnectedDashboard = connect(mapStateToProps, mapDispatchToProps)(Dashboard);
 
 Dashboard.propTypes = {
-  panes: PropTypes.objectOf(PropTypes.string).isRequired,
+  panes: PropTypes.objectOf(PropTypes.shape({
+    type: PropTypes.string.isRequired,
+    isAutoAxis: PropTypes.bool.isRequired,
+  })).isRequired,
   setDashboardPane: PropTypes.func.isRequired,
+  toggleAutoAxis: PropTypes.func.isRequired,
 };
 
 export default ConnectedDashboard;
