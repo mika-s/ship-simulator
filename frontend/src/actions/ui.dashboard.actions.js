@@ -17,3 +17,14 @@ export function toggleAutoAxis(number) {
   };
 }
 
+export function setMinMax(number, min, max) {
+  return {
+    type: 'SET_MIN_MAX_AXIS',
+    payload: {
+      number,
+      min,
+      max,
+    },
+  };
+}
+

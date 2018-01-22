@@ -42,6 +42,9 @@ class GpsSpeedPane extends Component {
         hover: {
           animationDuration: 0,
         },
+        scales: {
+          yAxes: [],
+        },
         responsiveAnimationDuration: 0,
         elements: {
           line: {
@@ -58,14 +61,32 @@ class GpsSpeedPane extends Component {
         labels: { $set: this.props.simulationTimeSeries },
         datasets: { 0: { data: { $set: this.props.speedSeries } } },
       }),
+      options: update(this.state.options, {
+        scales: {
+          yAxes: !this.props.isAutoAxis ? {
+            $set: [{ ticks: { min: this.props.min, max: this.props.max } }],
+          } : {
+            $set: [],
+          },
+        },
+      }),
     });
   }
 
-  componentWillReceiveProps() {
+  componentWillReceiveProps(nextProps) {
     this.setState({
       graphData: update(this.state.graphData, {
-        labels: { $set: this.props.simulationTimeSeries },
-        datasets: { 0: { data: { $set: this.props.speedSeries } } },
+        labels: { $set: nextProps.simulationTimeSeries },
+        datasets: { 0: { data: { $set: nextProps.speedSeries } } },
+      }),
+      options: update(this.state.options, {
+        scales: {
+          yAxes: !nextProps.isAutoAxis ? {
+            $set: [{ ticks: { min: nextProps.min, max: nextProps.max } }],
+          } : {
+            $set: [],
+          },
+        },
       }),
     });
   }
@@ -73,6 +94,7 @@ class GpsSpeedPane extends Component {
   render() {
     return (
       <Line
+        redraw
         width={400}
         height={277}
         options={this.state.options}
@@ -84,6 +106,8 @@ class GpsSpeedPane extends Component {
 
 GpsSpeedPane.propTypes = {
   isAutoAxis: PropTypes.bool.isRequired,
+  min: PropTypes.number.isRequired,
+  max: PropTypes.number.isRequired,
   simulationTimeSeries: PropTypes.arrayOf(PropTypes.number).isRequired,
   speedSeries: PropTypes.arrayOf(PropTypes.number).isRequired,
 };

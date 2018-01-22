@@ -70,7 +70,7 @@ class SensorPane extends Component {
           },
         },
         scales: {
-          yAxes: [{ ticks: { min: -5, max: 5 } }],
+          yAxes: [],
         },
       },
     };
@@ -85,16 +85,34 @@ class SensorPane extends Component {
           1: { data: { $set: this.props.pitchSeries } },
         },
       }),
+      options: update(this.state.options, {
+        scales: {
+          yAxes: !this.props.isAutoAxis ? {
+            $set: [{ ticks: { min: this.props.min, max: this.props.max } }],
+          } : {
+            $set: [],
+          },
+        },
+      }),
     });
   }
 
-  componentWillReceiveProps() {
+  componentWillReceiveProps(nextProps) {
     this.setState({
       graphData: update(this.state.graphData, {
-        labels: { $set: this.props.simulationTimeSeries },
+        labels: { $set: nextProps.simulationTimeSeries },
         datasets: {
-          0: { data: { $set: this.props.rollSeries } },
-          1: { data: { $set: this.props.pitchSeries } },
+          0: { data: { $set: nextProps.rollSeries } },
+          1: { data: { $set: nextProps.pitchSeries } },
+        },
+      }),
+      options: update(this.state.options, {
+        scales: {
+          yAxes: !nextProps.isAutoAxis ? {
+            $set: [{ ticks: { min: nextProps.min, max: nextProps.max } }],
+          } : {
+            $set: [],
+          },
         },
       }),
     });
@@ -113,6 +131,9 @@ class SensorPane extends Component {
 }
 
 SensorPane.propTypes = {
+  isAutoAxis: PropTypes.bool.isRequired,
+  min: PropTypes.number.isRequired,
+  max: PropTypes.number.isRequired,
   simulationTimeSeries: PropTypes.arrayOf(PropTypes.number).isRequired,
   rollSeries: PropTypes.arrayOf(PropTypes.number).isRequired,
   pitchSeries: PropTypes.arrayOf(PropTypes.number).isRequired,

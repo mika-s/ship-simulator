@@ -123,6 +123,9 @@ class PositionPane extends Component {
 }
 
 PositionPane.propTypes = {
+  isAutoAxis: PropTypes.bool.isRequired,
+  min: PropTypes.number.isRequired,
+  max: PropTypes.number.isRequired,
   simulationTimeSeries: PropTypes.arrayOf(PropTypes.number).isRequired,
   latitudeSeries: PropTypes.arrayOf(PropTypes.number).isRequired,
   longitudeSeries: PropTypes.arrayOf(PropTypes.number).isRequired,

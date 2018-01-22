@@ -42,6 +42,9 @@ class HeadingPane extends Component {
         hover: {
           animationDuration: 0,
         },
+        scales: {
+          yAxes: [],
+        },
         responsiveAnimationDuration: 0,
         elements: {
           line: {
@@ -58,14 +61,32 @@ class HeadingPane extends Component {
         labels: { $set: this.props.simulationTimeSeries },
         datasets: { 0: { data: { $set: this.props.headingSeries } } },
       }),
+      options: update(this.state.options, {
+        scales: {
+          yAxes: !this.props.isAutoAxis ? {
+            $set: [{ ticks: { min: this.props.min, max: this.props.max } }],
+          } : {
+            $set: [],
+          },
+        },
+      }),
     });
   }
 
-  componentWillReceiveProps() {
+  componentWillReceiveProps(nextProps) {
     this.setState({
       graphData: update(this.state.graphData, {
-        labels: { $set: this.props.simulationTimeSeries },
-        datasets: { 0: { data: { $set: this.props.headingSeries } } },
+        labels: { $set: nextProps.simulationTimeSeries },
+        datasets: { 0: { data: { $set: nextProps.headingSeries } } },
+      }),
+      options: update(this.state.options, {
+        scales: {
+          yAxes: !nextProps.isAutoAxis ? {
+            $set: [{ ticks: { min: nextProps.min, max: nextProps.max } }],
+          } : {
+            $set: [],
+          },
+        },
       }),
     });
   }
@@ -83,6 +104,9 @@ class HeadingPane extends Component {
 }
 
 HeadingPane.propTypes = {
+  isAutoAxis: PropTypes.bool.isRequired,
+  min: PropTypes.number.isRequired,
+  max: PropTypes.number.isRequired,
   simulationTimeSeries: PropTypes.arrayOf(PropTypes.number).isRequired,
   headingSeries: PropTypes.arrayOf(PropTypes.number).isRequired,
 };

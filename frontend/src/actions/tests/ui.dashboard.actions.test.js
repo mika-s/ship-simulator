@@ -28,3 +28,19 @@ it('should create an action to toggle auto axis', () => {
   expect(actions.toggleAutoAxis(number)).toEqual(expectedAction);
 });
 
+it('should create an action to set min and max', () => {
+  const number = 1;
+  const min = 0;
+  const max = 10;
+
+  const expectedAction = {
+    type: 'SET_MIN_MAX_AXIS',
+    payload: {
+      number,
+      min,
+      max,
+    },
+  };
+
+  expect(actions.setMinMax(number, min, max)).toEqual(expectedAction);
+});

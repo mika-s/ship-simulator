@@ -1,5 +1,6 @@
 import React, { Component } from 'react';
 import PropTypes from 'prop-types';
+import update from 'immutability-helper';
 import { connect } from 'react-redux';
 import HeadingPane from './Heading.pane';
 import SensorPane from './Sensor.pane';
@@ -14,12 +15,17 @@ class Paneselector extends Component {
     this.state = {
       pane: props.initialPane,
       isAutoAxis: props.initialSettings.isAutoAxis,
+      min: props.initialSettings.min,
+      max: props.initialSettings.max,
       isSettingsOpen: false,
     };
 
+    this.handleMinChange = this.handleMinChange.bind(this);
+    this.handleMaxChange = this.handleMaxChange.bind(this);
     this.onToggleAutoAxis = this.onToggleAutoAxis.bind(this);
     this.toggleSettings = this.toggleSettings.bind(this);
     this.changePane = this.changePane.bind(this);
+    this.setMinMax = this.setMinMax.bind(this);
   }
 
   onToggleAutoAxis() {
@@ -27,14 +33,39 @@ class Paneselector extends Component {
     this.props.toggleAutoAxis(this.props.number);
   }
 
-  toggleSettings() {
-    this.setState({ isSettingsOpen: !this.state.isSettingsOpen });
+  setMinMax(event) {
+    event.preventDefault();
+    this.props.setMinMax(
+      this.props.number,
+      Number.parseFloat(this.state.min[this.state.pane]),
+      Number.parseFloat(this.state.max[this.state.pane]),
+    );
   }
 
   changePane(event) {
     const newPane = event.target.value;
     this.setState({ pane: newPane });
     this.props.changePane(event, this.props.number);
+  }
+
+  toggleSettings() {
+    this.setState({ isSettingsOpen: !this.state.isSettingsOpen });
+  }
+
+  handleMinChange(event) {
+    this.setState({
+      min: update(this.state.min, {
+        [this.state.pane]: { $set: event.target.value },
+      }),
+    });
+  }
+
+  handleMaxChange(event) {
+    this.setState({
+      max: update(this.state.max, {
+        [this.state.pane]: { $set: event.target.value },
+      }),
+    });
   }
 
   render() {
@@ -59,21 +90,27 @@ class Paneselector extends Component {
           </select>
 
           {this.state.pane !== 'thrusters' &&
-          <button className="btn btn-outline-secondary btn-sm" type="button" onClick={this.toggleSettings}>
-            <span className="fa fa-cog" />
-          </button>}
+            <button className="btn btn-outline-secondary btn-sm" type="button" onClick={this.toggleSettings}>
+              <span className="fa fa-cog" />
+            </button>}
         </form>
 
         <div className="row">
           <div className={this.state.isSettingsOpen === true ? 'col-lg-6' : 'col-lg-12'}>
             {this.state.pane === 'heading' &&
               <HeadingPane
+                min={this.props.initialSettings.min.heading}
+                max={this.props.initialSettings.max.heading}
+                isAutoAxis={this.state.isAutoAxis}
                 simulationTimeSeries={simulationTimeSeries}
                 headingSeries={modelPositionSeries.heading}
               />}
 
             {this.state.pane === 'rollpitch' &&
               <SensorPane
+                min={this.props.initialSettings.min.rollpitch}
+                max={this.props.initialSettings.max.rollpitch}
+                isAutoAxis={this.state.isAutoAxis}
                 simulationTimeSeries={simulationTimeSeries}
                 rollSeries={rollSeries}
                 pitchSeries={pitchSeries}
@@ -81,6 +118,9 @@ class Paneselector extends Component {
 
             {this.state.pane === 'position' &&
               <PositionPane
+                min={this.props.initialSettings.min.position}
+                max={this.props.initialSettings.max.position}
+                isAutoAxis={this.state.isAutoAxis}
                 simulationTimeSeries={simulationTimeSeries}
                 latitudeSeries={modelPositionSeries.latitude}
                 longitudeSeries={modelPositionSeries.longitude}
@@ -88,6 +128,8 @@ class Paneselector extends Component {
 
             {this.state.pane === 'gpsspeed' &&
               <GpsSpeedPane
+                min={this.props.initialSettings.min.gpsspeed}
+                max={this.props.initialSettings.max.gpsspeed}
                 isAutoAxis={this.state.isAutoAxis}
                 simulationTimeSeries={simulationTimeSeries}
                 speedSeries={speedSeries}
@@ -111,6 +153,36 @@ class Paneselector extends Component {
                         <label className="form-check-label" htmlFor="autoCheckbox">Auto axis</label>
                       </div>
                     </form>
+                    {!this.state.isAutoAxis &&
+                      <form className="form-inline" style={{ marginTop: 10 }} onSubmit={this.setMinMax}>
+                        <div className="form-check">
+                          Min:
+                          <input
+                            type="number"
+                            min="-100"
+                            max="200"
+                            step="0.1"
+                            value={this.state.min[this.state.pane]}
+                            onChange={this.handleMinChange}
+                            style={{ width: 80, marginLeft: 5 }}
+                            className="form-control mb-2 mr-sm-2 mb-sm-0"
+                            required
+                          />
+                          Max:
+                          <input
+                            type="number"
+                            min="0"
+                            max="400"
+                            step="0.1"
+                            value={this.state.max[this.state.pane]}
+                            onChange={this.handleMaxChange}
+                            style={{ width: 80, marginLeft: 5 }}
+                            className="form-control mb-2 mr-sm-2 mb-sm-0"
+                            required
+                          />
+                          <button className="btn btn-secondary btn-sm" type="submit">Set</button>
+                        </div>
+                      </form>}
                   </div>
                 </div>
               </div>
@@ -141,10 +213,13 @@ Paneselector.propTypes = {
   initialPane: PropTypes.string.isRequired,
   initialSettings: PropTypes.shape({
     isAutoAxis: PropTypes.bool.isRequired,
+    min: PropTypes.objectOf(PropTypes.number).isRequired,
+    max: PropTypes.objectOf(PropTypes.number).isRequired,
   }).isRequired,
   number: PropTypes.number.isRequired,
   changePane: PropTypes.func.isRequired,
   toggleAutoAxis: PropTypes.func.isRequired,
+  setMinMax: PropTypes.func.isRequired,
   simulationTimeSeries: PropTypes.arrayOf(PropTypes.number).isRequired,
   modelPositionSeries: PropTypes.objectOf(PropTypes.arrayOf(PropTypes.number)).isRequired,
   rollSeries: PropTypes.arrayOf(PropTypes.number).isRequired,
