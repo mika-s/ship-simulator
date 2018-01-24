@@ -84,7 +84,12 @@ class GpsSpeedPane extends Component {
           yAxes: !nextProps.isAutoAxis ? {
             $set: [{ ticks: { min: nextProps.min, max: nextProps.max } }],
           } : {
-            $set: [],
+            $set: [{
+              ticks: {
+                min: nextProps.speedSeries.length > 0 ? Math.min(...nextProps.speedSeries) : -1,
+                max: nextProps.speedSeries.length > 0 ? Math.max(...nextProps.speedSeries) : 1,
+              },
+            }],
           },
         },
       }),
@@ -94,7 +99,6 @@ class GpsSpeedPane extends Component {
   render() {
     return (
       <Line
-        redraw
         width={400}
         height={277}
         options={this.state.options}

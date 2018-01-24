@@ -23,7 +23,6 @@ export default function dashboardReducer(state, action) {
         },
       };
     case 'SET_MIN_MAX_AXIS':
-      console.log(action, state.panes[action.payload.number].type);
       return {
         ...state,
         panes: {

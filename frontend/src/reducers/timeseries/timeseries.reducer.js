@@ -24,8 +24,14 @@ export default function timeseriesReducer(state, action, time, model, sensors, r
 
         model: {
           position: {
-            latitude: updateArray(state.model.position.latitude, model.position.latitude),
-            longitude: updateArray(state.model.position.longitude, model.position.longitude),
+            latitude: updateArray(
+              state.model.position.latitude,
+              truncToDecimal(model.position.latitude, 7),
+            ),
+            longitude: updateArray(
+              state.model.position.longitude,
+              truncToDecimal(model.position.longitude, 7),
+            ),
             heading: updateArray(
               state.model.position.heading,
               truncToDecimal(model.position.heading * (180.0 / Math.PI), 2),

@@ -21,11 +21,14 @@ class Paneselector extends Component {
     };
 
     this.handleMinChange = this.handleMinChange.bind(this);
+    this.handleMinChange2 = this.handleMinChange2.bind(this);
     this.handleMaxChange = this.handleMaxChange.bind(this);
+    this.handleMaxChange2 = this.handleMaxChange2.bind(this);
     this.onToggleAutoAxis = this.onToggleAutoAxis.bind(this);
     this.toggleSettings = this.toggleSettings.bind(this);
     this.changePane = this.changePane.bind(this);
     this.setMinMax = this.setMinMax.bind(this);
+    this.setMinMax2 = this.setMinMax2.bind(this);
   }
 
   onToggleAutoAxis() {
@@ -39,6 +42,15 @@ class Paneselector extends Component {
       this.props.number,
       Number.parseFloat(this.state.min[this.state.pane]),
       Number.parseFloat(this.state.max[this.state.pane]),
+    );
+  }
+
+  setMinMax2(event) {
+    event.preventDefault();
+    this.props.setMinMax(
+      this.props.number,
+      Number.parseFloat(this.state.min[`${this.state.pane}2`]),
+      Number.parseFloat(this.state.max[`${this.state.pane}2`]),
     );
   }
 
@@ -60,10 +72,26 @@ class Paneselector extends Component {
     });
   }
 
+  handleMinChange2(event) {
+    this.setState({
+      min: update(this.state.min, {
+        [`${this.state.pane}2`]: { $set: event.target.value },
+      }),
+    });
+  }
+
   handleMaxChange(event) {
     this.setState({
       max: update(this.state.max, {
         [this.state.pane]: { $set: event.target.value },
+      }),
+    });
+  }
+
+  handleMaxChange2(event) {
+    this.setState({
+      max: update(this.state.max, {
+        [`${this.state.pane}2`]: { $set: event.target.value },
       }),
     });
   }
@@ -120,6 +148,8 @@ class Paneselector extends Component {
               <PositionPane
                 min={this.props.initialSettings.min.position}
                 max={this.props.initialSettings.max.position}
+                min2={this.props.initialSettings.min.position2}
+                max2={this.props.initialSettings.max.position2}
                 isAutoAxis={this.state.isAutoAxis}
                 simulationTimeSeries={simulationTimeSeries}
                 latitudeSeries={modelPositionSeries.latitude}
@@ -176,6 +206,37 @@ class Paneselector extends Component {
                             step="0.1"
                             value={this.state.max[this.state.pane]}
                             onChange={this.handleMaxChange}
+                            style={{ width: 80, marginLeft: 5 }}
+                            className="form-control mb-2 mr-sm-2 mb-sm-0"
+                            required
+                          />
+                          <button className="btn btn-secondary btn-sm" type="submit">Set</button>
+                        </div>
+                      </form>}
+                    {/* Special case for position which has two axes. */}
+                    {!this.state.isAutoAxis && this.state.pane === 'position' &&
+                      <form className="form-inline" style={{ marginTop: 10 }} onSubmit={this.setMinMax2}>
+                        <div className="form-check">
+                          Min:
+                          <input
+                            type="number"
+                            min="-100"
+                            max="200"
+                            step="0.1"
+                            value={this.state.min[`${this.state.pane}2`]}
+                            onChange={this.handleMinChange2}
+                            style={{ width: 80, marginLeft: 5 }}
+                            className="form-control mb-2 mr-sm-2 mb-sm-0"
+                            required
+                          />
+                          Max:
+                          <input
+                            type="number"
+                            min="0"
+                            max="400"
+                            step="0.1"
+                            value={this.state.max[`${this.state.pane}2`]}
+                            onChange={this.handleMaxChange2}
                             style={{ width: 80, marginLeft: 5 }}
                             className="form-control mb-2 mr-sm-2 mb-sm-0"
                             required

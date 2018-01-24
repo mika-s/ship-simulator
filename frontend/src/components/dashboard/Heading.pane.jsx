@@ -84,7 +84,12 @@ class HeadingPane extends Component {
           yAxes: !nextProps.isAutoAxis ? {
             $set: [{ ticks: { min: nextProps.min, max: nextProps.max } }],
           } : {
-            $set: [],
+            $set: [{
+              ticks: {
+                min: nextProps.headingSeries.length > 0 ? Math.min(...nextProps.headingSeries) : -1,
+                max: nextProps.headingSeries.length > 0 ? Math.max(...nextProps.headingSeries) : 1,
+              },
+            }],
           },
         },
       }),

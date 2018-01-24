@@ -15,17 +15,17 @@ class SensorPane extends Component {
             label: 'Roll',
             fill: false,
             lineTension: 0.1,
-            backgroundColor: 'rgba(0,0,0,0.4)',
-            borderColor: 'rgba(0,0,0,1)',
+            backgroundColor: 'rgba(100,0,100,0.4)',
+            borderColor: 'rgba(100,0,100,1)',
             borderCapStyle: 'butt',
             borderDash: [],
             borderDashOffset: 0.0,
             borderJoinStyle: 'miter',
-            pointBorderColor: 'rgba(0,0,0,1)',
+            pointBorderColor: 'rgba(100,0,100,1)',
             pointBackgroundColor: '#fff',
             pointBorderWidth: 1,
             pointHoverRadius: 5,
-            pointHoverBackgroundColor: 'rgba(0,0,0,1)',
+            pointHoverBackgroundColor: 'rgba(100,0,100,1)',
             pointHoverBorderColor: 'rgba(220,220,220,1)',
             pointHoverBorderWidth: 2,
             pointRadius: 1,
@@ -36,17 +36,17 @@ class SensorPane extends Component {
             label: 'Pitch',
             fill: false,
             lineTension: 0.1,
-            backgroundColor: 'rgba(0,255,0,0.4)',
-            borderColor: 'rgba(0,255,0,1)',
+            backgroundColor: 'rgba(100,255,255,0.4)',
+            borderColor: 'rgba(100,255,255,1)',
             borderCapStyle: 'butt',
             borderDash: [],
             borderDashOffset: 0.0,
             borderJoinStyle: 'miter',
-            pointBorderColor: 'rgba(0,255,0,1)',
+            pointBorderColor: 'rgba(100,255,255,1)',
             pointBackgroundColor: '#fff',
             pointBorderWidth: 1,
             pointHoverRadius: 5,
-            pointHoverBackgroundColor: 'rgba(0,255,0,1)',
+            pointHoverBackgroundColor: 'rgba(100,255,255,1)',
             pointHoverBorderColor: 'rgba(220,220,220,1)',
             pointHoverBorderWidth: 2,
             pointRadius: 1,
@@ -98,6 +98,13 @@ class SensorPane extends Component {
   }
 
   componentWillReceiveProps(nextProps) {
+    const minRoll = Math.min(...nextProps.rollSeries);
+    const minPitch = Math.min(...nextProps.pitchSeries);
+    const maxRoll = Math.max(...nextProps.rollSeries);
+    const maxPitch = Math.max(...nextProps.pitchSeries);
+    const minSeries = minRoll < minPitch ? nextProps.rollSeries : nextProps.pitchSeries;
+    const maxSeries = maxRoll > maxPitch ? nextProps.rollSeries : nextProps.pitchSeries;
+
     this.setState({
       graphData: update(this.state.graphData, {
         labels: { $set: nextProps.simulationTimeSeries },
@@ -111,7 +118,12 @@ class SensorPane extends Component {
           yAxes: !nextProps.isAutoAxis ? {
             $set: [{ ticks: { min: nextProps.min, max: nextProps.max } }],
           } : {
-            $set: [],
+            $set: [{
+              ticks: {
+                min: minSeries.length > 0 ? Math.min(...minSeries) : -1,
+                max: maxSeries.length > 0 ? Math.max(...maxSeries) : 1,
+              },
+            }],
           },
         },
       }),
