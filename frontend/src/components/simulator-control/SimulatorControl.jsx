@@ -73,6 +73,14 @@ export class UnconnectedSimulatorControl extends Component {
   }
 }
 
+UnconnectedSimulatorControl.propTypes = {
+  time: PropTypes.number.isRequired,
+  state: PropTypes.number.isRequired,
+  onSimulateClick: PropTypes.func.isRequired,
+  onPauseClick: PropTypes.func.isRequired,
+  onStopClick: PropTypes.func.isRequired,
+};
+
 const mapStateToProps = state => ({
   time: state.simulation.time,
   state: state.simulation.simulationState,
@@ -85,13 +93,5 @@ const mapDispatchToProps = dispatch => ({
 });
 
 const SimulatorControl = connect(mapStateToProps, mapDispatchToProps)(UnconnectedSimulatorControl);
-
-UnconnectedSimulatorControl.propTypes = {
-  time: PropTypes.number.isRequired,
-  state: PropTypes.number.isRequired,
-  onSimulateClick: PropTypes.func.isRequired,
-  onPauseClick: PropTypes.func.isRequired,
-  onStopClick: PropTypes.func.isRequired,
-};
 
 export default SimulatorControl;

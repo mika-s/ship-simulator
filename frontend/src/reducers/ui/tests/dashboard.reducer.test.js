@@ -18,7 +18,10 @@ it('should handle SET_DASHBOARD_PANE', () => {
       ...initialState,
       panes: {
         ...initialState.panes,
-        1: 'heading',
+        1: {
+          ...initialState.panes['1'],
+          type: 'heading',
+        },
       },
     });
 });

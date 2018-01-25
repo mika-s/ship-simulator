@@ -52,6 +52,19 @@ export class UnconnectedSettings extends Component {
   }
 }
 
+UnconnectedSettings.propTypes = {
+  currentSpeed: PropTypes.number.isRequired,
+  currentDirection: PropTypes.number.isRequired,
+  windSpeed: PropTypes.number.isRequired,
+  windDirection: PropTypes.number.isRequired,
+  position: PropTypes.objectOf(PropTypes.number).isRequired,
+  setWindSpeed: PropTypes.func.isRequired,
+  setWindDirection: PropTypes.func.isRequired,
+  setCurrentSpeed: PropTypes.func.isRequired,
+  setCurrentDirection: PropTypes.func.isRequired,
+  setPosition: PropTypes.func.isRequired,
+};
+
 const mapStateToProps = state => ({
   currentSpeed: state.ui.current.speed,
   currentDirection: state.ui.current.direction,
@@ -69,18 +82,5 @@ const mapDispatchToProps = dispatch => ({
 });
 
 const Settings = connect(mapStateToProps, mapDispatchToProps)(UnconnectedSettings);
-
-UnconnectedSettings.propTypes = {
-  currentSpeed: PropTypes.number.isRequired,
-  currentDirection: PropTypes.number.isRequired,
-  windSpeed: PropTypes.number.isRequired,
-  windDirection: PropTypes.number.isRequired,
-  position: PropTypes.objectOf(PropTypes.number).isRequired,
-  setWindSpeed: PropTypes.func.isRequired,
-  setWindDirection: PropTypes.func.isRequired,
-  setCurrentSpeed: PropTypes.func.isRequired,
-  setCurrentDirection: PropTypes.func.isRequired,
-  setPosition: PropTypes.func.isRequired,
-};
 
 export default Settings;

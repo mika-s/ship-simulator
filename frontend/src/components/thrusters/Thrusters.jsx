@@ -28,6 +28,11 @@ export class UnconnectedThrusters extends Component {
   }
 }
 
+UnconnectedThrusters.propTypes = {
+  thrusters: PropTypes.arrayOf(PropTypes.object).isRequired,
+  setThrusterDemand: PropTypes.func.isRequired,
+};
+
 const mapStateToProps = state => ({
   thrusters: state.ship.thrusters,
 });
@@ -37,10 +42,5 @@ const mapDispatchToProps = dispatch => ({
 });
 
 const Thrusters = connect(mapStateToProps, mapDispatchToProps)(UnconnectedThrusters);
-
-UnconnectedThrusters.propTypes = {
-  thrusters: PropTypes.arrayOf(PropTypes.object).isRequired,
-  setThrusterDemand: PropTypes.func.isRequired,
-};
 
 export default Thrusters;

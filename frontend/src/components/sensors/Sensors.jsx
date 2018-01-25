@@ -6,7 +6,7 @@ import MruSensor from './MruSensor';
 import WindSensor from './WindSensor';
 import './Sensors.css';
 
-class Sensors extends Component {
+export class UnconnectedSensors extends Component {
   constructor() {
     super();
     this.state = {};
@@ -95,6 +95,12 @@ class Sensors extends Component {
   }
 }
 
+UnconnectedSensors.propTypes = {
+  windsensors: PropTypes.arrayOf(PropTypes.object).isRequired,
+  gyrocompasses: PropTypes.arrayOf(PropTypes.object).isRequired,
+  mrus: PropTypes.arrayOf(PropTypes.object).isRequired,
+};
+
 const mapStateToProps = state => ({
   windsensors: state.ship.sensors.windsensors,
   gyrocompasses: state.ship.sensors.gyrocompasses,
@@ -103,12 +109,6 @@ const mapStateToProps = state => ({
 
 const mapDispatchToProps = () => ({});
 
-const ConnectedSensors = connect(mapStateToProps, mapDispatchToProps)(Sensors);
+const Sensors = connect(mapStateToProps, mapDispatchToProps)(UnconnectedSensors);
 
-Sensors.propTypes = {
-  windsensors: PropTypes.arrayOf(PropTypes.object).isRequired,
-  gyrocompasses: PropTypes.arrayOf(PropTypes.object).isRequired,
-  mrus: PropTypes.arrayOf(PropTypes.object).isRequired,
-};
-
-export default ConnectedSensors;
+export default Sensors;
