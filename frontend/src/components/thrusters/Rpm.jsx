@@ -1,5 +1,6 @@
 import React, { Component } from 'react';
 import PropTypes from 'prop-types';
+import { vesselControlMode } from '../../util/enums';
 import './Thrusters.css';
 
 class Rpm extends Component {
@@ -29,20 +30,21 @@ class Rpm extends Component {
         <td>Rpm demand</td>
         <td>{displayRpmDemand} %</td>
         <td>
-          <form className="form-inline" onSubmit={this.changeManualRpmDemand}>
-            <input
-              type="number"
-              min="-100"
-              max="100"
-              step="0.1"
-              defaultValue={this.props.demand * 100.0}
-              onChange={this.handleRpmChange}
-              style={{ width: 80, marginLeft: 15 }}
-              className="form-control mb-2 mr-sm-2 mb-sm-0"
-              required
-            />
-            <button className="btn btn-secondary btn-sm" type="submit">Set</button>
-          </form>
+          {this.props.mode === vesselControlMode.TEST &&
+            <form className="form-inline" onSubmit={this.changeManualRpmDemand}>
+              <input
+                type="number"
+                min="-100"
+                max="100"
+                step="0.1"
+                defaultValue={this.props.demand * 100.0}
+                onChange={this.handleRpmChange}
+                style={{ width: 80, marginLeft: 15 }}
+                className="form-control mb-2 mr-sm-2 mb-sm-0"
+                required
+              />
+              <button className="btn btn-secondary btn-sm" type="submit">Set</button>
+            </form>}
         </td>
         <td>Rpm feedback</td>
         <td>{displayRpmFeedback} %</td>
@@ -55,6 +57,7 @@ Rpm.propTypes = {
   demand: PropTypes.number.isRequired,
   feedback: PropTypes.number.isRequired,
   number: PropTypes.number.isRequired,
+  mode: PropTypes.number.isRequired,
   setThrusterDemand: PropTypes.func.isRequired,
 };
 

@@ -13,7 +13,7 @@ class Thruster extends Component {
 
   render() {
     const {
-      name, number, force, power, thrusterType, controlType, demand, feedback,
+      name, number, force, power, thrusterType, controlType, demand, feedback, mode,
     } = this.props.thrusterData;
 
     const displayForce = force.toFixed(2);
@@ -52,6 +52,7 @@ class Thruster extends Component {
                   demand={demand.rpm}
                   feedback={feedback.rpm}
                   number={number}
+                  mode={mode}
                   setThrusterDemand={this.props.setThrusterDemand}
                 />}
               {controlType === 'pitch' &&
@@ -59,6 +60,7 @@ class Thruster extends Component {
                   demand={demand.pitch}
                   feedback={feedback.pitch}
                   number={number}
+                  mode={mode}
                   setThrusterDemand={this.props.setThrusterDemand}
                 />}
               {(thrusterType === 'propeller' || thrusterType === 'azimuth') &&
@@ -66,6 +68,7 @@ class Thruster extends Component {
                   demand={demand.azimuth}
                   feedback={feedback.azimuth}
                   number={number}
+                  mode={mode}
                   setThrusterDemand={this.props.setThrusterDemand}
                 />}
             </tbody>
@@ -89,6 +92,7 @@ Thruster.propTypes = {
     power: PropTypes.number,
     demand: PropTypes.object,
     feedback: PropTypes.object,
+    mode: PropTypes.number,
   }).isRequired,
   setThrusterDemand: PropTypes.func.isRequired,
 };

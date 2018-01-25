@@ -10,7 +10,7 @@ export function calculateAutopilotDemand(control, gyrocompasses, gpses, thruster
   const speedError = control.autopilot.speed !== 0 ?
     control.autopilot.speed - gpses[0].speed : 0;
 
-  const headingControlForce = control.autopilot.controllers.headingPid.gain.p * headingError;
+  // const headingControlForce = control.autopilot.controllers.headingPid.gain.p * headingError;
   const speedControlForce = control.autopilot.controllers.speedPid.gain.p * speedError;
 
   // Allocation

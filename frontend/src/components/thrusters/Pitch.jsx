@@ -1,5 +1,6 @@
 import React, { Component } from 'react';
 import PropTypes from 'prop-types';
+import { vesselControlMode } from '../../util/enums';
 import './Thrusters.css';
 
 class Pitch extends Component {
@@ -29,20 +30,21 @@ class Pitch extends Component {
         <td>Pitch demand</td>
         <td>{displayPitchDemand} %</td>
         <td>
-          <form className="form-inline" onSubmit={this.changeManualPitchDemand}>
-            <input
-              type="number"
-              min="-100"
-              max="100"
-              step="0.1"
-              defaultValue={this.props.demand * 100.0}
-              onChange={this.handlePitchChange}
-              style={{ width: 80, marginLeft: 15 }}
-              className="form-control mb-2 mr-sm-2 mb-sm-0"
-              required
-            />
-            <button className="btn btn-secondary btn-sm" type="submit">Set</button>
-          </form>
+          {this.props.mode === vesselControlMode.TEST &&
+            <form className="form-inline" onSubmit={this.changeManualPitchDemand}>
+              <input
+                type="number"
+                min="-100"
+                max="100"
+                step="0.1"
+                defaultValue={this.props.demand * 100.0}
+                onChange={this.handlePitchChange}
+                style={{ width: 80, marginLeft: 15 }}
+                className="form-control mb-2 mr-sm-2 mb-sm-0"
+                required
+              />
+              <button className="btn btn-secondary btn-sm" type="submit">Set</button>
+            </form>}
         </td>
         <td>Pitch feedback</td>
         <td>{displayPitchFeedback} %</td>
@@ -55,6 +57,7 @@ Pitch.propTypes = {
   demand: PropTypes.number.isRequired,
   feedback: PropTypes.number.isRequired,
   number: PropTypes.number.isRequired,
+  mode: PropTypes.number.isRequired,
   setThrusterDemand: PropTypes.func.isRequired,
 };
 

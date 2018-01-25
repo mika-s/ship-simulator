@@ -49,6 +49,12 @@ class UnconnectedControl extends Component {
           />
           <input
             type="button"
+            onClick={() => this.setMode(vesselControlMode.TEST)}
+            value="Test"
+            className={this.setButtonColor(vesselControlMode.TEST)}
+          />
+          <input
+            type="button"
             onClick={() => this.setMode(vesselControlMode.LEVER)}
             value="Lever"
             className={this.setButtonColor(vesselControlMode.LEVER)}
