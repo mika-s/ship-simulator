@@ -37,7 +37,7 @@ class Rpm extends Component {
               step="0.1"
               defaultValue={this.props.demand * 100.0}
               onChange={this.handleRpmChange}
-              style={{ width: 70, marginLeft: 15 }}
+              style={{ width: 80, marginLeft: 15 }}
               className="form-control mb-2 mr-sm-2 mb-sm-0"
               required
             />

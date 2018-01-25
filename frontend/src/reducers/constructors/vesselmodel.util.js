@@ -56,7 +56,7 @@ export function calculateDrag(lpp, breadth, draft) {
   const dragYawSway = -0.005 * dragYaw * 0; // TODO: find a suitable value.
 
   const expValues = {
-    surge: 0.6, sway: 0.8, yaw: 0.6, yawSway: 1.0,
+    surge: 0.5, sway: 0.8, yaw: 0.6, yawSway: 1.0,
   };
 
   const drag = {

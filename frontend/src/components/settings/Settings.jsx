@@ -9,7 +9,7 @@ import Wind from './Wind';
 import InitialPosition from './InitialPosition';
 import './Settings.css';
 
-class Settings extends Component {
+export class UnconnectedSettings extends Component {
   constructor() {
     super();
     this.state = {};
@@ -52,6 +52,19 @@ class Settings extends Component {
   }
 }
 
+UnconnectedSettings.propTypes = {
+  currentSpeed: PropTypes.number.isRequired,
+  currentDirection: PropTypes.number.isRequired,
+  windSpeed: PropTypes.number.isRequired,
+  windDirection: PropTypes.number.isRequired,
+  position: PropTypes.objectOf(PropTypes.number).isRequired,
+  setWindSpeed: PropTypes.func.isRequired,
+  setWindDirection: PropTypes.func.isRequired,
+  setCurrentSpeed: PropTypes.func.isRequired,
+  setCurrentDirection: PropTypes.func.isRequired,
+  setPosition: PropTypes.func.isRequired,
+};
+
 const mapStateToProps = state => ({
   currentSpeed: state.ui.current.speed,
   currentDirection: state.ui.current.direction,
@@ -68,19 +81,6 @@ const mapDispatchToProps = dispatch => ({
   setPosition: position => dispatch(setPosition(position)),
 });
 
-const ConnectedSettings = connect(mapStateToProps, mapDispatchToProps)(Settings);
+const Settings = connect(mapStateToProps, mapDispatchToProps)(UnconnectedSettings);
 
-Settings.propTypes = {
-  currentSpeed: PropTypes.number.isRequired,
-  currentDirection: PropTypes.number.isRequired,
-  windSpeed: PropTypes.number.isRequired,
-  windDirection: PropTypes.number.isRequired,
-  position: PropTypes.objectOf(PropTypes.number).isRequired,
-  setWindSpeed: PropTypes.func.isRequired,
-  setWindDirection: PropTypes.func.isRequired,
-  setCurrentSpeed: PropTypes.func.isRequired,
-  setCurrentDirection: PropTypes.func.isRequired,
-  setPosition: PropTypes.func.isRequired,
-};
-
-export default ConnectedSettings;
+export default Settings;

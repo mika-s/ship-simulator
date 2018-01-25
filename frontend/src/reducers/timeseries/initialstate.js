@@ -11,6 +11,9 @@ const timeseriesInitialState = {
     roll: [],
     pitch: [],
   },
+  referencesystems: {
+    speed: [],
+  },
 };
 
 function getInitialState() {

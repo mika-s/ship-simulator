@@ -1,6 +1,7 @@
+import { vesselControlMode } from '../../util/enums';
 import { setDemand, getFeedback, getForces, getPower, isAzi } from './thruster.util';
 
-export default function thrusterReducer(state, action, demand) {
+export default function thrusterReducer(state, action, control, demand) {
   switch (action.type) {
     case 'SIMULATE':
       return {
@@ -9,6 +10,7 @@ export default function thrusterReducer(state, action, demand) {
         feedback: getFeedback(state),
         force: getForces(state),
         power: getPower(state),
+        mode: control.mode,
       };
     case 'STOP_SIMULATION':
       return {
@@ -25,6 +27,7 @@ export default function thrusterReducer(state, action, demand) {
         },
         force: 0.0,
         power: 0.0,
+        mode: vesselControlMode.AUTOPILOT,
       };
     default:
       return state;

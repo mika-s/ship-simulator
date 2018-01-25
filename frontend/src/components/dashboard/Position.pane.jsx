@@ -58,6 +58,7 @@ class PositionPane extends Component {
         ],
       },
       options: {
+        maintainAspectRatio: false,
         animation: {
           duration: 0,
         },
@@ -71,15 +72,7 @@ class PositionPane extends Component {
           },
         },
         scales: {
-          yAxes: [{
-            id: 'latitude-axis',
-            type: 'linear',
-            position: 'left',
-          }, {
-            id: 'longitude-axis',
-            type: 'linear',
-            position: 'right',
-          }],
+          yAxes: [],
         },
       },
     };
@@ -94,25 +87,93 @@ class PositionPane extends Component {
           1: { data: { $set: this.props.longitudeSeries } },
         },
       }),
+      options: update(this.state.options, {
+        scales: {
+          yAxes: !this.props.isAutoAxis ? {
+            $set: [{
+              id: 'latitude-axis',
+              type: 'linear',
+              position: 'left',
+              ticks: { min: this.props.min, max: this.props.max },
+            }, {
+              id: 'longitude-axis',
+              type: 'linear',
+              position: 'right',
+              ticks: { min: this.props.min2, max: this.props.max2 },
+            }],
+          } : {
+            $set: [{
+              id: 'latitude-axis',
+              type: 'linear',
+              position: 'left',
+            }, {
+              id: 'longitude-axis',
+              type: 'linear',
+              position: 'right',
+            }],
+          },
+        },
+      }),
     });
   }
 
-  componentWillReceiveProps() {
+  componentWillReceiveProps(nextProps) {
     this.setState({
       graphData: update(this.state.graphData, {
-        labels: { $set: this.props.simulationTimeSeries },
+        labels: { $set: nextProps.simulationTimeSeries },
         datasets: {
-          0: { data: { $set: this.props.latitudeSeries } },
-          1: { data: { $set: this.props.longitudeSeries } },
+          0: { data: { $set: nextProps.latitudeSeries } },
+          1: { data: { $set: nextProps.longitudeSeries } },
+        },
+      }),
+      options: update(this.state.options, {
+        scales: {
+          yAxes: !nextProps.isAutoAxis ? {
+            $set: [{
+              id: 'latitude-axis',
+              type: 'linear',
+              position: 'left',
+              ticks: { min: nextProps.min, max: nextProps.max },
+            }, {
+              id: 'longitude-axis',
+              type: 'linear',
+              position: 'right',
+              ticks: { min: nextProps.min2, max: nextProps.max2 },
+            }],
+          } : {
+            $set: [{
+              id: 'latitude-axis',
+              type: 'linear',
+              position: 'left',
+              ticks: {
+                min: nextProps.latitudeSeries.length > 0 ?
+                  Math.min(...nextProps.latitudeSeries) : -1,
+                max: nextProps.latitudeSeries.length > 0 ?
+                  Math.max(...nextProps.latitudeSeries) : 1,
+              },
+            }, {
+              id: 'longitude-axis',
+              type: 'linear',
+              position: 'right',
+              ticks: {
+                min: nextProps.longitudeSeries.length > 0 ?
+                  Math.min(...nextProps.longitudeSeries) : -1,
+                max: nextProps.longitudeSeries.length > 0 ?
+                  Math.max(...nextProps.longitudeSeries) : 1,
+              },
+            }],
+          },
         },
       }),
     });
   }
 
   render() {
+    console.log(this.state.options.scales.yAxes);
     return (
       <Line
         width={400}
+        height={277}
         options={this.state.options}
         data={this.state.graphData}
       />
@@ -121,6 +182,11 @@ class PositionPane extends Component {
 }
 
 PositionPane.propTypes = {
+  isAutoAxis: PropTypes.bool.isRequired,
+  min: PropTypes.number.isRequired,
+  max: PropTypes.number.isRequired,
+  min2: PropTypes.number.isRequired,
+  max2: PropTypes.number.isRequired,
   simulationTimeSeries: PropTypes.arrayOf(PropTypes.number).isRequired,
   latitudeSeries: PropTypes.arrayOf(PropTypes.number).isRequired,
   longitudeSeries: PropTypes.arrayOf(PropTypes.number).isRequired,

@@ -65,8 +65,8 @@
       "thrusterType": "tunnel",
       "controlType": "pitch",
       "maxPower": {
-        "positive": 800.0,
-        "negative": 800.0
+        "positive": 1000.0,
+        "negative": 1000.0
       },
       "location": {
         "x": 45.0,
@@ -89,12 +89,40 @@
     },
     {
       "number": 2,
+      "name": "Tunnel 2",
+      "thrusterType": "tunnel",
+      "controlType": "pitch",
+      "maxPower": {
+        "positive": 1000.0,
+        "negative": 1000.0
+      },
+      "location": {
+        "x": 43.0,
+        "y": 0.0
+      },
+      "pitchExponent": {
+        "positive": 1.8,
+        "negative": 1.8
+      },
+      "pitchPowerExponent": {
+        "positive": 2.7,
+        "negative": 2.7
+      },
+      "risetimes": {
+        "pitch": {
+          "positive": 10.0,
+          "negative": -10.0
+        }
+      }
+    },
+    {
+      "number": 3,
       "name": "Port prop",
       "thrusterType": "azimuth",
       "controlType": "rpm",
       "maxPower": {
-        "positive": 2000.0,
-        "negative": 1500.0
+        "positive": 2500.0,
+        "negative": 1800.0
       },
       "location": {
         "x": -45.0,
@@ -112,13 +140,13 @@
       }
     },
     {
-      "number": 3,
+      "number": 4,
       "name": "Stbd prop",
       "thrusterType": "azimuth",
       "controlType": "rpm",
       "maxPower": {
-        "positive": 2000.0,
-        "negative": 1500.0
+        "positive": 2500.0,
+        "negative": 1800.0
       },
       "location": {
         "x": -45.0,

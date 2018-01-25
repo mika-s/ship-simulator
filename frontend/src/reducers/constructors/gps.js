@@ -28,6 +28,8 @@ function GPS(data) {
     latitude: initialPosition.latitude,
     longitude: initialPosition.longitude,
   };
+  this.speed = 0.0;
+  this.direction = 0.0;
 }
 
 export default GPS;

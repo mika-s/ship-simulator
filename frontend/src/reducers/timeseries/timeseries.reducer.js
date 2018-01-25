@@ -15,7 +15,7 @@ function updateArray(oldArray, newValue) {
   return newArray;
 }
 
-export default function timeseriesReducer(state, action, time, model, sensors) {
+export default function timeseriesReducer(state, action, time, model, sensors, referencesystems) {
   switch (action.type) {
     case 'SIMULATE':
       return {
@@ -24,8 +24,14 @@ export default function timeseriesReducer(state, action, time, model, sensors) {
 
         model: {
           position: {
-            latitude: updateArray(state.model.position.latitude, model.position.latitude),
-            longitude: updateArray(state.model.position.longitude, model.position.longitude),
+            latitude: updateArray(
+              state.model.position.latitude,
+              truncToDecimal(model.position.latitude, 7),
+            ),
+            longitude: updateArray(
+              state.model.position.longitude,
+              truncToDecimal(model.position.longitude, 7),
+            ),
             heading: updateArray(
               state.model.position.heading,
               truncToDecimal(model.position.heading * (180.0 / Math.PI), 2),
@@ -35,6 +41,9 @@ export default function timeseriesReducer(state, action, time, model, sensors) {
         sensors: {
           roll: updateArray(state.sensors.roll, sensors.mrus[0].roll),
           pitch: updateArray(state.sensors.pitch, sensors.mrus[0].pitch),
+        },
+        referencesystems: {
+          speed: updateArray(state.referencesystems.speed, referencesystems.gpses[0].speed),
         },
       };
     case 'STOP_SIMULATION':
@@ -53,6 +62,10 @@ export default function timeseriesReducer(state, action, time, model, sensors) {
         sensors: {
           roll: [],
           pitch: [],
+        },
+
+        referencesystems: {
+          speed: [],
         },
       };
     default:

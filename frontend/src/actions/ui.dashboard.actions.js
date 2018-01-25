@@ -7,3 +7,24 @@ export function setDashboardPane(number, pane) {
     },
   };
 }
+
+export function toggleAutoAxis(number) {
+  return {
+    type: 'TOGGLE_AUTO_AXIS',
+    payload: {
+      number,
+    },
+  };
+}
+
+export function setMinMax(number, min, max) {
+  return {
+    type: 'SET_MIN_MAX_AXIS',
+    payload: {
+      number,
+      min,
+      max,
+    },
+  };
+}
+

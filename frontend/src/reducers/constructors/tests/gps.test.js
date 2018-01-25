@@ -13,6 +13,8 @@ it('should be created successfully with correct parameters', () => {
   expect(newGPS).toEqual({
     number: 1,
     position: { latitude: 50.0, longitude: 4.0 },
+    speed: 0.0,
+    direction: 0.0,
   });
 });
 
