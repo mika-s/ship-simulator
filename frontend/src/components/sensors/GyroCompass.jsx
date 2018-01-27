@@ -8,13 +8,15 @@ class GyroCompass extends Component {
   }
 
   render() {
-    const { number, heading } = this.props.gyroCompassData;
+    const { number, heading, rot } = this.props.gyroCompassData;
     const displayHeading = heading.toFixed(1);
+    const displayRot = rot.toFixed(1);
 
     return (
       <tr>
         <td>{number}</td>
         <td>{displayHeading}</td>
+        <td>{displayRot}</td>
         <td />
       </tr>
     );

@@ -68,16 +68,17 @@
 
 ## Sensors
 
-| Variable               | Dimension  | Unit  | Description                                         |
-|------------------------|------------|-------|-----------------------------------------------------|
-| gyrocompass.number     | -          | -     | Gyrocompass number.                                 |
-| gyrocompass.heading    | angle      | °     | The vessel's heading as read from the gyrocompass.  |
-| mru.number             | -          | -     | MRU number.                                         |
-| mru.roll               | angle      | °     | The roll of the vessel as read from the MRU.        |
-| mru.pitch              | angle      | °     | The pitch of the vessel as read from the MRU.       |
-| windsensor.number      | -          | -     | MRU number.                                         |
-| windsensor.speed       | speed      | m/s   | The wind speed as read from the wind sensor.        |
-| windsensor.direction   | angle      | °     | The wind direction as read from the wind sensor.    |
+| Variable               | Dimension     | Unit  | Description                                         |
+|------------------------|---------------|-------|-----------------------------------------------------|
+| gyrocompass.number     | -             | -     | Gyrocompass number.                                 |
+| gyrocompass.heading    | angle         | °     | The vessel's heading as read from the gyrocompass.  |
+| gyrocompass.rot        | angular speed | °/min | The vessel's ROT as read from the gyrocompass.      |
+| mru.number             | -             | -     | MRU number.                                         |
+| mru.roll               | angle         | °     | The roll of the vessel as read from the MRU.        |
+| mru.pitch              | angle         | °     | The pitch of the vessel as read from the MRU.       |
+| windsensor.number      | -             | -     | MRU number.                                         |
+| windsensor.speed       | speed         | m/s   | The wind speed as read from the wind sensor.        |
+| windsensor.direction   | angle         | °     | The wind direction as read from the wind sensor.    |
 
 ## Reference systems
 
