@@ -1,7 +1,7 @@
 import React, { Component } from 'react';
 import './Power.css';
 
-class Power extends Component {
+export class UnconnectedPower extends Component {
   constructor() {
     super();
     this.state = {};
@@ -14,4 +14,4 @@ class Power extends Component {
   }
 }
 
-export default Power;
+export default UnconnectedPower;
