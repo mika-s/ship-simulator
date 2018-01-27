@@ -10,19 +10,23 @@ import timeseriesReducer from './timeseries/timeseries.reducer';
 import uiReducer from './ui/ui.reducer';
 
 export default function rootreducer(state = initialState, action) {
+  let demandsAndSummedError = {};
   let demands = [];
+  let summedHeadingError = 0;
   let forces = { thrusters: 0, wind: 0, current: 0 };
   let model = { position: 0, positionInMeters: 0, velocity: 0 };
 
   if (action.type === 'SIMULATE' || action.type === 'STOP_SIMULATION') {
     // Controller
-    demands = calculateDemands(
+    demandsAndSummedError = calculateDemands(
       state.control,
       state.ship.sensors.gyrocompasses,
       state.ship.referencesystems.gpses,
       state.ship.thrusters,
       state.ui.thrusters,
     );
+    demands = demandsAndSummedError.demands;
+    summedHeadingError = demandsAndSummedError.summedHeadingError;
 
     // Model
     forces = calculateForces(
@@ -43,7 +47,7 @@ export default function rootreducer(state = initialState, action) {
   return {
     ...state,
 
-    control: controlReducer(state.control, action, state.ui.control),
+    control: controlReducer(state.control, action, state.ui.control, summedHeadingError),
     timeseries: timeseriesReducer(
       state.timeseries, action, state.simulation.time,
       model, state.ship.sensors, state.ship.referencesystems,
