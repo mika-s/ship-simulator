@@ -1,7 +1,34 @@
 import { vesselControlMode } from '../../util/enums';
-import { calculateAutopilotDemand } from '../control/autopilot';
+import { headingController, autopilotAlloc } from '../control/autopilot';
 
-export function calculateDemands(control, gyrocompasses, gpses, thrusters, uiThrusters) {
+export function calculateControllerDemands(control, gyrocompasses) {
+  let forces;
+  let controllerOutput;
+  const data = {};
+
+  switch (control.mode) {
+    case vesselControlMode.STANDBY:
+      forces = { surge: 0.0, sway: 0.0, yaw: 0.0 };
+      break;
+    case vesselControlMode.TEST:
+      forces = { surge: 0.0, sway: 0.0, yaw: 0.0 };
+      break;
+    case vesselControlMode.LEVER:
+      forces = { surge: 0.0, sway: 0.0, yaw: 0.0 };
+      break;
+    case vesselControlMode.AUTOPILOT:
+      controllerOutput = headingController(control.autopilot, gyrocompasses[0].heading);
+      ({ forces } = controllerOutput);
+      data.summedHeadingError = controllerOutput.summedHeadingError;
+      break;
+    default:
+      throw new Error(`Invalid control mode ${control.mode}`);
+  }
+
+  return { forces, data };
+}
+
+export function calculateThrusterDemands(controllerData, control, thrusters, uiThrusters) {
   let demands = [];
 
   switch (control.mode) {
@@ -33,7 +60,11 @@ export function calculateDemands(control, gyrocompasses, gpses, thrusters, uiThr
       }
       break;
     case vesselControlMode.AUTOPILOT:
-      demands = calculateAutopilotDemand(control, gyrocompasses, gpses, thrusters);
+      demands = autopilotAlloc(
+        controllerData.forces.yaw,
+        control.autopilot.maxRudderAngle,
+        thrusters,
+      );
       break;
     default:
       throw new Error(`Invalid control mode ${control.mode}`);

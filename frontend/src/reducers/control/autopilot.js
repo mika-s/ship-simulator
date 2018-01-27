@@ -2,7 +2,7 @@ import { transformTo0To360, transformToPipi } from '../../util/kinematics.util';
 
 const { PI } = Math;
 
-function headingController(autopilot, gyroHeading) {
+export function headingController(autopilot, gyroHeading) {
   const antiWindupLimit = 30;
   const antiWindupMax = 500;
 
@@ -41,10 +41,12 @@ function headingController(autopilot, gyroHeading) {
     (autopilot.controllers.headingPid.gain.i * summedHeadingError) +
     (autopilot.controllers.headingPid.gain.d * derivativeHeadingError);
 
-  return { force, summedHeadingError };
+  const forces = { surge: 0.0, sway: 0.0, yaw: force };
+
+  return { forces, summedHeadingError };
 }
 
-function autopilotAlloc(headingControlForce, maxRudderAngle, thrusters) {
+export function autopilotAlloc(headingControlForce, maxRudderAngle, thrusters) {
   const demands = [];
 
   for (let thrIdx = 0; thrIdx < thrusters.length; thrIdx += 1) {
@@ -73,11 +75,4 @@ function autopilotAlloc(headingControlForce, maxRudderAngle, thrusters) {
   }
 
   return demands;
-}
-
-export function calculateAutopilotDemand(control, gyrocompasses, gpses, thrusters) {
-  const headingData = headingController(control.autopilot, gyrocompasses[0].heading);
-  const demands = autopilotAlloc(headingData.force, control.autopilot.maxRudderAngle, thrusters);
-
-  return { demands, summedHeadingError: headingData.summedHeadingError };
 }
