@@ -6,11 +6,13 @@ import shipInitialState from './ship/initialstate';
 import timeseriesInitialState from './timeseries/initialstate';
 import vesselModelInitialState from './vesselmodel/initialstate';
 import uiInitialState from './ui/initialstate';
-import InitialVessel from '../Vessel.json';
+import InitialVessel from '../settings/Vessel.json';
+import InitialEstimator from '../settings/Estimator.json';
+import InitialController from '../settings/Controller.json';
 
 const initialState = {
-  control: controlInitialState(),
-  estimator: estimatorInitialState(InitialVessel),
+  control: controlInitialState(InitialController),
+  estimator: estimatorInitialState(InitialVessel, InitialEstimator),
   ui: uiInitialState(InitialVessel),
   timeseries: timeseriesInitialState(),
   simulation: simulatorInitialState(),

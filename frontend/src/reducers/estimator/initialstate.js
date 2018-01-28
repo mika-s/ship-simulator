@@ -2,8 +2,8 @@ import Estimator from '../constructors/estimator';
 
 const estimatorInitialState = {
   alphabeta: {
-    alpha: 0.3,
-    beta: 0.05,
+    alpha: 0.0,
+    beta: 0.0,
     position: {
       longitude: 0.0,
       latitude: 0.0,
@@ -17,8 +17,8 @@ const estimatorInitialState = {
   },
 };
 
-function getInitialState(InitialVessel) {
-  return Estimator(estimatorInitialState, InitialVessel);
+function getInitialState(initialVessel, initialEstimator) {
+  return Estimator(estimatorInitialState, initialVessel, initialEstimator);
 }
 
 export default getInitialState;
