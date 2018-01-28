@@ -1,7 +1,9 @@
 import initialState from './initialstate';
+import { estimatePositionAndVelocity } from './estimator/estimator.util';
 import { calculateControllerDemands, calculateThrusterDemands } from './control/control.util';
 import { calculateForces, calculatePosition } from './vesselmodel/vessel.util';
 import controlReducer from './control/control.reducer';
+import estimatorReducer from './estimator/estimator.reducer';
 import vesselmodelReducer from './vesselmodel/vesselmodel.reducer';
 import environmentReducer from './environment/environment.reducer';
 import shipReducer from './ship/ship.reducer';
@@ -18,12 +20,20 @@ export default function rootreducer(state = initialState, action) {
     control: uiControl, wind: uiWind, current: uiCurrent, position: uiPosition,
   } = state.ui;
 
-  let demands = [];
+  let positionAndVelocity = {};
   let controllerData = { forces: {}, data: {} };
+  let demands = [];
   let forces = { thrusters: 0, wind: 0, current: 0 };
   let newModel = { position: 0, positionInMeters: 0, velocity: 0 };
 
   if (action.type === 'SIMULATE' || action.type === 'STOP_SIMULATION') {
+    // Estimator
+    positionAndVelocity = estimatePositionAndVelocity(
+      state.estimator,
+      referencesystems.gpses,
+      sensors.gyrocompasses,
+    );
+
     // Controller
     controllerData = calculateControllerDemands(
       state.control,
@@ -38,6 +48,9 @@ export default function rootreducer(state = initialState, action) {
       state.ui.thrusters,
     );
 
+    /* ****************************
+    *    BLACK BOX FROM HERE ON.
+    ***************************** */
     // Model
     forces = calculateForces(
       thrusters,
@@ -58,6 +71,8 @@ export default function rootreducer(state = initialState, action) {
       state.control, action, uiControl,
       controllerData.data.summedHeadingError,
     ),
+
+    estimator: estimatorReducer(state.estimator, action, positionAndVelocity),
 
     timeseries: timeseriesReducer(
       state.timeseries, action, state.simulation.time,

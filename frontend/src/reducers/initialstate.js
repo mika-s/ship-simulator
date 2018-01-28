@@ -1,4 +1,5 @@
 import controlInitialState from './control/initialstate';
+import estimatorInitialState from './estimator/initialstate';
 import environmentInitialState from './environment/initialstate';
 import simulatorInitialState from './simulation/initialstate';
 import shipInitialState from './ship/initialstate';
@@ -9,6 +10,7 @@ import InitialVessel from '../Vessel.json';
 
 const initialState = {
   control: controlInitialState(),
+  estimator: estimatorInitialState(InitialVessel),
   ui: uiInitialState(InitialVessel),
   timeseries: timeseriesInitialState(),
   simulation: simulatorInitialState(),

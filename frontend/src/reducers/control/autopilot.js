@@ -16,7 +16,6 @@ export function headingController(autopilot, gyroHeading) {
     const ccw = error > 0 ? error - 360.0 : error;
     const cw = error > 0 ? error : 360 + error;
     const chosenError = Math.abs(ccw) < Math.abs(cw) ? ccw : cw;
-    // console.log(chosenError);
 
     const errorInRads = chosenError * (PI / 180.0);
     headingError = transformToPipi(errorInRads).angle * (180.0 / PI);
@@ -34,8 +33,6 @@ export function headingController(autopilot, gyroHeading) {
     summedHeadingError = 0.0;
   }
 
-  // console.log('summed: ', summedHeadingError);
-
   const force =
     (autopilot.controllers.headingPid.gain.p * headingError) +
     (autopilot.controllers.headingPid.gain.i * summedHeadingError) +
@@ -47,6 +44,7 @@ export function headingController(autopilot, gyroHeading) {
 }
 
 export function autopilotAlloc(headingControlForce, maxRudderAngle, thrusters) {
+  const rudderGain = -0.1;
   const demands = [];
 
   for (let thrIdx = 0; thrIdx < thrusters.length; thrIdx += 1) {
@@ -59,7 +57,7 @@ export function autopilotAlloc(headingControlForce, maxRudderAngle, thrusters) {
         azimuth: 90.0,
       });
     } else if (thruster.thrusterType === 'azimuth' || thruster.thrusterType === 'propeller') {
-      let azimuth = -0.1 * headingControlForce;
+      let azimuth = rudderGain * headingControlForce;
       azimuth = Math.max(-maxRudderAngle, azimuth);
       azimuth = Math.min(maxRudderAngle, azimuth);
       azimuth = transformTo0To360(azimuth);
