@@ -2,6 +2,7 @@ import React, { Component } from 'react';
 import PropTypes from 'prop-types';
 import update from 'immutability-helper';
 import { connect } from 'react-redux';
+import AlphabetaHeading from './Alphabeta.heading.pane';
 import HeadingPane from './Heading.pane';
 import SensorPane from './Sensor.pane';
 import ThrustersPane from './Thrusters.pane';
@@ -99,7 +100,7 @@ class Paneselector extends Component {
   render() {
     const {
       simulationTimeSeries, modelPositionSeries, rollSeries, pitchSeries,
-      speedSeries, thrusters,
+      speedSeries, alphabetaHeadingSeries, alphabetaRotSeries, thrusters,
     } = this.props;
 
     return (
@@ -115,6 +116,7 @@ class Paneselector extends Component {
             <option value="rollpitch">Roll and pitch</option>
             <option value="thrusters">Thrusters</option>
             <option value="gpsspeed">GPS speed</option>
+            <option value="alphabeta-heading">αβ - heading and ROT</option>
           </select>
 
           {this.state.pane !== 'thrusters' &&
@@ -163,6 +165,18 @@ class Paneselector extends Component {
                 isAutoAxis={this.state.isAutoAxis}
                 simulationTimeSeries={simulationTimeSeries}
                 speedSeries={speedSeries}
+              />}
+
+            {this.state.pane === 'alphabeta-heading' &&
+              <AlphabetaHeading
+                min={this.props.initialSettings.min.alphabetaHeading}
+                max={this.props.initialSettings.max.alphabetaHeading}
+                min2={this.props.initialSettings.min.alphabetaRot}
+                max2={this.props.initialSettings.max.alphabetaRot}
+                isAutoAxis={this.state.isAutoAxis}
+                simulationTimeSeries={simulationTimeSeries}
+                headingSeries={alphabetaHeadingSeries}
+                rotSeries={alphabetaRotSeries}
               />}
           </div>
           {this.state.isSettingsOpen &&
@@ -214,7 +228,7 @@ class Paneselector extends Component {
                         </div>
                       </form>}
                     {/* Special case for position which has two axes. */}
-                    {!this.state.isAutoAxis && this.state.pane === 'position' &&
+                    {!this.state.isAutoAxis && (this.state.pane === 'position' || this.state.pane === 'alphabeta-heading') &&
                       <form className="form-inline" style={{ marginTop: 10 }} onSubmit={this.setMinMax2}>
                         <div className="form-check">
                           Min:
@@ -263,6 +277,8 @@ const mapStateToProps = state => ({
   rollSeries: state.timeseries.sensors.roll,
   pitchSeries: state.timeseries.sensors.pitch,
   speedSeries: state.timeseries.referencesystems.speed,
+  alphabetaHeadingSeries: state.timeseries.estimator.alphabeta.position.heading,
+  alphabetaRotSeries: state.timeseries.estimator.alphabeta.velocity.r,
   thrusters: state.ship.thrusters,
 });
 
@@ -286,6 +302,8 @@ Paneselector.propTypes = {
   rollSeries: PropTypes.arrayOf(PropTypes.number).isRequired,
   pitchSeries: PropTypes.arrayOf(PropTypes.number).isRequired,
   speedSeries: PropTypes.arrayOf(PropTypes.number).isRequired,
+  alphabetaHeadingSeries: PropTypes.arrayOf(PropTypes.number).isRequired,
+  alphabetaRotSeries: PropTypes.arrayOf(PropTypes.number).isRequired,
   thrusters: PropTypes.arrayOf(PropTypes.object).isRequired,
 };
 

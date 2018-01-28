@@ -75,7 +75,7 @@ export default function rootreducer(state = initialState, action) {
     estimator: estimatorReducer(state.estimator, action, positionAndVelocity),
 
     timeseries: timeseriesReducer(
-      state.timeseries, action, state.simulation.time,
+      state.timeseries, action, state.simulation.time, positionAndVelocity,
       newModel, sensors, referencesystems,
     ),
 

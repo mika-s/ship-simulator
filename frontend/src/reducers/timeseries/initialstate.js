@@ -1,5 +1,19 @@
 const timeseriesInitialState = {
   time: [],
+  estimator: {
+    alphabeta: {
+      position: {
+        longitude: [],
+        latitude: [],
+        heading: [],
+      },
+      velocity: {
+        u: [],
+        v: [],
+        r: [],
+      },
+    },
+  },
   model: {
     position: {
       latitude: [],

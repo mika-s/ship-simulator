@@ -1,27 +1,47 @@
 import { truncToDecimal } from '../../util/general.util';
+import { updateArray } from './timeseries.util';
 
-function updateArray(oldArray, newValue) {
-  const secondToSave = 60;
-
-  const newArray = oldArray.slice();
-
-  if (newArray.length < secondToSave) {
-    newArray.push(newValue);
-  } else {
-    newArray.shift();
-    newArray.push(newValue);
-  }
-
-  return newArray;
-}
-
-export default function timeseriesReducer(state, action, time, model, sensors, referencesystems) {
+export default function timeseriesReducer(
+  state, action, time, estimator,
+  model, sensors, referencesystems,
+) {
   switch (action.type) {
     case 'SIMULATE':
       return {
         ...state,
         time: updateArray(state.time, time + 1),
-
+        estimator: {
+          alphabeta: {
+            position: {
+              longitude: updateArray(
+                state.estimator.alphabeta.position.latitude,
+                truncToDecimal(estimator.position.latitude, 7),
+              ),
+              latitude: updateArray(
+                state.estimator.alphabeta.position.longitude,
+                truncToDecimal(estimator.position.longitude, 7),
+              ),
+              heading: updateArray(
+                state.estimator.alphabeta.position.heading,
+                truncToDecimal(estimator.position.heading, 2),
+              ),
+            },
+            velocity: {
+              u: updateArray(
+                state.estimator.alphabeta.velocity.u,
+                truncToDecimal(estimator.velocity.u, 1),
+              ),
+              v: updateArray(
+                state.estimator.alphabeta.velocity.v,
+                truncToDecimal(estimator.velocity.v, 1),
+              ),
+              r: updateArray(
+                state.estimator.alphabeta.velocity.r,
+                truncToDecimal(estimator.velocity.r, 1),
+              ),
+            },
+          },
+        },
         model: {
           position: {
             latitude: updateArray(
@@ -51,6 +71,21 @@ export default function timeseriesReducer(state, action, time, model, sensors, r
         ...state,
 
         time: [],
+
+        estimator: {
+          alphabeta: {
+            position: {
+              longitude: [],
+              latitude: [],
+              heading: [],
+            },
+            velocity: {
+              u: [],
+              v: [],
+              r: [],
+            },
+          },
+        },
 
         model: {
           position: {

@@ -28,6 +28,8 @@ const uiInitialState = {
           position2: 3.9,
           thrusters: 0,
           rollpitch: -5.0,
+          alphabetaHeading: 0.0,
+          alphabetaRot: 0.0,
         },
         max: {
           heading: 360,
@@ -36,6 +38,8 @@ const uiInitialState = {
           position2: 4.1,
           thrusters: 0,
           rollpitch: 5.0,
+          alphabetaHeading: 360.0,
+          alphabetaRot: 100.0,
         },
       },
       2: {
@@ -48,6 +52,8 @@ const uiInitialState = {
           position2: 3.9,
           thrusters: 0,
           rollpitch: -5.0,
+          alphabetaHeading: 0.0,
+          alphabetaRot: 0.0,
         },
         max: {
           heading: 360,
@@ -56,6 +62,8 @@ const uiInitialState = {
           position2: 4.1,
           thrusters: 0,
           rollpitch: 5.0,
+          alphabetaHeading: 360.0,
+          alphabetaRot: 100.0,
         },
       },
       3: {
@@ -68,6 +76,8 @@ const uiInitialState = {
           position2: 3.9,
           thrusters: 0,
           rollpitch: -5.0,
+          alphabetaHeading: 0.0,
+          alphabetaRot: 0.0,
         },
         max: {
           heading: 360,
@@ -76,6 +86,8 @@ const uiInitialState = {
           position2: 4.1,
           thrusters: 0,
           rollpitch: 5.0,
+          alphabetaHeading: 360.0,
+          alphabetaRot: 100.0,
         },
       },
       4: {
@@ -88,6 +100,8 @@ const uiInitialState = {
           position2: 3.9,
           thrusters: 0,
           rollpitch: -5.0,
+          alphabetaHeading: 0.0,
+          alphabetaRot: 0.0,
         },
         max: {
           heading: 360,
@@ -96,6 +110,8 @@ const uiInitialState = {
           position2: 4.1,
           thrusters: 0,
           rollpitch: 5.0,
+          alphabetaHeading: 360.0,
+          alphabetaRot: 100.0,
         },
       },
     },
