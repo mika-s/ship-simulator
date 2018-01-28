@@ -7,32 +7,37 @@ function getHeadingFromGyrocompasses(gyrocompasses) {
   return sum / gyrocompasses.length;
 }
 
-function alphabetaFilter(alphabeta, filteredGyroHeading) {
-  const dt = 1;
-  const alpha = 1;
-  const beta = 1;
+function alphabetaFilter(frequency, alphabeta, filteredGyroHeading) {
+  const secInMin = 60;
+  const dt = 1 / frequency;
+  const { alpha, beta } = alphabeta;
+
   const prevEstimatedHeading = alphabeta.position.heading;
-  const prevEstimatedRot = alphabeta.velocity.r;
+  const prevEstimatedRot = alphabeta.velocity.r / secInMin;
+
+  // console.log(prevEstimatedHeading, prevEstimatedRot);
 
   // prediction step
   const predictedHeading = prevEstimatedHeading + (prevEstimatedRot * dt);
   const predictedRot = prevEstimatedRot;
 
+  // console.log(predictedHeading, predictedRot);
+
   // update step
   const residual = filteredGyroHeading - predictedHeading;
-  let estimatedRot = predictedRot + ((beta * (residual)) / dt);
+  let estimatedRot = predictedRot + ((beta * residual) / dt);
   const estimatedHeading = predictedHeading + (alpha * residual);
 
   // convert ROT to °/min
-  estimatedRot *= 60;
+  estimatedRot *= secInMin;
 
   return { estimatedHeading, estimatedRot };
 }
 
-export function estimatePositionAndVelocity(estimator, gpses, gyrocompasses) {
+export function estimatePositionAndVelocity(frequency, estimator, gpses, gyrocompasses) {
   const filteredGyroHeading = getHeadingFromGyrocompasses(gyrocompasses);
   const { estimatedHeading, estimatedRot }
-    = alphabetaFilter(estimator.alphabeta, filteredGyroHeading);
+    = alphabetaFilter(frequency, estimator.alphabeta, filteredGyroHeading);
 
   const position = {
     latitude: 0.0,

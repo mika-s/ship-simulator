@@ -29,7 +29,7 @@ const uiInitialState = {
           thrusters: 0,
           rollpitch: -5.0,
           alphabetaHeading: 0.0,
-          alphabetaRot: 0.0,
+          alphabetaHeading2: 0.0,
         },
         max: {
           heading: 360,
@@ -39,7 +39,7 @@ const uiInitialState = {
           thrusters: 0,
           rollpitch: 5.0,
           alphabetaHeading: 360.0,
-          alphabetaRot: 100.0,
+          alphabetaHeading2: 100.0,
         },
       },
       2: {
@@ -53,7 +53,7 @@ const uiInitialState = {
           thrusters: 0,
           rollpitch: -5.0,
           alphabetaHeading: 0.0,
-          alphabetaRot: 0.0,
+          alphabetaHeading2: 0.0,
         },
         max: {
           heading: 360,
@@ -63,7 +63,7 @@ const uiInitialState = {
           thrusters: 0,
           rollpitch: 5.0,
           alphabetaHeading: 360.0,
-          alphabetaRot: 100.0,
+          alphabetaHeading2: 100.0,
         },
       },
       3: {
@@ -77,7 +77,7 @@ const uiInitialState = {
           thrusters: 0,
           rollpitch: -5.0,
           alphabetaHeading: 0.0,
-          alphabetaRot: 0.0,
+          alphabetaHeading2: 0.0,
         },
         max: {
           heading: 360,
@@ -87,7 +87,7 @@ const uiInitialState = {
           thrusters: 0,
           rollpitch: 5.0,
           alphabetaHeading: 360.0,
-          alphabetaRot: 100.0,
+          alphabetaHeading2: 100.0,
         },
       },
       4: {
@@ -101,7 +101,7 @@ const uiInitialState = {
           thrusters: 0,
           rollpitch: -5.0,
           alphabetaHeading: 0.0,
-          alphabetaRot: 0.0,
+          alphabetaHeading2: 0.0,
         },
         max: {
           heading: 360,
@@ -111,7 +111,7 @@ const uiInitialState = {
           thrusters: 0,
           rollpitch: 5.0,
           alphabetaHeading: 360.0,
-          alphabetaRot: 100.0,
+          alphabetaHeading2: 100.0,
         },
       },
     },
@@ -126,6 +126,12 @@ const uiInitialState = {
       active: false,
       heading: 0.0,
       speed: 0.0,
+    },
+  },
+  estimator: {
+    alphabeta: {
+      alpha: 0.5,
+      beta: 0.5,
     },
   },
 };

@@ -2,8 +2,8 @@ import Estimator from '../constructors/estimator';
 
 const estimatorInitialState = {
   alphabeta: {
-    alpha: 0.5,
-    beta: 0.5,
+    alpha: 0.3,
+    beta: 0.05,
     position: {
       longitude: 0.0,
       latitude: 0.0,

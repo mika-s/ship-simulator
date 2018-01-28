@@ -29,6 +29,7 @@ export default function rootreducer(state = initialState, action) {
   if (action.type === 'SIMULATE' || action.type === 'STOP_SIMULATION') {
     // Estimator
     positionAndVelocity = estimatePositionAndVelocity(
+      state.simulation.frequency,
       state.estimator,
       referencesystems.gpses,
       sensors.gyrocompasses,
@@ -72,7 +73,7 @@ export default function rootreducer(state = initialState, action) {
       controllerData.data.summedHeadingError,
     ),
 
-    estimator: estimatorReducer(state.estimator, action, positionAndVelocity),
+    estimator: estimatorReducer(state.estimator, action, state.ui.estimator, positionAndVelocity),
 
     timeseries: timeseriesReducer(
       state.timeseries, action, state.simulation.time, positionAndVelocity,

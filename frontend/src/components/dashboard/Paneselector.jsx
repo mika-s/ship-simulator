@@ -116,7 +116,7 @@ class Paneselector extends Component {
             <option value="rollpitch">Roll and pitch</option>
             <option value="thrusters">Thrusters</option>
             <option value="gpsspeed">GPS speed</option>
-            <option value="alphabeta-heading">αβ - heading and ROT</option>
+            <option value="alphabetaHeading">αβ - heading and ROT</option>
           </select>
 
           {this.state.pane !== 'thrusters' &&
@@ -167,12 +167,12 @@ class Paneselector extends Component {
                 speedSeries={speedSeries}
               />}
 
-            {this.state.pane === 'alphabeta-heading' &&
+            {this.state.pane === 'alphabetaHeading' &&
               <AlphabetaHeading
                 min={this.props.initialSettings.min.alphabetaHeading}
                 max={this.props.initialSettings.max.alphabetaHeading}
-                min2={this.props.initialSettings.min.alphabetaRot}
-                max2={this.props.initialSettings.max.alphabetaRot}
+                min2={this.props.initialSettings.min.alphabetaHeading2}
+                max2={this.props.initialSettings.max.alphabetaHeading2}
                 isAutoAxis={this.state.isAutoAxis}
                 simulationTimeSeries={simulationTimeSeries}
                 headingSeries={alphabetaHeadingSeries}
@@ -228,7 +228,7 @@ class Paneselector extends Component {
                         </div>
                       </form>}
                     {/* Special case for position which has two axes. */}
-                    {!this.state.isAutoAxis && (this.state.pane === 'position' || this.state.pane === 'alphabeta-heading') &&
+                    {!this.state.isAutoAxis && (this.state.pane === 'position' || this.state.pane === 'alphabetaHeading') &&
                       <form className="form-inline" style={{ marginTop: 10 }} onSubmit={this.setMinMax2}>
                         <div className="form-check">
                           Min:
@@ -292,6 +292,8 @@ Paneselector.propTypes = {
     isAutoAxis: PropTypes.bool.isRequired,
     min: PropTypes.objectOf(PropTypes.number).isRequired,
     max: PropTypes.objectOf(PropTypes.number).isRequired,
+    min2: PropTypes.objectOf(PropTypes.number),
+    max2: PropTypes.objectOf(PropTypes.number),
   }).isRequired,
   number: PropTypes.number.isRequired,
   changePane: PropTypes.func.isRequired,
