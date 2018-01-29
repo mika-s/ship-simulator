@@ -2,6 +2,7 @@ import React, { Component } from 'react';
 import PropTypes from 'prop-types';
 import { connect } from 'react-redux';
 import { setControlMode, setAutopilotHeading, setAutopilotSpeed, toggleAutopilot } from '../../actions/ui.control.actions';
+import { setAlphaForHeading, setBetaForHeading } from '../../actions/ui.estimator.actions';
 import { setThrusterDemand } from '../../actions/ui.thruster.actions';
 import { vesselControlMode } from '../../util/enums';
 import Lever from './Lever';
@@ -34,7 +35,7 @@ class UnconnectedControl extends Component {
 
   render() {
     const {
-      thrusters, active, heading, speed,
+      thrusters, active, heading, speed, alpha, beta,
     } = this.props;
 
     return (
@@ -46,6 +47,12 @@ class UnconnectedControl extends Component {
             onClick={() => this.setMode(vesselControlMode.STANDBY)}
             value="Standby"
             className={this.setButtonColor(vesselControlMode.STANDBY)}
+          />
+          <input
+            type="button"
+            onClick={() => this.setMode(vesselControlMode.TEST)}
+            value="Test"
+            className={this.setButtonColor(vesselControlMode.TEST)}
           />
           <input
             type="button"
@@ -71,9 +78,13 @@ class UnconnectedControl extends Component {
             active={active}
             initialHeading={heading}
             initialSpeed={speed}
+            initialAlpha={alpha}
+            initialBeta={beta}
             thrusters={thrusters}
             setAutopilotHeading={this.props.setAutopilotHeading}
             setAutopilotSpeed={this.props.setAutopilotSpeed}
+            setAlphaForHeading={this.props.setAlphaForHeading}
+            setBetaForHeading={this.props.setBetaForHeading}
             toggleAutopilot={this.props.toggleAutopilot}
           />
         }
@@ -88,6 +99,8 @@ const mapStateToProps = state => ({
   active: state.control.autopilot.active,
   heading: state.ui.control.autopilot.heading,
   speed: state.ui.control.autopilot.speed,
+  alpha: state.ui.estimator.alphabeta.alpha,
+  beta: state.ui.estimator.alphabeta.beta,
 });
 
 const mapDispatchToProps = dispatch => ({
@@ -95,6 +108,8 @@ const mapDispatchToProps = dispatch => ({
   setThrusterDemand: (number, type, demand) => dispatch(setThrusterDemand(number, type, demand)),
   setAutopilotHeading: heading => dispatch(setAutopilotHeading(heading)),
   setAutopilotSpeed: heading => dispatch(setAutopilotSpeed(heading)),
+  setAlphaForHeading: alpha => dispatch(setAlphaForHeading(alpha)),
+  setBetaForHeading: beta => dispatch(setBetaForHeading(beta)),
   toggleAutopilot: heading => dispatch(toggleAutopilot(heading)),
 });
 
@@ -106,10 +121,14 @@ UnconnectedControl.propTypes = {
   active: PropTypes.bool.isRequired,
   heading: PropTypes.number.isRequired,
   speed: PropTypes.number.isRequired,
+  alpha: PropTypes.number.isRequired,
+  beta: PropTypes.number.isRequired,
   setControlMode: PropTypes.func.isRequired,
   setThrusterDemand: PropTypes.func.isRequired,
   setAutopilotHeading: PropTypes.func.isRequired,
   setAutopilotSpeed: PropTypes.func.isRequired,
+  setAlphaForHeading: PropTypes.func.isRequired,
+  setBetaForHeading: PropTypes.func.isRequired,
   toggleAutopilot: PropTypes.func.isRequired,
 };
 

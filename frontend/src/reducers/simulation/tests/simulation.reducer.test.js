@@ -13,5 +13,6 @@ it('should handle SIMULATE', () => {
     .toEqual({
       simulationState: simulationState.RUNNING,
       time: 1,
+      frequency: 1,
     });
 });

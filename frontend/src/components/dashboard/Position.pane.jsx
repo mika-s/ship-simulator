@@ -169,7 +169,6 @@ class PositionPane extends Component {
   }
 
   render() {
-    console.log(this.state.options.scales.yAxes);
     return (
       <Line
         width={400}

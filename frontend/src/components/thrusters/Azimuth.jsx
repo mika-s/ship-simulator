@@ -1,5 +1,6 @@
 import React, { Component } from 'react';
 import PropTypes from 'prop-types';
+import { vesselControlMode } from '../../util/enums';
 import './Thrusters.css';
 
 class Azimuth extends Component {
@@ -29,20 +30,21 @@ class Azimuth extends Component {
         <td>Azimuth demand</td>
         <td>{displayAzimuthDemand}°</td>
         <td>
-          <form className="form-inline" onSubmit={this.changeManualAzimuthDemand}>
-            <input
-              type="number"
-              min="0"
-              max="360"
-              step="0.1"
-              defaultValue={this.props.demand}
-              onChange={this.handleAzimuthChange}
-              style={{ width: 80, marginLeft: 15 }}
-              className="form-control mb-2 mr-sm-2 mb-sm-0"
-              required
-            />
-            <button className="btn btn-secondary btn-sm" type="submit">Set</button>
-          </form>
+          {this.props.mode === vesselControlMode.TEST &&
+            <form className="form-inline" onSubmit={this.changeManualAzimuthDemand}>
+              <input
+                type="number"
+                min="0"
+                max="360"
+                step="0.1"
+                defaultValue={this.props.demand}
+                onChange={this.handleAzimuthChange}
+                style={{ width: 80, marginLeft: 15 }}
+                className="form-control mb-2 mr-sm-2 mb-sm-0"
+                required
+              />
+              <button className="btn btn-secondary btn-sm" type="submit">Set</button>
+            </form>}
         </td>
         <td>Azimuth feedback</td>
         <td>{displayAzimuthFeedback}°</td>
@@ -55,6 +57,7 @@ Azimuth.propTypes = {
   demand: PropTypes.number.isRequired,
   feedback: PropTypes.number.isRequired,
   number: PropTypes.number.isRequired,
+  mode: PropTypes.number.isRequired,
   setThrusterDemand: PropTypes.func.isRequired,
 };
 

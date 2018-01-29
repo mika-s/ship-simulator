@@ -28,3 +28,13 @@ export function setMinMax(number, min, max) {
   };
 }
 
+export function setMinMax2(number, min, max) {
+  return {
+    type: 'SET_MIN_MAX2_AXIS',
+    payload: {
+      number,
+      min,
+      max,
+    },
+  };
+}

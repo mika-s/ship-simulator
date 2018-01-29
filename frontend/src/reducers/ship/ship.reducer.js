@@ -13,7 +13,7 @@ export default function shipReducer(state, action, model, control, demands, envW
 
     sensors: {
       gyrocompasses: state.sensors.gyrocompasses.map(gyrocompass =>
-        gyroReducer(gyrocompass, action, model.position.heading)),
+        gyroReducer(gyrocompass, action, model.position.heading, model.velocity.r)),
 
       mrus: state.sensors.mrus.map(mru =>
         mruReducer(mru, action, 0.0, 0.0)),

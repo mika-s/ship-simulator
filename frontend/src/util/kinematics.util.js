@@ -1,3 +1,7 @@
+const {
+  PI, abs, sign, sin, cos, trunc,
+} = Math;
+
 /**
 * Transform from NED to BODY. I.e. latitude, longitude, heading to surge, sway, heading.
 * @param {object} bodyPostion   - Object containing latitude, longitude, heading (rad).
@@ -6,8 +10,8 @@
 export function transformNEDToBODY(nedPosition) {
   const { latitude, longitude, heading } = nedPosition;
 
-  const surge = (Math.cos(heading) * latitude) + (Math.sin(heading) * longitude);
-  const sway = -(Math.sin(heading) * latitude) + (Math.cos(heading) * longitude);
+  const surge = (cos(heading) * latitude) + (sin(heading) * longitude);
+  const sway = -(sin(heading) * latitude) + (cos(heading) * longitude);
 
   return { surge, sway, heading };
 }
@@ -20,8 +24,8 @@ export function transformNEDToBODY(nedPosition) {
 export function transformBODYToNED(bodyPostion) {
   const { surge, sway, heading } = bodyPostion;
 
-  const latitude = (Math.cos(heading) * surge) - (Math.sin(heading) * sway);
-  const longitude = (Math.sin(heading) * surge) + (Math.cos(heading) * sway);
+  const latitude = (cos(heading) * surge) - (sin(heading) * sway);
+  const longitude = (sin(heading) * surge) + (cos(heading) * sway);
 
   return { latitude, longitude, heading };
 }
@@ -41,5 +45,23 @@ export function transformTo0To360(angle) {
 * @returns {number}         - The angle transformed.
 */
 export function transformTo0To2pi(angle) {
-  return (angle % (2 * Math.PI)) + (angle < 0 ? (2 * Math.PI) : 0);
+  return (angle % (2 * PI)) + (angle < 0 ? (2 * PI) : 0);
+}
+
+/**
+* Transform an angle in the range -∞,∞ to -π to π.
+* @param {number} angle     - The angle to transform.
+* @returns {object}         - An object containing the angle transformed and
+*                             number of revolutions.
+*/
+export function transformToPipi(angle) {
+  const revolutions = trunc((angle + (sign(angle) * PI)) / (2 * PI));
+
+  const part1 = (angle + (sign(angle) * PI)) % (2 * PI);
+  const part21 = 2 * (sign(abs(((angle + PI) % (2 * PI)) / (2 * PI))) - 1);
+  const part2 = (sign(sign(angle) + part21)) * PI;
+
+  const outputAngle = part1 - part2;
+
+  return { angle: outputAngle, revolutions };
 }

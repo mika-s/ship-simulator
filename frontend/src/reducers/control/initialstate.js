@@ -9,20 +9,24 @@ const controlInitialState = {
     maxRudderAngle: 30.0,
     controllers: {
       headingPid: {
-        gain: { p: 100, i: 1, d: 1 },
-        force: { p: 0, i: 0, d: 0 },
+        gain: { p: 0, i: 0.0, d: 0 },
         summedError: 0,
       },
       speedPid: {
-        gain: { p: 5, i: 1, d: 1 },
-        force: { p: 0, i: 0, d: 0 },
+        gain: { p: 0, i: 0, d: 0 },
         summedError: 0,
       },
     },
   },
 };
 
-function getInitialState() {
+function getInitialState(initialController) {
+  controlInitialState.autopilot.controllers.headingPid.gain =
+    initialController.autopilot.controllers.headingPid.gain;
+
+  controlInitialState.autopilot.controllers.speedPid.gain =
+    initialController.autopilot.controllers.speedPid.gain;
+
   return controlInitialState;
 }
 

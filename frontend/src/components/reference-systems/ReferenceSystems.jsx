@@ -4,7 +4,7 @@ import PropTypes from 'prop-types';
 import GPS from './GPS';
 import './ReferenceSystems.css';
 
-class ReferenceSystems extends Component {
+export class UnconnectedReferenceSystems extends Component {
   constructor() {
     super();
     this.state = {};
@@ -39,16 +39,16 @@ class ReferenceSystems extends Component {
   }
 }
 
+UnconnectedReferenceSystems.propTypes = {
+  gpses: PropTypes.arrayOf(PropTypes.object).isRequired,
+};
+
 const mapStateToProps = state => ({
   gpses: state.ship.referencesystems.gpses,
 });
 
 const mapDispatchToProps = () => ({});
 
-const ConnectedReferenceSystems = connect(mapStateToProps, mapDispatchToProps)(ReferenceSystems);
+const ReferenceSystems = connect(mapStateToProps, mapDispatchToProps)(UnconnectedReferenceSystems);
 
-ReferenceSystems.propTypes = {
-  gpses: PropTypes.arrayOf(PropTypes.object).isRequired,
-};
-
-export default ConnectedReferenceSystems;
+export default ReferenceSystems;

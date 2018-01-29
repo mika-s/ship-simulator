@@ -1,6 +1,7 @@
 import React from 'react';
 import ReactDOM from 'react-dom';
 import Thruster from '../Thruster';
+import { vesselControlMode } from '../../../util/enums';
 
 it('renders without crashing', () => {
   function setThrusterDemand() { }
@@ -25,6 +26,7 @@ it('renders without crashing', () => {
       azimuth: 45.0,
       rpm: 18.0,
     },
+    mode: vesselControlMode.LEVER,
   };
 
   const div = document.createElement('div');

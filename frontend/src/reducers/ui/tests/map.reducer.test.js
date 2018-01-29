@@ -1,9 +1,9 @@
-import mockInitialVesselModel from './testdata';
+import { initialVesselModel, initialEstimator } from './testdata';
 import mapReducer from '../map.reducer';
 import getInitialState from '../initialstate';
 import { motion } from '../../../util/enums';
 
-const initialState = getInitialState(mockInitialVesselModel).map;
+const initialState = getInitialState(initialVesselModel, initialEstimator).map;
 
 it('should handle INC_ZOOM_LEVEL', () => {
   const action = {

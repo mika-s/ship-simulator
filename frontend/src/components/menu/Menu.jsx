@@ -30,8 +30,8 @@ class Menu extends Component {
 
 Menu.propTypes = {
   items: PropTypes.arrayOf(PropTypes.shape({
-    name: PropTypes.string,
-    number: PropTypes.number,
+    name: PropTypes.string.isRequired,
+    href: PropTypes.string.isRequired,
   })).isRequired,
 };
 

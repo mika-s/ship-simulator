@@ -1,8 +1,8 @@
-import mockInitialVesselModel from './testdata';
+import { initialVesselModel, initialEstimator } from './testdata';
 import dashboardReducer from '../dashboard.reducer';
 import getInitialState from '../initialstate';
 
-const initialState = getInitialState(mockInitialVesselModel).dashboard;
+const initialState = getInitialState(initialVesselModel, initialEstimator).dashboard;
 
 it('should handle SET_DASHBOARD_PANE', () => {
   const action = {

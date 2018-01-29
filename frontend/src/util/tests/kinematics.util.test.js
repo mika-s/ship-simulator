@@ -1,4 +1,4 @@
-import { transformTo0To360, transformTo0To2pi } from '../kinematics.util';
+import { transformTo0To360, transformTo0To2pi, transformToPipi } from '../kinematics.util';
 
 /* transformTo0To360() */
 
@@ -53,3 +53,30 @@ it('transformTo0To2pi(5.5π) = 3/2π', () => {
   const transformedAngle = transformTo0To2pi(5.5 * Math.PI);
   expect(transformedAngle).toBeCloseTo((3 / 2) * Math.PI, 5);
 });
+
+/* transformToPipi() */
+
+it('transformToPipi(π/2) = π/2', () => {
+  const transformedAngle = transformToPipi(0.5 * Math.PI);
+  expect(transformedAngle.angle).toBeCloseTo(0.5 * Math.PI, 5);
+  expect(transformedAngle.revolutions).toEqual(0);
+});
+
+it('transformToPipi(-π/2) = -π/2', () => {
+  const transformedAngle = transformToPipi(-0.5 * Math.PI);
+  expect(transformedAngle.angle).toBeCloseTo(-0.5 * Math.PI, 5);
+  expect(transformedAngle.revolutions).toEqual(-0);
+});
+
+it('transformToPipi(2π) = 0', () => {
+  const transformedAngle = transformToPipi(2 * Math.PI);
+  expect(transformedAngle.angle).toBeCloseTo(0 * Math.PI, 5);
+  expect(transformedAngle.revolutions).toEqual(1);
+});
+
+it('transformToPipi(1.5π) = -π/2', () => {
+  const transformedAngle = transformToPipi(1.5 * Math.PI);
+  expect(transformedAngle.angle).toBeCloseTo(-0.5 * Math.PI, 5);
+  expect(transformedAngle.revolutions).toEqual(1);
+});
+

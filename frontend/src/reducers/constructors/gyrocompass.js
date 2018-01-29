@@ -20,6 +20,7 @@ function Gyrocompass(data) {
 
   this.number = number;
   this.heading = initialHeading;
+  this.rot = 0.0;
 }
 
 export default Gyrocompass;

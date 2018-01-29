@@ -10,7 +10,7 @@ it('should be created successfully with correct parameters', () => {
 
   const newGyrocompass = new Gyrocompass(data);
 
-  expect(newGyrocompass).toEqual({ number: 1, heading: 123.4 });
+  expect(newGyrocompass).toEqual({ number: 1, heading: 123.4, rot: 0.0 });
 });
 
 it('should be not created with too small number', () => {
