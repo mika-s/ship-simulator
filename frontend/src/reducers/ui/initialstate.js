@@ -130,18 +130,21 @@ const uiInitialState = {
   },
   estimator: {
     alphabeta: {
-      alpha: 0.5,
-      beta: 0.5,
+      alpha: 0.0,
+      beta: 0.0,
     },
   },
 };
 
-function getInitialState(InitialVessel) {
-  uiInitialState.position = InitialVessel.model.position;
+function getInitialState(initialVessel, initialEstimator) {
+  uiInitialState.position = initialVessel.model.position;
 
-  for (let thrIdx = 0; thrIdx < InitialVessel.thrusters.length; thrIdx += 1) {
-    uiInitialState.thrusters.push(new UiThruster(InitialVessel.thrusters[thrIdx]));
+  for (let thrIdx = 0; thrIdx < initialVessel.thrusters.length; thrIdx += 1) {
+    uiInitialState.thrusters.push(new UiThruster(initialVessel.thrusters[thrIdx]));
   }
+
+  uiInitialState.estimator.alphabeta.alpha = initialEstimator.alphabeta.alpha;
+  uiInitialState.estimator.alphabeta.beta = initialEstimator.alphabeta.beta;
 
   return uiInitialState;
 }

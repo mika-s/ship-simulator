@@ -1,6 +1,26 @@
 # Important variables:
 
+## Controller
+
+| Variable                                 | Dimension | Unit     | Description                                      |
+|------------------------------------------|-----------|----------|--------------------------------------------------|
+| autopilot.controllers.headingPid.gain.p  | -         | t/°      | P gain for heading PID controller for autopilot. |
+| autopilot.controllers.headingPid.gain.i  | -         | t/s°     | I gain for heading PID controller for autopilot. |
+| autopilot.controllers.headingPid.gain.d  | -         | t(s/°)   | D gain for heading PID controller for autopilot. |
+| autopilot.controllers.speedPid.gain.p    | -         | t(s/m)   | P gain for speed PID controller for autopilot.   |
+| autopilot.controllers.speedPid.gain.i    | -         | t/m      | I gain for speed PID controller for autopilot.   |
+| autopilot.controllers.speedPid.gain.d    | -         | t(s^2/m) | D gain for speed PID controller for autopilot.   |
+
+## Estimator
+
+| Variable           | Dimension | Unit | Description                                   |
+|--------------------|-----------|------|-----------------------------------------------|
+| alphabeta.alpha    | -         | -    | Alpha value in an alphabeta filter.           |
+| alphabeta.beta     | -         | -    | Beta value in an alphabeta filter.            |
+
 ## Vessel
+
+### Vessel
 
 | Variable                    | Dimension | Unit | Description                                   |
 |-----------------------------|-----------|------|-----------------------------------------------|
@@ -51,7 +71,7 @@
 | drag.yaw        |           | ts^2/m^3 | Drag in yaw.                       |
 | drag.yawSway    |           |          | Drag in yaw due to sway velocity.  |
 
-## Environment
+### Environment
 
 | Variable              | Dimension  | Unit  | Description                         |
 |-----------------------|------------|-------|-------------------------------------|
@@ -66,7 +86,7 @@
 | current.forces.sway   | force      | T     | Force due to the current, in sway.  |
 | current.forces.yaw    | moment     | Tm    | Moment due to the current, in yaw.  |
 
-## Sensors
+### Sensors
 
 | Variable               | Dimension     | Unit  | Description                                         |
 |------------------------|---------------|-------|-----------------------------------------------------|
@@ -80,7 +100,7 @@
 | windsensor.speed       | speed         | m/s   | The wind speed as read from the wind sensor.        |
 | windsensor.direction   | angle         | °     | The wind direction as read from the wind sensor.    |
 
-## Reference systems
+### Reference systems
 
 | Variable               | Dimension  | Unit  | Description                            |
 |------------------------|------------|-------|----------------------------------------|
@@ -88,4 +108,4 @@
 | gps.position.latitude  | angle      | °     | The read latitude in decimal degrees.  |
 | gps.position.longitude | angle      | °     | The read longitude in decimal degrees. |
 
-## Thrusters
+### Thrusters

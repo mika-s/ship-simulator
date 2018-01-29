@@ -1,8 +1,8 @@
-import mockInitialVesselModel from './testdata';
+import { initialVesselModel, initialEstimator } from './testdata';
 import positionReducer from '../position.reducer';
 import getInitialState from '../initialstate';
 
-const initialState = getInitialState(mockInitialVesselModel).position;
+const initialState = getInitialState(initialVesselModel, initialEstimator).position;
 
 it('should handle SET_INITIAL_POSITION', () => {
   const action = {

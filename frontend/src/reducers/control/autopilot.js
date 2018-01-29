@@ -2,15 +2,17 @@ import { transformTo0To360, transformToPipi } from '../../util/kinematics.util';
 
 const { PI } = Math;
 
-export function headingController(autopilot, gyroHeading) {
+export function headingController(autopilot, estimatedHeading, estimatedRot) {
   const antiWindupLimit = 30;
   const antiWindupMax = 500;
+  const desiredRot = 0.0;
 
-  const derivativeHeadingError = 0.0;
   let headingError;
+  let derivativeHeadingError;
 
   if (autopilot.speed !== 0) {
-    const error = autopilot.heading - gyroHeading;
+    const error = autopilot.heading - estimatedHeading;
+    const derror = desiredRot - estimatedRot;
 
     // Find shortest distance.
     const ccw = error > 0 ? error - 360.0 : error;
@@ -19,8 +21,10 @@ export function headingController(autopilot, gyroHeading) {
 
     const errorInRads = chosenError * (PI / 180.0);
     headingError = transformToPipi(errorInRads).angle * (180.0 / PI);
+    derivativeHeadingError = derror;
   } else {
     headingError = 0.0;
+    derivativeHeadingError = 0.0;
   }
 
   let summedHeadingError;

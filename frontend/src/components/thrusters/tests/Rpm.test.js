@@ -1,6 +1,7 @@
 import React from 'react';
 import ReactDOM from 'react-dom';
 import Rpm from '../Rpm';
+import { vesselControlMode } from '../../../util/enums';
 
 it('renders without crashing', () => {
   function setThrusterDemand() {}
@@ -11,5 +12,6 @@ it('renders without crashing', () => {
     feedback={30}
     number={1}
     setThrusterDemand={setThrusterDemand}
+    mode={vesselControlMode.LEVER}
   />, tbody);
 });

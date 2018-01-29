@@ -48,7 +48,7 @@ class Paneselector extends Component {
 
   setMinMax2(event) {
     event.preventDefault();
-    this.props.setMinMax(
+    this.props.setMinMax2(
       this.props.number,
       Number.parseFloat(this.state.min[`${this.state.pane}2`]),
       Number.parseFloat(this.state.max[`${this.state.pane}2`]),
@@ -292,13 +292,12 @@ Paneselector.propTypes = {
     isAutoAxis: PropTypes.bool.isRequired,
     min: PropTypes.objectOf(PropTypes.number).isRequired,
     max: PropTypes.objectOf(PropTypes.number).isRequired,
-    min2: PropTypes.objectOf(PropTypes.number),
-    max2: PropTypes.objectOf(PropTypes.number),
   }).isRequired,
   number: PropTypes.number.isRequired,
   changePane: PropTypes.func.isRequired,
   toggleAutoAxis: PropTypes.func.isRequired,
   setMinMax: PropTypes.func.isRequired,
+  setMinMax2: PropTypes.func.isRequired,
   simulationTimeSeries: PropTypes.arrayOf(PropTypes.number).isRequired,
   modelPositionSeries: PropTypes.objectOf(PropTypes.arrayOf(PropTypes.number)).isRequired,
   rollSeries: PropTypes.arrayOf(PropTypes.number).isRequired,

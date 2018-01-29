@@ -14,12 +14,12 @@ export default function timeseriesReducer(
           alphabeta: {
             position: {
               longitude: updateArray(
-                state.estimator.alphabeta.position.latitude,
-                truncToDecimal(estimator.position.latitude, 7),
-              ),
-              latitude: updateArray(
                 state.estimator.alphabeta.position.longitude,
                 truncToDecimal(estimator.position.longitude, 7),
+              ),
+              latitude: updateArray(
+                state.estimator.alphabeta.position.latitude,
+                truncToDecimal(estimator.position.latitude, 7),
               ),
               heading: updateArray(
                 state.estimator.alphabeta.position.heading,

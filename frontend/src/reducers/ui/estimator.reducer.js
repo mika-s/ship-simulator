@@ -8,7 +8,7 @@ export default function estimatorReducer(state, action) {
           alpha: action.payload.alpha,
         },
       };
-    case 'SET_BETA_FOR_HEADNG':
+    case 'SET_BETA_FOR_HEADING':
       return {
         ...state,
         alphabeta: {

@@ -38,7 +38,7 @@ export default function rootreducer(state = initialState, action) {
     // Controller
     controllerData = calculateControllerDemands(
       state.control,
-      sensors.gyrocompasses,
+      positionAndVelocity,
     );
 
     // Thruster allocation

@@ -1,10 +1,8 @@
 import React, { Component } from 'react';
 import PropTypes from 'prop-types';
 import { connect } from 'react-redux';
-import {
-  setControlMode, setAutopilotHeading, setAutopilotSpeed,
-  setAlphaForHeading, setBetaForHeading, toggleAutopilot,
-} from '../../actions/ui.control.actions';
+import { setControlMode, setAutopilotHeading, setAutopilotSpeed, toggleAutopilot } from '../../actions/ui.control.actions';
+import { setAlphaForHeading, setBetaForHeading } from '../../actions/ui.estimator.actions';
 import { setThrusterDemand } from '../../actions/ui.thruster.actions';
 import { vesselControlMode } from '../../util/enums';
 import Lever from './Lever';
@@ -123,6 +121,8 @@ UnconnectedControl.propTypes = {
   active: PropTypes.bool.isRequired,
   heading: PropTypes.number.isRequired,
   speed: PropTypes.number.isRequired,
+  alpha: PropTypes.number.isRequired,
+  beta: PropTypes.number.isRequired,
   setControlMode: PropTypes.func.isRequired,
   setThrusterDemand: PropTypes.func.isRequired,
   setAutopilotHeading: PropTypes.func.isRequired,

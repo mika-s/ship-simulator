@@ -1,7 +1,7 @@
 import { vesselControlMode } from '../../util/enums';
 import { headingController, autopilotAlloc } from '../control/autopilot';
 
-export function calculateControllerDemands(control, gyrocompasses) {
+export function calculateControllerDemands(control, positionAndVelocity) {
   let forces;
   let controllerOutput;
   const data = {};
@@ -17,7 +17,11 @@ export function calculateControllerDemands(control, gyrocompasses) {
       forces = { surge: 0.0, sway: 0.0, yaw: 0.0 };
       break;
     case vesselControlMode.AUTOPILOT:
-      controllerOutput = headingController(control.autopilot, gyrocompasses[0].heading);
+      controllerOutput = headingController(
+        control.autopilot,
+        positionAndVelocity.position.heading,
+        positionAndVelocity.velocity.r,
+      );
       ({ forces } = controllerOutput);
       data.summedHeadingError = controllerOutput.summedHeadingError;
       break;
