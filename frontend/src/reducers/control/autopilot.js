@@ -3,8 +3,7 @@ import { transformTo0To360, transformToPipi } from '../../util/kinematics.util';
 const { PI } = Math;
 
 export function headingController(autopilot, estimatedHeading, estimatedRot) {
-  const antiWindupLimit = 30;
-  const antiWindupMax = 500;
+  const { sector, maxI } = autopilot.controllers.headingPid.antiWindup;
   const desiredRot = 0.0;
 
   let headingError;
@@ -30,9 +29,9 @@ export function headingController(autopilot, estimatedHeading, estimatedRot) {
   let summedHeadingError;
 
   // Anti-windup
-  if (-antiWindupLimit < headingError && headingError < antiWindupLimit) {
+  if (-sector < headingError && headingError < sector) {
     summedHeadingError = autopilot.controllers.headingPid.summedError + headingError;
-    if (summedHeadingError > antiWindupMax) summedHeadingError = antiWindupMax;
+    if (maxI < summedHeadingError) summedHeadingError = maxI;
   } else {
     summedHeadingError = 0.0;
   }

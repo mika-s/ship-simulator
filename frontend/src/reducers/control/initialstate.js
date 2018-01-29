@@ -11,6 +11,10 @@ const controlInitialState = {
       headingPid: {
         gain: { p: 0, i: 0.0, d: 0 },
         summedError: 0,
+        antiWindup: {
+          sector: 0,
+          maxI: 0,
+        },
       },
       speedPid: {
         gain: { p: 0, i: 0, d: 0 },
@@ -23,6 +27,9 @@ const controlInitialState = {
 function getInitialState(initialController) {
   controlInitialState.autopilot.controllers.headingPid.gain =
     initialController.autopilot.controllers.headingPid.gain;
+
+  controlInitialState.autopilot.controllers.headingPid.antiWindup =
+    initialController.autopilot.controllers.headingPid.antiWindup;
 
   controlInitialState.autopilot.controllers.speedPid.gain =
     initialController.autopilot.controllers.speedPid.gain;

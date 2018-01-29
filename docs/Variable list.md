@@ -2,14 +2,16 @@
 
 ## Controller
 
-| Variable                                 | Dimension | Unit     | Description                                      |
-|------------------------------------------|-----------|----------|--------------------------------------------------|
-| autopilot.controllers.headingPid.gain.p  | -         | t/°      | P gain for heading PID controller for autopilot. |
-| autopilot.controllers.headingPid.gain.i  | -         | t/s°     | I gain for heading PID controller for autopilot. |
-| autopilot.controllers.headingPid.gain.d  | -         | t(s/°)   | D gain for heading PID controller for autopilot. |
-| autopilot.controllers.speedPid.gain.p    | -         | t(s/m)   | P gain for speed PID controller for autopilot.   |
-| autopilot.controllers.speedPid.gain.i    | -         | t/m      | I gain for speed PID controller for autopilot.   |
-| autopilot.controllers.speedPid.gain.d    | -         | t(s^2/m) | D gain for speed PID controller for autopilot.   |
+| Variable                                            | Dimension   | Unit     | Description                                      |
+|-----------------------------------------------------|-------------|----------|--------------------------------------------------|
+| autopilot.controllers.headingPid.gain.p             | coeff       | t/°      | P gain for heading PID controller for autopilot. |
+| autopilot.controllers.headingPid.gain.i             | coeff       | t/s°     | I gain for heading PID controller for autopilot. |
+| autopilot.controllers.headingPid.gain.d             | coeff       | t(s/°)   | D gain for heading PID controller for autopilot. |
+| autopilot.controllers.headingPid.antiWindup.sector  | angle       | °        | Integral term is used inside this sector.        |
+| autopilot.controllers.headingPid.antiWindup.maxI    | time*angle  | s°       | Integral force max value.                        |
+| autopilot.controllers.speedPid.gain.p               | coeff       | t(s/m)   | P gain for speed PID controller for autopilot.   |
+| autopilot.controllers.speedPid.gain.i               | coeff       | t/m      | I gain for speed PID controller for autopilot.   |
+| autopilot.controllers.speedPid.gain.d               | coeff       | t(s^2/m) | D gain for speed PID controller for autopilot.   |
 
 ## Estimator
 
