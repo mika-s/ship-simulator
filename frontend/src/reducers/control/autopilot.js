@@ -1,4 +1,4 @@
-import { transformTo0To360, transformToPipi } from '../../util/kinematics.util';
+import { wrapTo0To360, wrapToPipi } from '../../util/kinematics.util';
 
 const { PI } = Math;
 
@@ -19,7 +19,7 @@ export function headingController(autopilot, estimatedHeading, estimatedRot) {
     const chosenError = Math.abs(ccw) < Math.abs(cw) ? ccw : cw;
 
     const errorInRads = chosenError * (PI / 180.0);
-    headingError = transformToPipi(errorInRads).angle * (180.0 / PI);
+    headingError = wrapToPipi(errorInRads).angle * (180.0 / PI);
     derivativeHeadingError = derror;
   } else {
     headingError = 0.0;
@@ -67,7 +67,7 @@ export function autopilotAlloc(headingControlForce, maxRudderAngle, thrusters) {
       let azimuth = rudderGain * headingControlForce;
       azimuth = Math.max(-maxRudderAngle, azimuth);
       azimuth = Math.min(maxRudderAngle, azimuth);
-      azimuth = transformTo0To360(azimuth);
+      azimuth = wrapTo0To360(azimuth);
 
       demands.push({
         pitch: thruster.controlType === 'pitch' ? 1.0 : 0.0,

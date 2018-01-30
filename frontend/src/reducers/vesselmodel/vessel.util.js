@@ -1,4 +1,4 @@
-import { transformBODYToNED, transformTo0To2pi } from '../../util/kinematics.util';
+import { transformBODYToNED, wrapTo0To2pi } from '../../util/kinematics.util';
 import { getPositionInLatLon } from './geo.util';
 
 export function calculatePosition(mass, drag, forces, position) {
@@ -29,7 +29,7 @@ export function calculatePosition(mass, drag, forces, position) {
   const newNedPositionInMeters = {
     latitude: nedPositionInMeters.latitude + nedVelocity.latitude,
     longitude: nedPositionInMeters.longitude + nedVelocity.longitude,
-    heading: transformTo0To2pi(nedPositionInMeters.heading + velocity.r),
+    heading: wrapTo0To2pi(nedPositionInMeters.heading + velocity.r),
   };
 
   const newPosition = getPositionInLatLon(

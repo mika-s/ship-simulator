@@ -1,4 +1,4 @@
-import { transformTo0To360 } from '../../util/kinematics.util';
+import { wrapTo0To360 } from '../../util/kinematics.util';
 
 function getHeadingFromGyrocompasses(gyrocompasses) {
   let sum = 0;
@@ -28,7 +28,7 @@ function alphabetaFilter(frequency, alphabeta, filteredGyroHeading) {
   let estimatedRot = predictedRot + ((beta * residual) / dt);
   let estimatedHeading = predictedHeading + (alpha * residual);
 
-  estimatedHeading = transformTo0To360(estimatedHeading);
+  estimatedHeading = wrapTo0To360(estimatedHeading);
   estimatedRot *= secInMin;
 
   return { estimatedHeading, estimatedRot };

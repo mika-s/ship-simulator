@@ -1,4 +1,4 @@
-import { transformTo0To2pi } from '../../../util/kinematics.util';
+import { wrapTo0To2pi } from '../../../util/kinematics.util';
 import { maxBasedTrigonometric } from './trigonometric';
 
 /**
@@ -21,7 +21,7 @@ export function calculateForces(
   const frontalArea = dimensions.draft * dimensions.breadth;
   const lateralArea = dimensions.draft * dimensions.lpp;
   let relativeAngle = currentDirectionInRad - vesselHeading;
-  relativeAngle = transformTo0To2pi(relativeAngle);
+  relativeAngle = wrapTo0To2pi(relativeAngle);
 
   /* const coefficients = dragBasedTrigonometric(
     relativeAngle, drag,

@@ -1,5 +1,5 @@
 import { thrusterFeedbackState } from '../../util/enums';
-import { transformTo0To360 } from '../../util/kinematics.util';
+import { wrapTo0To360 } from '../../util/kinematics.util';
 
 /**
 * Get the thruster force.
@@ -195,7 +195,7 @@ export function getFeedback(thruster) {
     newFeedback.azimuth = thruster.feedback.azimuth;
   }
 
-  newFeedback.azimuth = transformTo0To360(newFeedback.azimuth);
+  newFeedback.azimuth = wrapTo0To360(newFeedback.azimuth);
 
   return newFeedback;
 }

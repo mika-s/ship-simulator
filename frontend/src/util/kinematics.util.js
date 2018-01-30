@@ -31,30 +31,30 @@ export function transformBODYToNED(bodyPostion) {
 }
 
 /**
-* Transform an angle in the range -∞,∞ to 0,360°.
-* @param {number} angle     - The angle to transform.
-* @returns {number}         - The angle transformed.
+* Wrap an angle in the range -∞,∞ to 0,360°.
+* @param {number} angle     - The angle to wrap.
+* @returns {number}         - The wrapped angle.
 */
-export function transformTo0To360(angle) {
+export function wrapTo0To360(angle) {
   return (angle % 360) + (angle < 0 ? 360 : 0);
 }
 
 /**
-* Transform an angle in the range -∞,∞ to 0,2π.
-* @param {number} angle     - The angle to transform.
-* @returns {number}         - The angle transformed.
+* Wrap an angle in the range -∞,∞ to 0,2π.
+* @param {number} angle     - The angle to wrap.
+* @returns {number}         - The wrapped angle.
 */
-export function transformTo0To2pi(angle) {
+export function wrapTo0To2pi(angle) {
   return (angle % (2 * PI)) + (angle < 0 ? (2 * PI) : 0);
 }
 
 /**
-* Transform an angle in the range -∞,∞ to -π to π.
-* @param {number} angle     - The angle to transform.
-* @returns {object}         - An object containing the angle transformed and
+* Wrap an angle in the range -∞,∞ to -π to π.
+* @param {number} angle     - The angle to wrap.
+* @returns {object}         - An object containing the wrapped angle and
 *                             number of revolutions.
 */
-export function transformToPipi(angle) {
+export function wrapToPipi(angle) {
   const revolutions = trunc((angle + (sign(angle) * PI)) / (2 * PI));
 
   const part1 = (angle + (sign(angle) * PI)) % (2 * PI);
