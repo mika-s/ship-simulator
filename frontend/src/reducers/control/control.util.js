@@ -7,15 +7,6 @@ export function calculateControllerDemands(control, positionAndVelocity) {
   const data = {};
 
   switch (control.mode) {
-    case vesselControlMode.STANDBY:
-      forces = { surge: 0.0, sway: 0.0, yaw: 0.0 };
-      break;
-    case vesselControlMode.TEST:
-      forces = { surge: 0.0, sway: 0.0, yaw: 0.0 };
-      break;
-    case vesselControlMode.LEVER:
-      forces = { surge: 0.0, sway: 0.0, yaw: 0.0 };
-      break;
     case vesselControlMode.AUTOPILOT:
       controllerOutput = headingController(
         control.autopilot,
@@ -24,9 +15,13 @@ export function calculateControllerDemands(control, positionAndVelocity) {
       );
       ({ forces } = controllerOutput);
       data.summedHeadingError = controllerOutput.summedHeadingError;
+      data.pid = controllerOutput.pid;
       break;
     default:
-      throw new Error(`Invalid control mode ${control.mode}`);
+      forces = { surge: 0.0, sway: 0.0, yaw: 0.0 };
+      data.summedHeadingError = 0.0;
+      data.pid = { p: 0.0, i: 0.0, d: 0.0 };
+      break;
   }
 
   return { forces, data };

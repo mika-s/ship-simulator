@@ -61,3 +61,20 @@ it('should create an action to set min2 and max2', () => {
 
   expect(actions.setMinMax2(number, min, max)).toEqual(expectedAction);
 });
+
+it('should create an action to set min3 and max3', () => {
+  const number = 1;
+  const min = 0;
+  const max = 10;
+
+  const expectedAction = {
+    type: 'SET_MIN_MAX3_AXIS',
+    payload: {
+      number,
+      min,
+      max,
+    },
+  };
+
+  expect(actions.setMinMax3(number, min, max)).toEqual(expectedAction);
+});

@@ -36,14 +36,18 @@ export function headingController(autopilot, estimatedHeading, estimatedRot) {
     summedHeadingError = 0.0;
   }
 
-  const force =
-    (autopilot.controllers.headingPid.gain.p * headingError) +
-    (autopilot.controllers.headingPid.gain.i * summedHeadingError) +
-    (autopilot.controllers.headingPid.gain.d * derivativeHeadingError);
+  const p = autopilot.controllers.headingPid.gain.p * headingError;
+  const i = autopilot.controllers.headingPid.gain.i * summedHeadingError;
+  const d = autopilot.controllers.headingPid.gain.d * derivativeHeadingError;
+  const force = p + i + d;
 
   const forces = { surge: 0.0, sway: 0.0, yaw: force };
 
-  return { forces, summedHeadingError };
+  return {
+    forces,
+    summedHeadingError,
+    pid: { p, i, d },
+  };
 }
 
 export function autopilotAlloc(headingControlForce, maxRudderAngle, thrusters) {

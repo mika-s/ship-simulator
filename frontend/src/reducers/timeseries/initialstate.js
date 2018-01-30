@@ -14,6 +14,15 @@ const timeseriesInitialState = {
       },
     },
   },
+  autopilot: {
+    controllers: {
+      headingPid: {
+        p: [],
+        i: [],
+        d: [],
+      },
+    },
+  },
   model: {
     position: {
       latitude: [],

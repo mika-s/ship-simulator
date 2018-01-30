@@ -4,11 +4,11 @@
       "headingPid": {
         "gain": {
           "p": 1,
-          "i": 0.001,
-          "d": 1
+          "i": 0.005,
+          "d": 3
         },
         "antiWindup": {
-          "sector": 30,
+          "sector": 20,
           "maxI": 500
         }
       },
