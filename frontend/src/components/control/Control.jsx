@@ -5,11 +5,11 @@ import { setControlMode, setAutopilotHeading, setAutopilotSpeed, toggleAutopilot
 import { setAlphaForHeading, setBetaForHeading } from '../../actions/ui.estimator.actions';
 import { setThrusterDemand } from '../../actions/ui.thruster.actions';
 import { vesselControlMode } from '../../util/enums';
-import Lever from './Lever';
-import Autopilot from './Autopilot';
+import Lever from './Lever/Lever';
+import Autopilot from './Autopilot/Autopilot';
 import './Control.css';
 
-class UnconnectedControl extends Component {
+export class UnconnectedControl extends Component {
   constructor() {
     super();
     this.state = {};
@@ -93,6 +93,23 @@ class UnconnectedControl extends Component {
   }
 }
 
+UnconnectedControl.propTypes = {
+  mode: PropTypes.number.isRequired,
+  thrusters: PropTypes.arrayOf(PropTypes.object).isRequired,
+  active: PropTypes.bool.isRequired,
+  heading: PropTypes.number.isRequired,
+  speed: PropTypes.number.isRequired,
+  alpha: PropTypes.number.isRequired,
+  beta: PropTypes.number.isRequired,
+  setControlMode: PropTypes.func.isRequired,
+  setThrusterDemand: PropTypes.func.isRequired,
+  setAutopilotHeading: PropTypes.func.isRequired,
+  setAutopilotSpeed: PropTypes.func.isRequired,
+  setAlphaForHeading: PropTypes.func.isRequired,
+  setBetaForHeading: PropTypes.func.isRequired,
+  toggleAutopilot: PropTypes.func.isRequired,
+};
+
 const mapStateToProps = state => ({
   mode: state.control.mode,
   thrusters: state.ship.thrusters,
@@ -114,22 +131,5 @@ const mapDispatchToProps = dispatch => ({
 });
 
 const Control = connect(mapStateToProps, mapDispatchToProps)(UnconnectedControl);
-
-UnconnectedControl.propTypes = {
-  mode: PropTypes.number.isRequired,
-  thrusters: PropTypes.arrayOf(PropTypes.object).isRequired,
-  active: PropTypes.bool.isRequired,
-  heading: PropTypes.number.isRequired,
-  speed: PropTypes.number.isRequired,
-  alpha: PropTypes.number.isRequired,
-  beta: PropTypes.number.isRequired,
-  setControlMode: PropTypes.func.isRequired,
-  setThrusterDemand: PropTypes.func.isRequired,
-  setAutopilotHeading: PropTypes.func.isRequired,
-  setAutopilotSpeed: PropTypes.func.isRequired,
-  setAlphaForHeading: PropTypes.func.isRequired,
-  setBetaForHeading: PropTypes.func.isRequired,
-  toggleAutopilot: PropTypes.func.isRequired,
-};
 
 export default Control;

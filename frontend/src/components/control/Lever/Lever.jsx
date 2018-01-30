@@ -1,8 +1,8 @@
 import React, { Component } from 'react';
 import PropTypes from 'prop-types';
-import AzimuthThruster from '../misc/AzimuthThruster/AzimuthThruster';
-import TunnelThruster from '../misc/TunnelThruster/TunnelThruster';
-import './Control.css';
+import AzimuthThruster from '../../misc/AzimuthThruster/AzimuthThruster';
+import TunnelThruster from '../../misc/TunnelThruster/TunnelThruster';
+import '../Control.css';
 
 class Lever extends Component {
   static mapThrusterToRowAndCol(thrusters) {
@@ -56,7 +56,7 @@ class Lever extends Component {
           if (thrusters[thrIdx].location.x === layout.grid[rowIdx][colIdx].x &&
             thrusters[thrIdx].location.y === layout.grid[rowIdx][colIdx].y) {
             isThrusterColumn = true;
-            cols.push(
+            cols.push((
               <div className={`col-lg-${columnWidth}`} key={colIdx * 100}>
                 {thrusters[thrIdx].thrusterType === 'tunnel' &&
                   <TunnelThruster
@@ -70,7 +70,7 @@ class Lever extends Component {
                     setThrusterDemand={this.props.setThrusterDemand}
                   />
                 }
-              </div>);
+              </div>));
           }
         }
 

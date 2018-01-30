@@ -3,23 +3,23 @@ import ReactDOM from 'react-dom';
 import Autopilot from '../Autopilot';
 
 it('renders without crashing', () => {
-  function setAutopilotHeading() {}
-  function setAutopilotSpeed() {}
-  function setAlphaForHeading() {}
-  function setBetaForHeading() {}
-  function toggleAutopilot() {}
+  function setAlphaForHeading() { }
+  function setBetaForHeading() { }
+  function setAutopilotHeading() { }
+  function setAutopilotSpeed() { }
+  function toggleAutopilot() { }
 
   const div = document.createElement('div');
   ReactDOM.render(<Autopilot
     active
-    initialHeading={0.0}
-    initialSpeed={0.0}
-    initialAlpha={0.0}
-    initialBeta={0.0}
-    setAutopilotHeading={setAutopilotHeading}
-    setAutopilotSpeed={setAutopilotSpeed}
+    initialAlpha={0.1}
+    initialBeta={0.03}
+    initialHeading={0.1}
+    initialSpeed={0.03}
     setAlphaForHeading={setAlphaForHeading}
     setBetaForHeading={setBetaForHeading}
+    setAutopilotHeading={setAutopilotHeading}
+    setAutopilotSpeed={setAutopilotSpeed}
     toggleAutopilot={toggleAutopilot}
   />, div);
 });
