@@ -1,4 +1,4 @@
-import { wrapTo0To360 } from '../../util/kinematics.util';
+import { wrapTo0To360, unwrapAngle } from '../../util/kinematics.util';
 
 function getHeadingFromGyrocompasses(gyrocompasses) {
   let sum = 0;
@@ -15,6 +15,10 @@ function alphabetaFilter(frequency, alphabeta, filteredGyroHeading) {
   const { alpha, beta } = alphabeta;
 
   // Unwrap filtered gyro to -∞,∞
+  const unwrappedFilteredGyroHeading = unwrapAngle(
+    alphabeta.position.heading * (Math.PI / 180.0),
+    filteredGyroHeading * (Math.PI / 180.0),
+  ) * (180.0 / Math.PI);
 
   const prevEstimatedHeading = alphabeta.position.heading;
   const prevEstimatedRot = alphabeta.velocity.r / secInMin;
@@ -24,7 +28,7 @@ function alphabetaFilter(frequency, alphabeta, filteredGyroHeading) {
   const predictedRot = prevEstimatedRot;
 
   // update step
-  const residual = filteredGyroHeading - predictedHeading;
+  const residual = unwrappedFilteredGyroHeading - predictedHeading;
   let estimatedRot = predictedRot + ((beta * residual) / dt);
   let estimatedHeading = predictedHeading + (alpha * residual);
 

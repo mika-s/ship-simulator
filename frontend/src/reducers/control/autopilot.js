@@ -1,10 +1,14 @@
 import { wrapTo0To360, wrapToPipi } from '../../util/kinematics.util';
 
-const { PI } = Math;
+const {
+  PI, max, min, abs,
+} = Math;
 
 export function headingController(autopilot, estimatedHeading, estimatedRot) {
   const { sector, maxI } = autopilot.controllers.headingPid.antiWindup;
   const desiredRot = 0.0;
+  const iDieConstant = 15;
+  const iDieSector = 2.0;
 
   let headingError;
   let derivativeHeadingError;
@@ -32,6 +36,13 @@ export function headingController(autopilot, estimatedHeading, estimatedRot) {
   if (-sector < headingError && headingError < sector) {
     summedHeadingError = autopilot.controllers.headingPid.summedError + headingError;
     if (maxI < summedHeadingError) summedHeadingError = maxI;
+
+    // Let I-term die out over time.
+    if (summedHeadingError > 0 && abs(headingError) < iDieSector) {
+      summedHeadingError = max(0, summedHeadingError - iDieConstant);
+    } else if (summedHeadingError < 0 && abs(headingError) < iDieSector) {
+      summedHeadingError = min(0, summedHeadingError + iDieConstant);
+    }
   } else {
     summedHeadingError = 0.0;
   }

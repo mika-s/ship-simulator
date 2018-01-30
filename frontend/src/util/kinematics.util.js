@@ -65,3 +65,18 @@ export function wrapToPipi(angle) {
 
   return { angle: outputAngle, revolutions };
 }
+
+/**
+* Unwrap the angle
+* @param {number} previousAngle   - The previous angle.
+* @param {number} newAngle        - The new angle.
+* @returns {object}               - The angle unwrapped.
+*/
+export function unwrapAngle(previousAngle, newAngle) {
+  let difference = newAngle - previousAngle;
+
+  if (difference > PI) difference -= 2 * PI;
+  else if (difference < -PI) difference += 2 * PI;
+
+  return previousAngle + difference;
+}
