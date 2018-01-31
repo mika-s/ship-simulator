@@ -30,6 +30,9 @@ const uiInitialState = {
           rollpitch: -5.0,
           alphabetaHeading: 0.0,
           alphabetaHeading2: 0.0,
+          autopilotPid: -50.0,
+          autopilotPid2: -3.0,
+          autopilotPid3: -50.0,
         },
         max: {
           heading: 360,
@@ -40,6 +43,9 @@ const uiInitialState = {
           rollpitch: 5.0,
           alphabetaHeading: 360.0,
           alphabetaHeading2: 100.0,
+          autopilotPid: 50.0,
+          autopilotPid2: 3.0,
+          autopilotPid3: 50.0,
         },
       },
       2: {
@@ -54,6 +60,9 @@ const uiInitialState = {
           rollpitch: -5.0,
           alphabetaHeading: 0.0,
           alphabetaHeading2: 0.0,
+          autopilotPid: -50.0,
+          autopilotPid2: -3.0,
+          autopilotPid3: -50.0,
         },
         max: {
           heading: 360,
@@ -64,6 +73,9 @@ const uiInitialState = {
           rollpitch: 5.0,
           alphabetaHeading: 360.0,
           alphabetaHeading2: 100.0,
+          autopilotPid: 50.0,
+          autopilotPid2: 3.0,
+          autopilotPid3: 50.0,
         },
       },
       3: {
@@ -78,6 +90,9 @@ const uiInitialState = {
           rollpitch: -5.0,
           alphabetaHeading: 0.0,
           alphabetaHeading2: 0.0,
+          autopilotPid: -50.0,
+          autopilotPid2: -3.0,
+          autopilotPid3: -50.0,
         },
         max: {
           heading: 360,
@@ -88,6 +103,9 @@ const uiInitialState = {
           rollpitch: 5.0,
           alphabetaHeading: 360.0,
           alphabetaHeading2: 100.0,
+          autopilotPid: 50.0,
+          autopilotPid2: 3.0,
+          autopilotPid3: 50.0,
         },
       },
       4: {
@@ -102,6 +120,9 @@ const uiInitialState = {
           rollpitch: -5.0,
           alphabetaHeading: 0.0,
           alphabetaHeading2: 0.0,
+          autopilotPid: -50.0,
+          autopilotPid2: -3.0,
+          autopilotPid3: -50.0,
         },
         max: {
           heading: 360,
@@ -112,6 +133,9 @@ const uiInitialState = {
           rollpitch: 5.0,
           alphabetaHeading: 360.0,
           alphabetaHeading2: 100.0,
+          autopilotPid: 50.0,
+          autopilotPid2: 3.0,
+          autopilotPid3: 50.0,
         },
       },
     },
@@ -126,6 +150,14 @@ const uiInitialState = {
       active: false,
       heading: 0.0,
       speed: 0.0,
+      controllers: {
+        headingPid: {
+          gain: { p: 0.0, i: 0.0, d: 0.0 },
+        },
+        speedPid: {
+          gain: { p: 0.0, i: 0.0, d: 0.0 },
+        },
+      },
     },
   },
   estimator: {
@@ -136,7 +168,7 @@ const uiInitialState = {
   },
 };
 
-function getInitialState(initialVessel, initialEstimator) {
+function getInitialState(initialVessel, initialController, initialEstimator) {
   uiInitialState.position = initialVessel.model.position;
 
   for (let thrIdx = 0; thrIdx < initialVessel.thrusters.length; thrIdx += 1) {
@@ -145,6 +177,12 @@ function getInitialState(initialVessel, initialEstimator) {
 
   uiInitialState.estimator.alphabeta.alpha = initialEstimator.alphabeta.alpha;
   uiInitialState.estimator.alphabeta.beta = initialEstimator.alphabeta.beta;
+
+  uiInitialState.control.autopilot.controllers.headingPid.gain =
+    initialController.autopilot.controllers.headingPid.gain;
+
+  uiInitialState.control.autopilot.controllers.speedPid.gain =
+    initialController.autopilot.controllers.speedPid.gain;
 
   return uiInitialState;
 }

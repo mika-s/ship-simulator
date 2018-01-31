@@ -3,6 +3,7 @@ import PropTypes from 'prop-types';
 import update from 'immutability-helper';
 import { connect } from 'react-redux';
 import AlphabetaHeading from './Alphabeta.heading.pane';
+import AutopilotPidPane from './Autopilot.PID.pane';
 import HeadingPane from './Heading.pane';
 import SensorPane from './Sensor.pane';
 import ThrustersPane from './Thrusters.pane';
@@ -23,13 +24,16 @@ class Paneselector extends Component {
 
     this.handleMinChange = this.handleMinChange.bind(this);
     this.handleMinChange2 = this.handleMinChange2.bind(this);
+    this.handleMinChange3 = this.handleMinChange3.bind(this);
     this.handleMaxChange = this.handleMaxChange.bind(this);
     this.handleMaxChange2 = this.handleMaxChange2.bind(this);
+    this.handleMaxChange3 = this.handleMaxChange3.bind(this);
     this.onToggleAutoAxis = this.onToggleAutoAxis.bind(this);
     this.toggleSettings = this.toggleSettings.bind(this);
     this.changePane = this.changePane.bind(this);
     this.setMinMax = this.setMinMax.bind(this);
     this.setMinMax2 = this.setMinMax2.bind(this);
+    this.setMinMax3 = this.setMinMax3.bind(this);
   }
 
   onToggleAutoAxis() {
@@ -52,6 +56,15 @@ class Paneselector extends Component {
       this.props.number,
       Number.parseFloat(this.state.min[`${this.state.pane}2`]),
       Number.parseFloat(this.state.max[`${this.state.pane}2`]),
+    );
+  }
+
+  setMinMax3(event) {
+    event.preventDefault();
+    this.props.setMinMax3(
+      this.props.number,
+      Number.parseFloat(this.state.min[`${this.state.pane}3`]),
+      Number.parseFloat(this.state.max[`${this.state.pane}3`]),
     );
   }
 
@@ -81,6 +94,14 @@ class Paneselector extends Component {
     });
   }
 
+  handleMinChange3(event) {
+    this.setState({
+      min: update(this.state.min, {
+        [`${this.state.pane}3`]: { $set: event.target.value },
+      }),
+    });
+  }
+
   handleMaxChange(event) {
     this.setState({
       max: update(this.state.max, {
@@ -97,10 +118,19 @@ class Paneselector extends Component {
     });
   }
 
+  handleMaxChange3(event) {
+    this.setState({
+      max: update(this.state.max, {
+        [`${this.state.pane}3`]: { $set: event.target.value },
+      }),
+    });
+  }
+
   render() {
     const {
       simulationTimeSeries, modelPositionSeries, rollSeries, pitchSeries,
       speedSeries, alphabetaHeadingSeries, alphabetaRotSeries, thrusters,
+      pSeries, iSeries, dSeries,
     } = this.props;
 
     return (
@@ -116,7 +146,8 @@ class Paneselector extends Component {
             <option value="rollpitch">Roll and pitch</option>
             <option value="thrusters">Thrusters</option>
             <option value="gpsspeed">GPS speed</option>
-            <option value="alphabetaHeading">αβ - heading and ROT</option>
+            <option value="alphabetaHeading">αβ - Heading and ROT</option>
+            <option value="autopilotPid">Autopilot - PID</option>
           </select>
 
           {this.state.pane !== 'thrusters' &&
@@ -178,6 +209,21 @@ class Paneselector extends Component {
                 headingSeries={alphabetaHeadingSeries}
                 rotSeries={alphabetaRotSeries}
               />}
+
+            {this.state.pane === 'autopilotPid' &&
+              <AutopilotPidPane
+                min={this.props.initialSettings.min.autopilotPid}
+                max={this.props.initialSettings.max.autopilotPid}
+                min2={this.props.initialSettings.min.autopilotPid2}
+                max2={this.props.initialSettings.max.autopilotPid2}
+                min3={this.props.initialSettings.min.autopilotPid3}
+                max3={this.props.initialSettings.max.autopilotPid3}
+                isAutoAxis={this.state.isAutoAxis}
+                simulationTimeSeries={simulationTimeSeries}
+                pSeries={pSeries}
+                iSeries={iSeries}
+                dSeries={dSeries}
+              />}
           </div>
           {this.state.isSettingsOpen &&
             <div className="col-lg-6">
@@ -203,8 +249,8 @@ class Paneselector extends Component {
                           Min:
                           <input
                             type="number"
-                            min="-100"
-                            max="200"
+                            min="-2000"
+                            max="2000"
                             step="0.1"
                             value={this.state.min[this.state.pane]}
                             onChange={this.handleMinChange}
@@ -215,8 +261,8 @@ class Paneselector extends Component {
                           Max:
                           <input
                             type="number"
-                            min="0"
-                            max="400"
+                            min="-2000"
+                            max="2000"
                             step="0.1"
                             value={this.state.max[this.state.pane]}
                             onChange={this.handleMaxChange}
@@ -228,14 +274,15 @@ class Paneselector extends Component {
                         </div>
                       </form>}
                     {/* Special case for position which has two axes. */}
-                    {!this.state.isAutoAxis && (this.state.pane === 'position' || this.state.pane === 'alphabetaHeading') &&
+                    {!this.state.isAutoAxis && (this.state.pane === 'position'
+                      || this.state.pane === 'alphabetaHeading' || this.state.pane === 'autopilotPid') &&
                       <form className="form-inline" style={{ marginTop: 10 }} onSubmit={this.setMinMax2}>
                         <div className="form-check">
                           Min:
                           <input
                             type="number"
-                            min="-100"
-                            max="200"
+                            min="-2000"
+                            max="2000"
                             step="0.1"
                             value={this.state.min[`${this.state.pane}2`]}
                             onChange={this.handleMinChange2}
@@ -246,11 +293,42 @@ class Paneselector extends Component {
                           Max:
                           <input
                             type="number"
-                            min="0"
-                            max="400"
+                            min="-2000"
+                            max="2000"
                             step="0.1"
                             value={this.state.max[`${this.state.pane}2`]}
                             onChange={this.handleMaxChange2}
+                            style={{ width: 80, marginLeft: 5 }}
+                            className="form-control mb-2 mr-sm-2 mb-sm-0"
+                            required
+                          />
+                          <button className="btn btn-secondary btn-sm" type="submit">Set</button>
+                        </div>
+                      </form>}
+                    {/* Special case for position which has three axes. */}
+                    {!this.state.isAutoAxis && this.state.pane === 'autopilotPid' &&
+                      <form className="form-inline" style={{ marginTop: 10 }} onSubmit={this.setMinMax3}>
+                        <div className="form-check">
+                          Min:
+                          <input
+                            type="number"
+                            min="-2000"
+                            max="2000"
+                            step="0.1"
+                            value={this.state.min[`${this.state.pane}3`]}
+                            onChange={this.handleMinChange3}
+                            style={{ width: 80, marginLeft: 5 }}
+                            className="form-control mb-2 mr-sm-2 mb-sm-0"
+                            required
+                          />
+                          Max:
+                          <input
+                            type="number"
+                            min="-2000"
+                            max="2000"
+                            step="0.1"
+                            value={this.state.max[`${this.state.pane}3`]}
+                            onChange={this.handleMaxChange3}
                             style={{ width: 80, marginLeft: 5 }}
                             className="form-control mb-2 mr-sm-2 mb-sm-0"
                             required
@@ -279,6 +357,9 @@ const mapStateToProps = state => ({
   speedSeries: state.timeseries.referencesystems.speed,
   alphabetaHeadingSeries: state.timeseries.estimator.alphabeta.position.heading,
   alphabetaRotSeries: state.timeseries.estimator.alphabeta.velocity.r,
+  pSeries: state.timeseries.autopilot.controllers.headingPid.p,
+  iSeries: state.timeseries.autopilot.controllers.headingPid.i,
+  dSeries: state.timeseries.autopilot.controllers.headingPid.d,
   thrusters: state.ship.thrusters,
 });
 
@@ -298,6 +379,7 @@ Paneselector.propTypes = {
   toggleAutoAxis: PropTypes.func.isRequired,
   setMinMax: PropTypes.func.isRequired,
   setMinMax2: PropTypes.func.isRequired,
+  setMinMax3: PropTypes.func.isRequired,
   simulationTimeSeries: PropTypes.arrayOf(PropTypes.number).isRequired,
   modelPositionSeries: PropTypes.objectOf(PropTypes.arrayOf(PropTypes.number)).isRequired,
   rollSeries: PropTypes.arrayOf(PropTypes.number).isRequired,
@@ -305,6 +387,9 @@ Paneselector.propTypes = {
   speedSeries: PropTypes.arrayOf(PropTypes.number).isRequired,
   alphabetaHeadingSeries: PropTypes.arrayOf(PropTypes.number).isRequired,
   alphabetaRotSeries: PropTypes.arrayOf(PropTypes.number).isRequired,
+  pSeries: PropTypes.arrayOf(PropTypes.number).isRequired,
+  iSeries: PropTypes.arrayOf(PropTypes.number).isRequired,
+  dSeries: PropTypes.arrayOf(PropTypes.number).isRequired,
   thrusters: PropTypes.arrayOf(PropTypes.object).isRequired,
 };
 

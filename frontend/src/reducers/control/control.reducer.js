@@ -1,4 +1,7 @@
-export default function controlReducer(state, action, uiControl, summedError) {
+export default function controlReducer(
+  state, action, uiControl,
+  summedErrorHeading, summedErrorSpeed,
+) {
   switch (action.type) {
     case 'SIMULATE':
       return {
@@ -13,7 +16,13 @@ export default function controlReducer(state, action, uiControl, summedError) {
             ...state.autopilot.controllers,
             headingPid: {
               ...state.autopilot.controllers.headingPid,
-              summedError,
+              gain: uiControl.autopilot.controllers.headingPid.gain,
+              summedError: summedErrorHeading,
+            },
+            speedPid: {
+              ...state.autopilot.controllers.speedPid,
+              gain: uiControl.autopilot.controllers.speedPid.gain,
+              summedError: summedErrorSpeed,
             },
           },
         },

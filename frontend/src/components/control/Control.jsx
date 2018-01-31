@@ -1,15 +1,19 @@
 import React, { Component } from 'react';
 import PropTypes from 'prop-types';
 import { connect } from 'react-redux';
-import { setControlMode, setAutopilotHeading, setAutopilotSpeed, toggleAutopilot } from '../../actions/ui.control.actions';
+import {
+  setControlMode, setAutopilotHeading, setAutopilotSpeed, toggleAutopilot,
+  setAutopilotPgain, setAutopilotIgain, setAutopilotDgain,
+  setSpeedPgain, setSpeedIgain, setSpeedDgain,
+} from '../../actions/ui.control.actions';
 import { setAlphaForHeading, setBetaForHeading } from '../../actions/ui.estimator.actions';
 import { setThrusterDemand } from '../../actions/ui.thruster.actions';
 import { vesselControlMode } from '../../util/enums';
-import Lever from './Lever';
-import Autopilot from './Autopilot';
+import Lever from './Lever/Lever';
+import Autopilot from './Autopilot/Autopilot';
 import './Control.css';
 
-class UnconnectedControl extends Component {
+export class UnconnectedControl extends Component {
   constructor() {
     super();
     this.state = {};
@@ -35,7 +39,8 @@ class UnconnectedControl extends Component {
 
   render() {
     const {
-      thrusters, active, heading, speed, alpha, beta,
+      thrusters, active, heading, speed,
+      alpha, beta, headingGain, speedGain,
     } = this.props;
 
     return (
@@ -80,11 +85,19 @@ class UnconnectedControl extends Component {
             initialSpeed={speed}
             initialAlpha={alpha}
             initialBeta={beta}
+            initialHeadingGain={headingGain}
+            initialSpeedGain={speedGain}
             thrusters={thrusters}
             setAutopilotHeading={this.props.setAutopilotHeading}
             setAutopilotSpeed={this.props.setAutopilotSpeed}
             setAlphaForHeading={this.props.setAlphaForHeading}
             setBetaForHeading={this.props.setBetaForHeading}
+            setAutopilotPgain={this.props.setAutopilotPgain}
+            setAutopilotIgain={this.props.setAutopilotIgain}
+            setAutopilotDgain={this.props.setAutopilotDgain}
+            setSpeedPgain={this.props.setSpeedPgain}
+            setSpeedIgain={this.props.setSpeedIgain}
+            setSpeedDgain={this.props.setSpeedDgain}
             toggleAutopilot={this.props.toggleAutopilot}
           />
         }
@@ -92,28 +105,6 @@ class UnconnectedControl extends Component {
     );
   }
 }
-
-const mapStateToProps = state => ({
-  mode: state.control.mode,
-  thrusters: state.ship.thrusters,
-  active: state.control.autopilot.active,
-  heading: state.ui.control.autopilot.heading,
-  speed: state.ui.control.autopilot.speed,
-  alpha: state.ui.estimator.alphabeta.alpha,
-  beta: state.ui.estimator.alphabeta.beta,
-});
-
-const mapDispatchToProps = dispatch => ({
-  setControlMode: (number, pane) => dispatch(setControlMode(number, pane)),
-  setThrusterDemand: (number, type, demand) => dispatch(setThrusterDemand(number, type, demand)),
-  setAutopilotHeading: heading => dispatch(setAutopilotHeading(heading)),
-  setAutopilotSpeed: heading => dispatch(setAutopilotSpeed(heading)),
-  setAlphaForHeading: alpha => dispatch(setAlphaForHeading(alpha)),
-  setBetaForHeading: beta => dispatch(setBetaForHeading(beta)),
-  toggleAutopilot: heading => dispatch(toggleAutopilot(heading)),
-});
-
-const Control = connect(mapStateToProps, mapDispatchToProps)(UnconnectedControl);
 
 UnconnectedControl.propTypes = {
   mode: PropTypes.number.isRequired,
@@ -123,13 +114,59 @@ UnconnectedControl.propTypes = {
   speed: PropTypes.number.isRequired,
   alpha: PropTypes.number.isRequired,
   beta: PropTypes.number.isRequired,
+  headingGain: PropTypes.shape({
+    p: PropTypes.number.isRequired,
+    i: PropTypes.number.isRequired,
+    d: PropTypes.number.isRequired,
+  }).isRequired,
+  speedGain: PropTypes.shape({
+    p: PropTypes.number.isRequired,
+    i: PropTypes.number.isRequired,
+    d: PropTypes.number.isRequired,
+  }).isRequired,
   setControlMode: PropTypes.func.isRequired,
   setThrusterDemand: PropTypes.func.isRequired,
   setAutopilotHeading: PropTypes.func.isRequired,
   setAutopilotSpeed: PropTypes.func.isRequired,
   setAlphaForHeading: PropTypes.func.isRequired,
   setBetaForHeading: PropTypes.func.isRequired,
+  setAutopilotPgain: PropTypes.func.isRequired,
+  setAutopilotIgain: PropTypes.func.isRequired,
+  setAutopilotDgain: PropTypes.func.isRequired,
+  setSpeedPgain: PropTypes.func.isRequired,
+  setSpeedIgain: PropTypes.func.isRequired,
+  setSpeedDgain: PropTypes.func.isRequired,
   toggleAutopilot: PropTypes.func.isRequired,
 };
+
+const mapStateToProps = state => ({
+  mode: state.control.mode,
+  thrusters: state.ship.thrusters,
+  active: state.control.autopilot.active,
+  heading: state.ui.control.autopilot.heading,
+  speed: state.ui.control.autopilot.speed,
+  alpha: state.ui.estimator.alphabeta.alpha,
+  beta: state.ui.estimator.alphabeta.beta,
+  headingGain: state.ui.control.autopilot.controllers.headingPid.gain,
+  speedGain: state.ui.control.autopilot.controllers.speedPid.gain,
+});
+
+const mapDispatchToProps = dispatch => ({
+  setControlMode: (number, pane) => dispatch(setControlMode(number, pane)),
+  setThrusterDemand: (number, type, demand) => dispatch(setThrusterDemand(number, type, demand)),
+  setAutopilotHeading: heading => dispatch(setAutopilotHeading(heading)),
+  setAutopilotSpeed: heading => dispatch(setAutopilotSpeed(heading)),
+  setAlphaForHeading: alpha => dispatch(setAlphaForHeading(alpha)),
+  setBetaForHeading: beta => dispatch(setBetaForHeading(beta)),
+  setAutopilotPgain: gain => dispatch(setAutopilotPgain(gain)),
+  setAutopilotIgain: gain => dispatch(setAutopilotIgain(gain)),
+  setAutopilotDgain: gain => dispatch(setAutopilotDgain(gain)),
+  setSpeedPgain: gain => dispatch(setSpeedPgain(gain)),
+  setSpeedIgain: gain => dispatch(setSpeedIgain(gain)),
+  setSpeedDgain: gain => dispatch(setSpeedDgain(gain)),
+  toggleAutopilot: heading => dispatch(toggleAutopilot(heading)),
+});
+
+const Control = connect(mapStateToProps, mapDispatchToProps)(UnconnectedControl);
 
 export default Control;

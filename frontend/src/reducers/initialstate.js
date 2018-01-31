@@ -13,7 +13,7 @@ import initialController from '../settings/Controller.json';
 const initialState = {
   control: controlInitialState(initialController),
   estimator: estimatorInitialState(initialVessel, initialEstimator),
-  ui: uiInitialState(initialVessel, initialEstimator),
+  ui: uiInitialState(initialVessel, initialController, initialEstimator),
   timeseries: timeseriesInitialState(),
   simulation: simulatorInitialState(),
   environment: environmentInitialState(),

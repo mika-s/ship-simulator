@@ -1,8 +1,9 @@
-import { initialVesselModel, initialEstimator } from './testdata';
+import { initialVesselModel, initialController, initialEstimator } from './testdata';
 import positionReducer from '../position.reducer';
 import getInitialState from '../initialstate';
 
-const initialState = getInitialState(initialVesselModel, initialEstimator).position;
+const initialState =
+  getInitialState(initialVesselModel, initialController, initialEstimator).position;
 
 it('should handle SET_INITIAL_POSITION', () => {
   const action = {

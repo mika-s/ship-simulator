@@ -38,3 +38,15 @@ export function setMinMax2(number, min, max) {
     },
   };
 }
+
+export function setMinMax3(number, min, max) {
+  return {
+    type: 'SET_MIN_MAX3_AXIS',
+    payload: {
+      number,
+      min,
+      max,
+    },
+  };
+}
+

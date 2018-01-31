@@ -13,12 +13,16 @@ it('should handle SIMULATE', () => {
     position: { longitude: 50.0, latitude: 4.0, heading: 180.0 },
     velocity: { u: 0.0, v: 0.0, r: 0.0 },
   };
+  let autopilot = { pid: { p: 1.1, i: 2.0, d: 0.1 } };
   let model = { position: { latitude: 50.0, longitude: 4.0, heading: Math.PI } };
   let sensors = { mrus: [{ roll: 2.31, pitch: -0.37 }] };
   let referencesystems = { gpses: [{ speed: 1.1 }] };
 
 
-  let newState = timeseriesReducer(initialState, { type: 'SIMULATE' }, time, estimator, model, sensors, referencesystems);
+  let newState = timeseriesReducer(
+    initialState, { type: 'SIMULATE' }, time, estimator,
+    autopilot, model, sensors, referencesystems,
+  );
 
   expect(newState)
     .toEqual({
@@ -34,6 +38,15 @@ it('should handle SIMULATE', () => {
             u: [0.0],
             v: [0.0],
             r: [0.0],
+          },
+        },
+      },
+      autopilot: {
+        controllers: {
+          headingPid: {
+            p: [1.1],
+            i: [2.0],
+            d: [0.1],
           },
         },
       },
@@ -58,11 +71,15 @@ it('should handle SIMULATE', () => {
     position: { longitude: 50.1, latitude: 4.1, heading: 180.0 },
     velocity: { u: 0.0, v: 0.0, r: 0.0 },
   };
+  autopilot = { pid: { p: 1.2, i: 2.1, d: -0.1 } };
   model = { position: { latitude: 50.1, longitude: 4.1, heading: Math.PI } };
   sensors = { mrus: [{ roll: 0.81, pitch: 0.22 }] };
   referencesystems = { gpses: [{ speed: 1.2 }] };
 
-  newState = timeseriesReducer(newState, { type: 'SIMULATE' }, time, estimator, model, sensors, referencesystems);
+  newState = timeseriesReducer(
+    newState, { type: 'SIMULATE' }, time, estimator,
+    autopilot, model, sensors, referencesystems,
+  );
 
   expect(newState)
     .toEqual({
@@ -78,6 +95,15 @@ it('should handle SIMULATE', () => {
             u: [0.0, 0.0],
             v: [0.0, 0.0],
             r: [0.0, 0.0],
+          },
+        },
+      },
+      autopilot: {
+        controllers: {
+          headingPid: {
+            p: [1.1, 1.2],
+            i: [2.0, 2.1],
+            d: [0.1, -0.1],
           },
         },
       },
@@ -114,6 +140,15 @@ it('should handle STOP_SIMULATION', () => {
             u: [],
             v: [],
             r: [],
+          },
+        },
+      },
+      autopilot: {
+        controllers: {
+          headingPid: {
+            p: [],
+            i: [],
+            d: [],
           },
         },
       },

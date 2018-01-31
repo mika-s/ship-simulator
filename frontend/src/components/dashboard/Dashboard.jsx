@@ -2,7 +2,7 @@ import React, { Component } from 'react';
 import PropTypes from 'prop-types';
 import { connect } from 'react-redux';
 import {
-  setDashboardPane, toggleAutoAxis, setMinMax, setMinMax2,
+  setDashboardPane, toggleAutoAxis, setMinMax, setMinMax2, setMinMax3,
 } from '../../actions/ui.dashboard.actions';
 import Paneselector from './Paneselector';
 import './Dashboard.css';
@@ -14,6 +14,7 @@ class Dashboard extends Component {
 
     this.setMinMax = this.setMinMax.bind(this);
     this.setMinMax2 = this.setMinMax2.bind(this);
+    this.setMinMax3 = this.setMinMax3.bind(this);
     this.changePane = this.changePane.bind(this);
     this.toggleAutoAxis = this.toggleAutoAxis.bind(this);
   }
@@ -24,6 +25,10 @@ class Dashboard extends Component {
 
   setMinMax2(number, min, max) {
     this.props.setMinMax2(number, min, max);
+  }
+
+  setMinMax3(number, min, max) {
+    this.props.setMinMax3(number, min, max);
   }
 
   changePane(event, number) {
@@ -52,6 +57,7 @@ class Dashboard extends Component {
               toggleAutoAxis={this.toggleAutoAxis}
               setMinMax={this.setMinMax}
               setMinMax2={this.setMinMax2}
+              setMinMax3={this.setMinMax3}
             />
           </div>
           <div className="col-lg-6 pane">
@@ -67,6 +73,7 @@ class Dashboard extends Component {
               toggleAutoAxis={this.toggleAutoAxis}
               setMinMax={this.setMinMax}
               setMinMax2={this.setMinMax2}
+              setMinMax3={this.setMinMax3}
             />
           </div>
         </div>
@@ -84,6 +91,7 @@ class Dashboard extends Component {
               toggleAutoAxis={this.toggleAutoAxis}
               setMinMax={this.setMinMax}
               setMinMax2={this.setMinMax2}
+              setMinMax3={this.setMinMax3}
             />
           </div>
           <div className="col-lg-6 pane">
@@ -99,6 +107,7 @@ class Dashboard extends Component {
               toggleAutoAxis={this.toggleAutoAxis}
               setMinMax={this.setMinMax}
               setMinMax2={this.setMinMax2}
+              setMinMax3={this.setMinMax3}
             />
           </div>
         </div>
@@ -116,6 +125,7 @@ const mapDispatchToProps = dispatch => ({
   toggleAutoAxis: number => dispatch(toggleAutoAxis(number)),
   setMinMax: (number, min, max) => dispatch(setMinMax(number, min, max)),
   setMinMax2: (number, min, max) => dispatch(setMinMax2(number, min, max)),
+  setMinMax3: (number, min, max) => dispatch(setMinMax3(number, min, max)),
 });
 
 const ConnectedDashboard = connect(mapStateToProps, mapDispatchToProps)(Dashboard);
@@ -133,6 +143,9 @@ Dashboard.propTypes = {
       rollpitch: PropTypes.number.isRequired,
       alphabetaHeading: PropTypes.number.isRequired,
       alphabetaHeading2: PropTypes.number.isRequired,
+      autopilotPid: PropTypes.number.isRequired,
+      autopilotPid2: PropTypes.number.isRequired,
+      autopilotPid3: PropTypes.number.isRequired,
     }).isRequired,
     max: PropTypes.shape({
       heading: PropTypes.number.isRequired,
@@ -143,12 +156,16 @@ Dashboard.propTypes = {
       rollpitch: PropTypes.number.isRequired,
       alphabetaHeading: PropTypes.number.isRequired,
       alphabetaHeading2: PropTypes.number.isRequired,
+      autopilotPid: PropTypes.number.isRequired,
+      autopilotPid2: PropTypes.number.isRequired,
+      autopilotPid3: PropTypes.number.isRequired,
     }).isRequired,
   })).isRequired,
   setDashboardPane: PropTypes.func.isRequired,
   toggleAutoAxis: PropTypes.func.isRequired,
   setMinMax: PropTypes.func.isRequired,
   setMinMax2: PropTypes.func.isRequired,
+  setMinMax3: PropTypes.func.isRequired,
 };
 
 export default ConnectedDashboard;

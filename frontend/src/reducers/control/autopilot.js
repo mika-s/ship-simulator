@@ -1,11 +1,14 @@
-import { transformTo0To360, transformToPipi } from '../../util/kinematics.util';
+import { wrapTo0To360, wrapToPipi } from '../../util/kinematics.util';
 
-const { PI } = Math;
+const {
+  PI, max, min, abs,
+} = Math;
 
 export function headingController(autopilot, estimatedHeading, estimatedRot) {
-  const antiWindupLimit = 30;
-  const antiWindupMax = 500;
+  const { sector, maxI } = autopilot.controllers.headingPid.antiWindup;
   const desiredRot = 0.0;
+  const iDieConstant = 15;
+  const iDieSector = 2.0;
 
   let headingError;
   let derivativeHeadingError;
@@ -20,7 +23,7 @@ export function headingController(autopilot, estimatedHeading, estimatedRot) {
     const chosenError = Math.abs(ccw) < Math.abs(cw) ? ccw : cw;
 
     const errorInRads = chosenError * (PI / 180.0);
-    headingError = transformToPipi(errorInRads).angle * (180.0 / PI);
+    headingError = wrapToPipi(errorInRads).angle * (180.0 / PI);
     derivativeHeadingError = derror;
   } else {
     headingError = 0.0;
@@ -30,21 +33,32 @@ export function headingController(autopilot, estimatedHeading, estimatedRot) {
   let summedHeadingError;
 
   // Anti-windup
-  if (-antiWindupLimit < headingError && headingError < antiWindupLimit) {
+  if (-sector < headingError && headingError < sector) {
     summedHeadingError = autopilot.controllers.headingPid.summedError + headingError;
-    if (summedHeadingError > antiWindupMax) summedHeadingError = antiWindupMax;
+    if (maxI < summedHeadingError) summedHeadingError = maxI;
+
+    // Let I-term die out over time.
+    if (summedHeadingError > 0 && abs(headingError) < iDieSector) {
+      summedHeadingError = max(0, summedHeadingError - iDieConstant);
+    } else if (summedHeadingError < 0 && abs(headingError) < iDieSector) {
+      summedHeadingError = min(0, summedHeadingError + iDieConstant);
+    }
   } else {
     summedHeadingError = 0.0;
   }
 
-  const force =
-    (autopilot.controllers.headingPid.gain.p * headingError) +
-    (autopilot.controllers.headingPid.gain.i * summedHeadingError) +
-    (autopilot.controllers.headingPid.gain.d * derivativeHeadingError);
+  const p = autopilot.controllers.headingPid.gain.p * headingError;
+  const i = autopilot.controllers.headingPid.gain.i * summedHeadingError;
+  const d = autopilot.controllers.headingPid.gain.d * derivativeHeadingError;
+  const force = p + i + d;
 
   const forces = { surge: 0.0, sway: 0.0, yaw: force };
 
-  return { forces, summedHeadingError };
+  return {
+    forces,
+    summedHeadingError,
+    pid: { p, i, d },
+  };
 }
 
 export function autopilotAlloc(headingControlForce, maxRudderAngle, thrusters) {
@@ -64,7 +78,7 @@ export function autopilotAlloc(headingControlForce, maxRudderAngle, thrusters) {
       let azimuth = rudderGain * headingControlForce;
       azimuth = Math.max(-maxRudderAngle, azimuth);
       azimuth = Math.min(maxRudderAngle, azimuth);
-      azimuth = transformTo0To360(azimuth);
+      azimuth = wrapTo0To360(azimuth);
 
       demands.push({
         pitch: thruster.controlType === 'pitch' ? 1.0 : 0.0,

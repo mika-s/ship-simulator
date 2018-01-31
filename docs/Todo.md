@@ -20,6 +20,8 @@ Create speed controller for autopilot.
 
 For graphs with two axes: specify which min and max belongs to what graph.
 
+Auto axis per graph, instead of per pane.
+
 ## Structure
 
 VesselModel calculations in middleware?

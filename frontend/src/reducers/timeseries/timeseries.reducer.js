@@ -2,7 +2,7 @@ import { truncToDecimal } from '../../util/general.util';
 import { updateArray } from './timeseries.util';
 
 export default function timeseriesReducer(
-  state, action, time, estimator,
+  state, action, time, estimator, autopilot,
   model, sensors, referencesystems,
 ) {
   switch (action.type) {
@@ -38,6 +38,27 @@ export default function timeseriesReducer(
               r: updateArray(
                 state.estimator.alphabeta.velocity.r,
                 truncToDecimal(estimator.velocity.r, 1),
+              ),
+            },
+          },
+        },
+        autopilot: {
+          ...state.autopilot,
+          controllers: {
+            ...state.autopilot.controllers,
+            headingPid: {
+              ...state.autopilot.controllers.headingPid,
+              p: updateArray(
+                state.autopilot.controllers.headingPid.p,
+                truncToDecimal(autopilot.pid.p, 3),
+              ),
+              i: updateArray(
+                state.autopilot.controllers.headingPid.i,
+                truncToDecimal(autopilot.pid.i, 3),
+              ),
+              d: updateArray(
+                state.autopilot.controllers.headingPid.d,
+                truncToDecimal(autopilot.pid.d, 3),
               ),
             },
           },

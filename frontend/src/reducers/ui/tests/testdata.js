@@ -1,5 +1,14 @@
 import UiThruster from '../../constructors/uithruster';
 
+const initialController = {
+  autopilot: {
+    controllers: {
+      headingPid: { gain: { p: 0.0, i: 0.0, d: 0.0 } },
+      speedPid: { gain: { p: 0.0, i: 0.0, d: 0.0 } },
+    },
+  },
+};
+
 const initialEstimator = {
   alphabeta: {
     alpha: 0.3,
@@ -25,4 +34,4 @@ const initialVesselModel = {
   thrusters,
 };
 
-export { initialVesselModel, initialEstimator };
+export { initialVesselModel, initialController, initialEstimator };
