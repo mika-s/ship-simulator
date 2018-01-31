@@ -21,36 +21,25 @@ class Pid extends Component {
 
   setP(event) {
     event.preventDefault();
-    this.props.setP(this.state.p);
+    this.props.setP(Number.parseFloat(this.state.p));
   }
 
   setI(event) {
     event.preventDefault();
-    this.props.setI(this.state.i);
+    this.props.setI(Number.parseFloat(this.state.i));
   }
 
   setD(event) {
     event.preventDefault();
-    this.props.setD(this.state.d);
+    this.props.setD(Number.parseFloat(this.state.d));
   }
 
-  handlePChange(event) {
-    const parsedP = Number.parseFloat(event.target.value);
-    this.setState({ p: parsedP });
-  }
-
-  handleIChange(event) {
-    const parsedI = Number.parseFloat(event.target.value);
-    this.setState({ i: parsedI });
-  }
-
-  handleDChange(event) {
-    const parsedD = Number.parseFloat(event.target.value);
-    this.setState({ d: parsedD });
-  }
+  handlePChange(event) { this.setState({ p: event.target.value }); }
+  handleIChange(event) { this.setState({ i: event.target.value }); }
+  handleDChange(event) { this.setState({ d: event.target.value }); }
 
   render() {
-    const { name } = this.props;
+    const { name, min, max } = this.props;
 
     return (
       <div className="card" style={{ marginTop: 5, marginBottom: 20 }}>
@@ -61,8 +50,8 @@ class Pid extends Component {
           <form className="form-inline" onSubmit={this.setP}>
             <input
               type="number"
-              min="0"
-              max="2"
+              min={min.p}
+              max={max.p}
               step="0.001"
               value={this.state.p}
               onChange={this.handlePChange}
@@ -77,8 +66,8 @@ class Pid extends Component {
           <form className="form-inline" onSubmit={this.setI}>
             <input
               type="number"
-              min="0"
-              max="2"
+              min={min.i}
+              max={max.i}
               step="0.001"
               value={this.state.i}
               onChange={this.handleIChange}
@@ -93,8 +82,8 @@ class Pid extends Component {
           <form className="form-inline" onSubmit={this.setD}>
             <input
               type="number"
-              min="0"
-              max="2"
+              min={min.d}
+              max={max.d}
               step="0.001"
               value={this.state.d}
               onChange={this.handleDChange}
@@ -118,6 +107,16 @@ Pid.propTypes = {
   setP: PropTypes.func.isRequired,
   setI: PropTypes.func.isRequired,
   setD: PropTypes.func.isRequired,
+  min: PropTypes.shape({
+    p: PropTypes.number.isRequired,
+    i: PropTypes.number.isRequired,
+    d: PropTypes.number.isRequired,
+  }).isRequired,
+  max: PropTypes.shape({
+    p: PropTypes.number.isRequired,
+    i: PropTypes.number.isRequired,
+    d: PropTypes.number.isRequired,
+  }).isRequired,
 };
 
 export default Pid;

@@ -1,8 +1,9 @@
-import { initialVesselModel, initialEstimator } from './testdata';
+import { initialVesselModel, initialController, initialEstimator } from './testdata';
 import thrusterReducer from '../thruster.reducer';
 import getInitialState from '../initialstate';
 
-const initialState = getInitialState(initialVesselModel, initialEstimator).thrusters;
+const initialState =
+  getInitialState(initialVesselModel, initialController, initialEstimator).thrusters;
 
 it('should handle SET_THRUSTER_DEMAND', () => {
   const action = {

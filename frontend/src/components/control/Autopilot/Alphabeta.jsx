@@ -18,23 +18,16 @@ class Alphabeta extends Component {
 
   setAlphaForHeading(event) {
     event.preventDefault();
-    this.props.setAlphaForHeading(this.state.alpha);
+    this.props.setAlphaForHeading(Number.parseFloat(this.state.alpha));
   }
 
   setBetaForHeading(event) {
     event.preventDefault();
-    this.props.setBetaForHeading(this.state.beta);
+    this.props.setBetaForHeading(Number.parseFloat(this.state.beta));
   }
 
-  handleAlphaChange(event) {
-    const parsedAlpha = Number.parseFloat(event.target.value);
-    this.setState({ alpha: parsedAlpha });
-  }
-
-  handleBetaChange(event) {
-    const parsedBeta = Number.parseFloat(event.target.value);
-    this.setState({ beta: parsedBeta });
-  }
+  handleAlphaChange(event) { this.setState({ alpha: event.target.value }); }
+  handleBetaChange(event) { this.setState({ beta: event.target.value }); }
 
   render() {
     return (

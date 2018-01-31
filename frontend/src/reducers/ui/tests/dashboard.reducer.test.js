@@ -1,8 +1,9 @@
-import { initialVesselModel, initialEstimator } from './testdata';
+import { initialVesselModel, initialController, initialEstimator } from './testdata';
 import dashboardReducer from '../dashboard.reducer';
 import getInitialState from '../initialstate';
 
-const initialState = getInitialState(initialVesselModel, initialEstimator).dashboard;
+const initialState =
+  getInitialState(initialVesselModel, initialController, initialEstimator).dashboard;
 
 it('should handle SET_DASHBOARD_PANE', () => {
   const action = {

@@ -18,23 +18,16 @@ class Setpoints extends Component {
 
   setAutopilotHeading(event) {
     event.preventDefault();
-    this.props.setAutopilotHeading(this.state.heading);
+    this.props.setAutopilotHeading(Number.parseFloat(this.state.heading));
   }
 
   setAutopilotSpeed(event) {
     event.preventDefault();
-    this.props.setAutopilotSpeed(this.state.speed);
+    this.props.setAutopilotSpeed(Number.parseFloat(this.state.speed));
   }
 
-  handleHeadingChange(event) {
-    const parsedHeading = Number.parseFloat(event.target.value);
-    this.setState({ heading: parsedHeading });
-  }
-
-  handleSpeedChange(event) {
-    const parsedSpeed = Number.parseFloat(event.target.value);
-    this.setState({ speed: parsedSpeed });
-  }
+  handleHeadingChange(event) { this.setState({ heading: event.target.value }); }
+  handleSpeedChange(event) { this.setState({ speed: event.target.value }); }
 
   render() {
     return (

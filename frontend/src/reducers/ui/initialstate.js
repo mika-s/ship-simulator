@@ -154,6 +154,9 @@ const uiInitialState = {
         headingPid: {
           gain: { p: 0.0, i: 0.0, d: 0.0 },
         },
+        speedPid: {
+          gain: { p: 0.0, i: 0.0, d: 0.0 },
+        },
       },
     },
   },
@@ -177,6 +180,9 @@ function getInitialState(initialVessel, initialController, initialEstimator) {
 
   uiInitialState.control.autopilot.controllers.headingPid.gain =
     initialController.autopilot.controllers.headingPid.gain;
+
+  uiInitialState.control.autopilot.controllers.speedPid.gain =
+    initialController.autopilot.controllers.speedPid.gain;
 
   return uiInitialState;
 }

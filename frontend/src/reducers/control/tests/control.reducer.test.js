@@ -16,11 +16,16 @@ it('should handle SIMULATE', () => {
       active: false,
       heading: 0.0,
       speed: 0.0,
+      controllers: {
+        headingPid: { gain: { p: 0.0, i: 0.0, d: 0.0 } },
+        speedPid: { gain: { p: 0.0, i: 0.0, d: 0.0 } },
+      },
     },
   };
-  const summedError = 0.0;
+  const summedErrorHeading = 0.0;
+  const summedErrorSpeed = 0.0;
 
-  expect(controlReducer(initialState, { type: 'SIMULATE' }, uiControl, summedError))
+  expect(controlReducer(initialState, { type: 'SIMULATE' }, uiControl, summedErrorHeading, summedErrorSpeed))
     .toEqual({
       mode: vesselControlMode.AUTOPILOT,
       autopilot: {
@@ -31,19 +36,23 @@ it('should handle SIMULATE', () => {
         controllers: {
           headingPid: {
             gain: {
-              p: controllerdata.autopilot.controllers.headingPid.gain.p,
-              i: controllerdata.autopilot.controllers.headingPid.gain.i,
-              d: controllerdata.autopilot.controllers.headingPid.gain.d,
+              p: uiControl.autopilot.controllers.headingPid.gain.p,
+              i: uiControl.autopilot.controllers.headingPid.gain.i,
+              d: uiControl.autopilot.controllers.headingPid.gain.d,
             },
-            summedError,
+            summedError: summedErrorHeading,
+            antiWindup: {
+              sector: 0.0,
+              maxI: 0.0,
+            },
           },
           speedPid: {
             gain: {
-              p: controllerdata.autopilot.controllers.speedPid.gain.p,
-              i: controllerdata.autopilot.controllers.speedPid.gain.i,
-              d: controllerdata.autopilot.controllers.speedPid.gain.d,
+              p: uiControl.autopilot.controllers.speedPid.gain.p,
+              i: uiControl.autopilot.controllers.speedPid.gain.i,
+              d: uiControl.autopilot.controllers.speedPid.gain.d,
             },
-            summedError,
+            summedError: summedErrorSpeed,
           },
         },
       },

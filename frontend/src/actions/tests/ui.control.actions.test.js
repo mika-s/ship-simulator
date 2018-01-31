@@ -39,7 +39,7 @@ it('should create an action to change mode', () => {
   expect(actions.setAutopilotSpeed(speed)).toEqual(expectedAction);
 });
 
-it('should create an action to change P gain', () => {
+it('should create an action to change P gain of the heading controller', () => {
   const gain = 1.0;
 
   const expectedAction = {
@@ -52,7 +52,7 @@ it('should create an action to change P gain', () => {
   expect(actions.setAutopilotPgain(gain)).toEqual(expectedAction);
 });
 
-it('should create an action to change I gain', () => {
+it('should create an action to change I gain of the heading controller', () => {
   const gain = 1.0;
 
   const expectedAction = {
@@ -65,7 +65,7 @@ it('should create an action to change I gain', () => {
   expect(actions.setAutopilotIgain(gain)).toEqual(expectedAction);
 });
 
-it('should create an action to change D gain', () => {
+it('should create an action to change D gain of the heading controller', () => {
   const gain = 1.0;
 
   const expectedAction = {
@@ -76,6 +76,45 @@ it('should create an action to change D gain', () => {
   };
 
   expect(actions.setAutopilotDgain(gain)).toEqual(expectedAction);
+});
+
+it('should create an action to change P gain of the speed controller', () => {
+  const gain = 1.0;
+
+  const expectedAction = {
+    type: 'SET_AUTOPILOT_SPEED_P_GAIN',
+    payload: {
+      gain,
+    },
+  };
+
+  expect(actions.setSpeedPgain(gain)).toEqual(expectedAction);
+});
+
+it('should create an action to change I gain of the speed controller', () => {
+  const gain = 1.0;
+
+  const expectedAction = {
+    type: 'SET_AUTOPILOT_SPEED_I_GAIN',
+    payload: {
+      gain,
+    },
+  };
+
+  expect(actions.setSpeedIgain(gain)).toEqual(expectedAction);
+});
+
+it('should create an action to change D gain of the speed controller', () => {
+  const gain = 1.0;
+
+  const expectedAction = {
+    type: 'SET_AUTOPILOT_SPEED_D_GAIN',
+    payload: {
+      gain,
+    },
+  };
+
+  expect(actions.setSpeedDgain(gain)).toEqual(expectedAction);
 });
 
 it('should create an action to change mode', () => {

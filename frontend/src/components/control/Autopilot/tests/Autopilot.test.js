@@ -10,9 +10,13 @@ it('renders without crashing', () => {
   function setAutopilotPgain() { }
   function setAutopilotIgain() { }
   function setAutopilotDgain() { }
+  function setSpeedPgain() { }
+  function setSpeedIgain() { }
+  function setSpeedDgain() { }
   function toggleAutopilot() { }
 
   const headingGain = { p: 0.0, i: 0.0, d: 0.0 };
+  const speedGain = { p: 0.0, i: 0.0, d: 0.0 };
 
   const div = document.createElement('div');
   ReactDOM.render(<Autopilot
@@ -22,6 +26,7 @@ it('renders without crashing', () => {
     initialHeading={0.1}
     initialSpeed={0.03}
     initialHeadingGain={headingGain}
+    initialSpeedGain={speedGain}
     setAlphaForHeading={setAlphaForHeading}
     setBetaForHeading={setBetaForHeading}
     setAutopilotHeading={setAutopilotHeading}
@@ -29,6 +34,9 @@ it('renders without crashing', () => {
     setAutopilotPgain={setAutopilotPgain}
     setAutopilotIgain={setAutopilotIgain}
     setAutopilotDgain={setAutopilotDgain}
+    setSpeedPgain={setSpeedPgain}
+    setSpeedIgain={setSpeedIgain}
+    setSpeedDgain={setSpeedDgain}
     toggleAutopilot={toggleAutopilot}
   />, div);
 });

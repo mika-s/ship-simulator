@@ -11,13 +11,6 @@ class Autopilot extends Component {
     this.state = {};
 
     this.setActiveButtonColor = this.setActiveButtonColor.bind(this);
-    this.setAutopilotHeading = this.setAutopilotHeading.bind(this);
-    this.setAutopilotSpeed = this.setAutopilotSpeed.bind(this);
-    this.setAlphaForHeading = this.setAlphaForHeading.bind(this);
-    this.setBetaForHeading = this.setBetaForHeading.bind(this);
-    this.setP = this.setP.bind(this);
-    this.setI = this.setI.bind(this);
-    this.setD = this.setD.bind(this);
     this.toggleActivate = this.toggleActivate.bind(this);
   }
 
@@ -32,42 +25,6 @@ class Autopilot extends Component {
     return cssClass;
   }
 
-  /* Delete these functions? */
-  setAutopilotHeading(event) {
-    event.preventDefault();
-    this.props.setAutopilotHeading(this.state.heading);
-  }
-
-  setAutopilotSpeed(event) {
-    event.preventDefault();
-    this.props.setAutopilotSpeed(this.state.speed);
-  }
-
-  setAlphaForHeading(event) {
-    event.preventDefault();
-    this.props.setAlphaForHeading(this.state.alpha);
-  }
-
-  setBetaForHeading(event) {
-    event.preventDefault();
-    this.props.setBetaForHeading(this.state.beta);
-  }
-
-  setP(event) {
-    event.preventDefault();
-    this.props.setAutopilotPgain(this.state.p);
-  }
-
-  setI(event) {
-    event.preventDefault();
-    this.props.setAutopilotIgain(this.state.i);
-  }
-
-  setD(event) {
-    event.preventDefault();
-    this.props.setAutopilotDgain(this.state.d);
-  }
-
   toggleActivate() {
     this.props.toggleAutopilot();
   }
@@ -77,6 +34,7 @@ class Autopilot extends Component {
       initialHeading, initialSpeed, setAutopilotHeading, setAutopilotSpeed,
       initialAlpha, initialBeta, setAlphaForHeading, setBetaForHeading,
       initialHeadingGain, setAutopilotPgain, setAutopilotIgain, setAutopilotDgain,
+      initialSpeedGain, setSpeedPgain, setSpeedIgain, setSpeedDgain,
     } = this.props;
 
     return (
@@ -100,11 +58,10 @@ class Autopilot extends Component {
               setBetaForHeading={setBetaForHeading}
             />
           </div>
-
         </div>
 
         <div className="row">
-          <div className="col-lg-4">
+          <div className="col-lg-3">
             <Pid
               name="Heading"
               initialP={initialHeadingGain.p}
@@ -113,6 +70,22 @@ class Autopilot extends Component {
               setP={setAutopilotPgain}
               setI={setAutopilotIgain}
               setD={setAutopilotDgain}
+              min={{ p: 0.0, i: 0.0, d: 0.0 }}
+              max={{ p: 5.0, i: 2.0, d: 5.0 }}
+            />
+          </div>
+
+          <div className="col-lg-3">
+            <Pid
+              name="Speed"
+              initialP={initialSpeedGain.p}
+              initialI={initialSpeedGain.i}
+              initialD={initialSpeedGain.d}
+              setP={setSpeedPgain}
+              setI={setSpeedIgain}
+              setD={setSpeedDgain}
+              min={{ p: 0.0, i: 0.0, d: 0.0 }}
+              max={{ p: 20.0, i: 5.0, d: 20.0 }}
             />
           </div>
         </div>
@@ -140,6 +113,11 @@ Autopilot.propTypes = {
     i: PropTypes.number.isRequired,
     d: PropTypes.number.isRequired,
   }).isRequired,
+  initialSpeedGain: PropTypes.shape({
+    p: PropTypes.number.isRequired,
+    i: PropTypes.number.isRequired,
+    d: PropTypes.number.isRequired,
+  }).isRequired,
   setAutopilotHeading: PropTypes.func.isRequired,
   setAutopilotSpeed: PropTypes.func.isRequired,
   setAlphaForHeading: PropTypes.func.isRequired,
@@ -147,6 +125,9 @@ Autopilot.propTypes = {
   setAutopilotPgain: PropTypes.func.isRequired,
   setAutopilotIgain: PropTypes.func.isRequired,
   setAutopilotDgain: PropTypes.func.isRequired,
+  setSpeedPgain: PropTypes.func.isRequired,
+  setSpeedIgain: PropTypes.func.isRequired,
+  setSpeedDgain: PropTypes.func.isRequired,
   toggleAutopilot: PropTypes.func.isRequired,
 };
 

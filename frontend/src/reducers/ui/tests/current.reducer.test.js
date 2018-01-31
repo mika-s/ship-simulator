@@ -1,8 +1,9 @@
-import { initialVesselModel, initialEstimator } from './testdata';
+import { initialVesselModel, initialController, initialEstimator } from './testdata';
 import currentReducer from '../current.reducer';
 import getInitialState from '../initialstate';
 
-const initialState = getInitialState(initialVesselModel, initialEstimator).current;
+const initialState =
+  getInitialState(initialVesselModel, initialController, initialEstimator).current;
 
 it('should handle SET_CURRENT_SPEED', () => {
   const action = {
