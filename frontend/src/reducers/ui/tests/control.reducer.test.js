@@ -56,6 +56,30 @@ it('should handle SET_AUTOPILOT_SPEED', () => {
     });
 });
 
+it('should handle SET_AUTOPILOT_P_GAIN', () => {
+  const action = {
+    type: 'SET_AUTOPILOT_P_GAIN',
+    payload: {
+      gain: 1.0,
+    },
+  };
+
+  expect(controlReducer(initialState, action))
+    .toEqual({
+      ...initialState,
+      autopilot: {
+        ...initialState.autopilot,
+        headingPid: {
+          ...initialState.autopilot.headingPid,
+          gain: {
+            ...initialState.autopilot.headingPid.gain,
+            p: 1.0,
+          },
+        },
+      },
+    });
+});
+
 it('should handle TOGGLE_AUTOPILOT', () => {
   const action = {
     type: 'TOGGLE_AUTOPILOT',

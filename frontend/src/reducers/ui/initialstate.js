@@ -150,6 +150,11 @@ const uiInitialState = {
       active: false,
       heading: 0.0,
       speed: 0.0,
+      controllers: {
+        headingPid: {
+          gain: { p: 0.0, i: 0.0, d: 0.0 },
+        },
+      },
     },
   },
   estimator: {
@@ -160,7 +165,7 @@ const uiInitialState = {
   },
 };
 
-function getInitialState(initialVessel, initialEstimator) {
+function getInitialState(initialVessel, initialController, initialEstimator) {
   uiInitialState.position = initialVessel.model.position;
 
   for (let thrIdx = 0; thrIdx < initialVessel.thrusters.length; thrIdx += 1) {
@@ -169,6 +174,9 @@ function getInitialState(initialVessel, initialEstimator) {
 
   uiInitialState.estimator.alphabeta.alpha = initialEstimator.alphabeta.alpha;
   uiInitialState.estimator.alphabeta.beta = initialEstimator.alphabeta.beta;
+
+  uiInitialState.control.autopilot.controllers.headingPid.gain =
+    initialController.autopilot.controllers.headingPid.gain;
 
   return uiInitialState;
 }

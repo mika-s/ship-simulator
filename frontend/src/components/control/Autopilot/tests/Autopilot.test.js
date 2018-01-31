@@ -7,7 +7,12 @@ it('renders without crashing', () => {
   function setBetaForHeading() { }
   function setAutopilotHeading() { }
   function setAutopilotSpeed() { }
+  function setAutopilotPgain() { }
+  function setAutopilotIgain() { }
+  function setAutopilotDgain() { }
   function toggleAutopilot() { }
+
+  const headingGain = { p: 0.0, i: 0.0, d: 0.0 };
 
   const div = document.createElement('div');
   ReactDOM.render(<Autopilot
@@ -16,10 +21,14 @@ it('renders without crashing', () => {
     initialBeta={0.03}
     initialHeading={0.1}
     initialSpeed={0.03}
+    initialHeadingGain={headingGain}
     setAlphaForHeading={setAlphaForHeading}
     setBetaForHeading={setBetaForHeading}
     setAutopilotHeading={setAutopilotHeading}
     setAutopilotSpeed={setAutopilotSpeed}
+    setAutopilotPgain={setAutopilotPgain}
+    setAutopilotIgain={setAutopilotIgain}
+    setAutopilotDgain={setAutopilotDgain}
     toggleAutopilot={toggleAutopilot}
   />, div);
 });

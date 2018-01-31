@@ -2,6 +2,7 @@ import React, { Component } from 'react';
 import PropTypes from 'prop-types';
 import Alphabeta from './Alphabeta';
 import Setpoints from './Setpoints';
+import Pid from './Pid';
 import '../Control.css';
 
 class Autopilot extends Component {
@@ -14,6 +15,9 @@ class Autopilot extends Component {
     this.setAutopilotSpeed = this.setAutopilotSpeed.bind(this);
     this.setAlphaForHeading = this.setAlphaForHeading.bind(this);
     this.setBetaForHeading = this.setBetaForHeading.bind(this);
+    this.setP = this.setP.bind(this);
+    this.setI = this.setI.bind(this);
+    this.setD = this.setD.bind(this);
     this.toggleActivate = this.toggleActivate.bind(this);
   }
 
@@ -28,6 +32,7 @@ class Autopilot extends Component {
     return cssClass;
   }
 
+  /* Delete these functions? */
   setAutopilotHeading(event) {
     event.preventDefault();
     this.props.setAutopilotHeading(this.state.heading);
@@ -48,6 +53,21 @@ class Autopilot extends Component {
     this.props.setBetaForHeading(this.state.beta);
   }
 
+  setP(event) {
+    event.preventDefault();
+    this.props.setAutopilotPgain(this.state.p);
+  }
+
+  setI(event) {
+    event.preventDefault();
+    this.props.setAutopilotIgain(this.state.i);
+  }
+
+  setD(event) {
+    event.preventDefault();
+    this.props.setAutopilotDgain(this.state.d);
+  }
+
   toggleActivate() {
     this.props.toggleAutopilot();
   }
@@ -56,6 +76,7 @@ class Autopilot extends Component {
     const {
       initialHeading, initialSpeed, setAutopilotHeading, setAutopilotSpeed,
       initialAlpha, initialBeta, setAlphaForHeading, setBetaForHeading,
+      initialHeadingGain, setAutopilotPgain, setAutopilotIgain, setAutopilotDgain,
     } = this.props;
 
     return (
@@ -79,6 +100,21 @@ class Autopilot extends Component {
               setBetaForHeading={setBetaForHeading}
             />
           </div>
+
+        </div>
+
+        <div className="row">
+          <div className="col-lg-4">
+            <Pid
+              name="Heading"
+              initialP={initialHeadingGain.p}
+              initialI={initialHeadingGain.i}
+              initialD={initialHeadingGain.d}
+              setP={setAutopilotPgain}
+              setI={setAutopilotIgain}
+              setD={setAutopilotDgain}
+            />
+          </div>
         </div>
 
         <div className="row">
@@ -99,10 +135,18 @@ Autopilot.propTypes = {
   initialSpeed: PropTypes.number.isRequired,
   initialAlpha: PropTypes.number.isRequired,
   initialBeta: PropTypes.number.isRequired,
+  initialHeadingGain: PropTypes.shape({
+    p: PropTypes.number.isRequired,
+    i: PropTypes.number.isRequired,
+    d: PropTypes.number.isRequired,
+  }).isRequired,
   setAutopilotHeading: PropTypes.func.isRequired,
   setAutopilotSpeed: PropTypes.func.isRequired,
   setAlphaForHeading: PropTypes.func.isRequired,
   setBetaForHeading: PropTypes.func.isRequired,
+  setAutopilotPgain: PropTypes.func.isRequired,
+  setAutopilotIgain: PropTypes.func.isRequired,
+  setAutopilotDgain: PropTypes.func.isRequired,
   toggleAutopilot: PropTypes.func.isRequired,
 };
 

@@ -21,6 +21,57 @@ export default function controlReducer(state, action, control) {
           speed: action.payload.speed,
         },
       };
+    case 'SET_AUTOPILOT_P_GAIN':
+      return {
+        ...state,
+        autopilot: {
+          ...state.autopilot,
+          controllers: {
+            ...state.autopilot.controllers,
+            headingPid: {
+              ...state.autopilot.controllers.headingPid,
+              gain: {
+                ...state.autopilot.controllers.headingPid.gain,
+                p: action.payload.gain,
+              },
+            },
+          },
+        },
+      };
+    case 'SET_AUTOPILOT_I_GAIN':
+      return {
+        ...state,
+        autopilot: {
+          ...state.autopilot,
+          controllers: {
+            ...state.autopilot.controllers,
+            headingPid: {
+              ...state.autopilot.controllers.headingPid,
+              gain: {
+                ...state.autopilot.controllers.headingPid.gain,
+                i: action.payload.gain,
+              },
+            },
+          },
+        },
+      };
+    case 'SET_AUTOPILOT_D_GAIN':
+      return {
+        ...state,
+        autopilot: {
+          ...state.autopilot,
+          controllers: {
+            ...state.autopilot.controllers,
+            headingPid: {
+              ...state.autopilot.controllers.headingPid,
+              gain: {
+                ...state.autopilot.controllers.headingPid.gain,
+                d: action.payload.gain,
+              },
+            },
+          },
+        },
+      };
     case 'TOGGLE_AUTOPILOT':
       return {
         ...state,

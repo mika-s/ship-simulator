@@ -13,6 +13,7 @@ export default function controlReducer(state, action, uiControl, summedError) {
             ...state.autopilot.controllers,
             headingPid: {
               ...state.autopilot.controllers.headingPid,
+              gain: uiControl.autopilot.controllers.headingPid.gain,
               summedError,
             },
           },

@@ -8,11 +8,15 @@ it('renders without crashing', () => {
   function setAutopilotSpeed() { }
   function setAlphaForHeading() { }
   function setBetaForHeading() { }
+  function setAutopilotPgain() { }
+  function setAutopilotIgain() { }
+  function setAutopilotDgain() { }
   function toggleAutopilot() { }
   function setThrusterDemand() { }
   function setControlMode() { }
 
   const thrusters = [];
+  const headingGain = { p: 0.0, i: 0.0, d: 0.0 };
 
   const div = document.createElement('div');
   ReactDOM.render(<UnconnectedControl
@@ -24,11 +28,15 @@ it('renders without crashing', () => {
     speed={0.0}
     alpha={0.0}
     beta={0.0}
+    headingGain={headingGain}
     setControlMode={setControlMode}
     setAutopilotHeading={setAutopilotHeading}
     setAutopilotSpeed={setAutopilotSpeed}
     setAlphaForHeading={setAlphaForHeading}
     setBetaForHeading={setBetaForHeading}
+    setAutopilotPgain={setAutopilotPgain}
+    setAutopilotIgain={setAutopilotIgain}
+    setAutopilotDgain={setAutopilotDgain}
     toggleAutopilot={toggleAutopilot}
   />, div);
 });
