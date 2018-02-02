@@ -1,0 +1,96 @@
+\documentclass[a4paper]{article}  
+
+\usepackage{amsmath}
+\usepackage{amssymb}
+\usepackage{mathrsfs}
+\usepackage[toc,page]{appendix}
+\usepackage[pdftex]{graphicx}
+\usepackage{geometry}
+\usepackage[utf8]{inputenc}
+\usepackage{tabularx}
+\usepackage{color}
+\usepackage{natbib}
+\usepackage{epstopdf}
+\usepackage{caption}
+\usepackage{subcaption}
+\usepackage{cancel}
+\usepackage{pdfpages}
+
+\bibliographystyle{plainnat}
+\newcommand{\HRule}{\rule{\linewidth}{1mm}}
+\newcommand{\myparagraph}[1]{\paragraph{#1}\mbox{}\\}
+
+\title{\textsc{Design description of the controllers}}
+\date{\today}
+
+\begin{document}
+
+\begin{titlepage}
+	\centering
+	{\scshape\LARGE Design description of the controllers\par}
+	\vspace{1cm}
+	{\scshape\Large Rev 0.1.0 \par}
+	\vspace{2cm}
+	\vfill
+
+% Bottom of the page
+	{\large \today\par}
+\end{titlepage}
+
+\thispagestyle{empty}
+\newpage
+
+\setcounter{tocdepth}{3}
+\tableofcontents
+\setcounter{secnumdepth}{3}
+\newpage
+
+\section{Autopilot}
+
+There are two parameters to control during autopilot: surge speed and heading.
+
+\subsection{Heading}
+
+The heading of the vessel in autopilot is currently controlled by a PID controller.
+
+\subsubsection{PID}
+
+The basic equation for the PID controller can be written as
+
+\begin{equation}
+\label{eq:heading_pid}
+\begin{aligned}
+	\tau_{\psi} = K_p \cdot e + K_i \cdot \int e + K_d \cdot \dot{e}
+\end{aligned}
+\end{equation}
+%
+where $\tau_{\psi}$ is wanted heading force, $K_p$ is the proportional gain, $K_i$ is the integral gain and $K_d$ is the derivative gain. $e$ is the error and is defined as
+\begin{equation}
+\label{eq:heading_pid_error}
+\begin{aligned}
+	e = \psi_d - \psi
+\end{aligned}
+\end{equation}
+%
+where $\psi_d$ is the desired heading.
+
+\paragraph{Anti-windup}
+
+The I-term can increase to very large or decrease to very small numbers. This will cause significant overshoot when reaching the setpoint during a heading change, for example. 
+A couple of mechanisms are implemented to prevent the I-term from winding up.
+
+\begin{itemize}  
+\item The I-term doesn't start building up unless the vessel's heading is within a sector of the desired heading. This sector is set in Controller.json and goes to both positive and negative
+direction around the desired heading.
+
+\item The I-term can never go above a value given in Controller.json.
+
+\item The I-term starts building down when within iDieSector (close to the desired heading). It goes to zero with a constant of iDieConstant per second.
+\end{itemize}
+
+\subsection{Speed}
+
+\subsubsection{PID}
+
+
+\end{document}

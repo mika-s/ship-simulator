@@ -4,8 +4,8 @@ const {
 
 /**
 * Transform from NED to BODY. I.e. latitude, longitude, heading to surge, sway, heading.
-* @param {object} bodyPostion   - Object containing latitude, longitude, heading (rad).
-* @returns {object}             - Object containing surge, sway, heading.
+* @param {Object} bodyPostion   - Object containing latitude, longitude, heading (rad).
+* @returns {Object} Object containing surge, sway, heading.
 */
 export function transformNEDToBODY(nedPosition) {
   const { latitude, longitude, heading } = nedPosition;
@@ -18,8 +18,8 @@ export function transformNEDToBODY(nedPosition) {
 
 /**
 * Transform from BODY to NED. I.e. surge, sway, heading to latitude, longitude, heading.
-* @param {object} bodyPostion   - Object containing surge (m), sway (m), heading (rad).
-* @returns {object}             - Object containing latitude, longitude, heading.
+* @param {Object} bodyPostion   - Object containing surge (m), sway (m), heading (rad).
+* @returns {Object} Object containing latitude, longitude, heading.
 */
 export function transformBODYToNED(bodyPostion) {
   const { surge, sway, heading } = bodyPostion;
@@ -33,7 +33,7 @@ export function transformBODYToNED(bodyPostion) {
 /**
 * Wrap an angle in the range -∞,∞ to 0,360°.
 * @param {number} angle     - The angle to wrap.
-* @returns {number}         - The wrapped angle.
+* @returns {number} The wrapped angle.
 */
 export function wrapTo0To360(angle) {
   return (angle % 360) + (angle < 0 ? 360 : 0);
@@ -42,7 +42,7 @@ export function wrapTo0To360(angle) {
 /**
 * Wrap an angle in the range -∞,∞ to 0,2π.
 * @param {number} angle     - The angle to wrap.
-* @returns {number}         - The wrapped angle.
+* @returns {number} The wrapped angle.
 */
 export function wrapTo0To2pi(angle) {
   return (angle % (2 * PI)) + (angle < 0 ? (2 * PI) : 0);
@@ -51,8 +51,7 @@ export function wrapTo0To2pi(angle) {
 /**
 * Wrap an angle in the range -∞,∞ to -π to π.
 * @param {number} angle     - The angle to wrap.
-* @returns {object}         - An object containing the wrapped angle and
-*                             number of revolutions.
+* @returns {Object} An object containing the wrapped angle and number of revolutions.
 */
 export function wrapToPipi(angle) {
   const revolutions = trunc((angle + (sign(angle) * PI)) / (2 * PI));
@@ -70,7 +69,7 @@ export function wrapToPipi(angle) {
 * Unwrap the angle
 * @param {number} previousAngle   - The previous angle.
 * @param {number} newAngle        - The new angle.
-* @returns {object}               - The angle unwrapped.
+* @returns {Object} The angle unwrapped.
 */
 export function unwrapAngle(previousAngle, newAngle) {
   let difference = newAngle - previousAngle;

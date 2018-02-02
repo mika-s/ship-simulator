@@ -4,18 +4,29 @@ const {
   PI, max, min, abs,
 } = Math;
 
-export function headingController(autopilot, estimatedHeading, estimatedRot) {
+/**
+* Find needed control force in heading.
+* @param {number} autopilot         - The autopilot object.
+* @param {number} heading           - The vessel's heading.
+* @param {number} rot               - The vessel's rot.
+* @returns {object} An object containing:
+*                   - the forces in surge, sway and yaw
+*                   - the summed heading error
+*                   - an object containing p, i and d forces.
+*/
+export function headingController(autopilot, heading, rot) {
   const { sector, maxI } = autopilot.controllers.headingPid.antiWindup;
   const desiredRot = 0.0;
   const iDieConstant = 15;
   const iDieSector = 2.0;
 
   let headingError;
+  let summedHeadingError;
   let derivativeHeadingError;
 
-  if (autopilot.speed !== 0) {
-    const error = autopilot.heading - estimatedHeading;
-    const derror = desiredRot - estimatedRot;
+  if (autopilot.speed !== 0 && autopilot.active) {
+    const error = autopilot.heading - heading;
+    const derror = desiredRot - rot;
 
     // Find shortest distance.
     const ccw = error > 0 ? error - 360.0 : error;
@@ -27,15 +38,16 @@ export function headingController(autopilot, estimatedHeading, estimatedRot) {
     derivativeHeadingError = derror;
   } else {
     headingError = 0.0;
+    summedHeadingError = 0.0;
     derivativeHeadingError = 0.0;
   }
-
-  let summedHeadingError;
 
   // Anti-windup
   if (-sector < headingError && headingError < sector) {
     summedHeadingError = autopilot.controllers.headingPid.summedError + headingError;
-    if (maxI < summedHeadingError) summedHeadingError = maxI;
+
+    summedHeadingError = min(summedHeadingError, maxI);
+    summedHeadingError = max(summedHeadingError, -maxI);
 
     // Let I-term die out over time.
     if (summedHeadingError > 0 && abs(headingError) < iDieSector) {
@@ -61,6 +73,13 @@ export function headingController(autopilot, estimatedHeading, estimatedRot) {
   };
 }
 
+/**
+* Allocate demands to the thrusters depending on the heading control force.
+* @param {number}      headingControlForce  - The heading control force.
+* @param {number}      maxRudderAngle       - Maximum rudder angle.
+* @param {Object[]}    thrusters            - An array of thruster objects.
+* @returns {Object} The demands for all the thrusters.
+*/
 export function autopilotAlloc(headingControlForce, maxRudderAngle, thrusters) {
   const rudderGain = -0.1;
   const demands = [];

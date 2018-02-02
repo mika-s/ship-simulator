@@ -1,4 +1,32 @@
-import { vesselControlMode } from '../../util/enums';
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="utf-8">
+    <title>JSDoc: Source: reducers/constructors/thruster.js</title>
+
+    <script src="scripts/prettify/prettify.js"> </script>
+    <script src="scripts/prettify/lang-css.js"> </script>
+    <!--[if lt IE 9]>
+      <script src="//html5shiv.googlecode.com/svn/trunk/html5.js"></script>
+    <![endif]-->
+    <link type="text/css" rel="stylesheet" href="styles/prettify-tomorrow.css">
+    <link type="text/css" rel="stylesheet" href="styles/jsdoc-default.css">
+</head>
+
+<body>
+
+<div id="main">
+
+    <h1 class="page-title">Source: reducers/constructors/thruster.js</h1>
+
+    
+
+
+
+    
+    <section>
+        <article>
+            <pre class="prettyprint source linenums"><code>import { vesselControlMode } from '../../util/enums';
 
 /**
 * Calculate maximum force, both directions, using IMCA's rules.
@@ -110,99 +138,99 @@ function assertThrusterConstructorInput(
     },
   };
 
-  if (typeof number !== 'number' || number < minNumber || maxNumber < number) {
+  if (typeof number !== 'number' || number &lt; minNumber || maxNumber &lt; number) {
     throw new Error(`Illegal thruster number: ${number}. Limits: lowest: ${minNumber}, highest: ${maxNumber}.`);
   }
 
-  if (typeof name !== 'string' || name.length < minThrusterNameLength || maxThrusterNameLength < name.length) {
+  if (typeof name !== 'string' || name.length &lt; minThrusterNameLength || maxThrusterNameLength &lt; name.length) {
     throw new Error(`Illegal thruster name: ${name}. Limits: length: ${minThrusterNameLength}-${maxThrusterNameLength}.`);
   }
 
-  if (thrusterType !== 'tunnel' && thrusterType !== 'azimuth' && thrusterType !== 'propeller' && thrusterType !== 'waterjet') {
+  if (thrusterType !== 'tunnel' &amp;&amp; thrusterType !== 'azimuth' &amp;&amp; thrusterType !== 'propeller' &amp;&amp; thrusterType !== 'waterjet') {
     throw new Error('Illegal thruster type.');
   }
 
-  if (thrusterType !== 'tunnel' && thrusterType !== 'azimuth' && thrusterType !== 'propeller' && thrusterType !== 'waterjet') {
+  if (thrusterType !== 'tunnel' &amp;&amp; thrusterType !== 'azimuth' &amp;&amp; thrusterType !== 'propeller' &amp;&amp; thrusterType !== 'waterjet') {
     throw new Error('Illegal thruster type.');
   }
 
-  if (controlType !== 'rpm' && controlType !== 'pitch') {
+  if (controlType !== 'rpm' &amp;&amp; controlType !== 'pitch') {
     throw new Error('Illegal control type.');
   }
 
-  if (typeof maxPower.positive !== 'number' || maxPower.positive < maxPowerLowLimit || maxPowerHighLimit < maxPower.positive) {
+  if (typeof maxPower.positive !== 'number' || maxPower.positive &lt; maxPowerLowLimit || maxPowerHighLimit &lt; maxPower.positive) {
     throw new Error(`Max power positive is too low or too high. Limits: ${maxPowerLowLimit} kW to ${maxPowerHighLimit} kW.`);
   }
 
-  if (typeof maxPower.negative !== 'number' || maxPower.negative < maxPowerLowLimit || maxPowerHighLimit < maxPower.negative) {
+  if (typeof maxPower.negative !== 'number' || maxPower.negative &lt; maxPowerLowLimit || maxPowerHighLimit &lt; maxPower.negative) {
     throw new Error(`Max power negative is too low or too high. Limits: ${maxPowerLowLimit} kW to ${maxPowerHighLimit} kW.`);
   }
 
-  if (typeof location.x !== 'number' || location.x < minXPos || maxXPos < location.x) {
+  if (typeof location.x !== 'number' || location.x &lt; minXPos || maxXPos &lt; location.x) {
     throw new Error(`x position is too small or too large. Limits: ${minXPos} m to ${maxXPos} m.`);
   }
 
-  if (typeof location.y !== 'number' || location.y < minYPos || maxYPos < location.y) {
+  if (typeof location.y !== 'number' || location.y &lt; minYPos || maxYPos &lt; location.y) {
     throw new Error(`y position is too small or too large. Limits: ${minYPos} m to ${maxYPos} m.`);
   }
 
-  if (typeof misc.maxRudderAngle !== 'number' || misc.maxRudderAngle < minMaxRudderAngle || maxMaxRudderAngle < misc.maxRudderAngle) {
+  if (typeof misc.maxRudderAngle !== 'number' || misc.maxRudderAngle &lt; minMaxRudderAngle || maxMaxRudderAngle &lt; misc.maxRudderAngle) {
     throw new Error(`maxRudderAngle is too small or too large. Limits: ${minMaxRudderAngle}° to ${maxMaxRudderAngle}°.`);
   }
 
-  if (risetimes.rpm && (typeof risetimes.rpm.positive !== 'number'
-    || risetimes.rpm.positive < minRisetime.rpm.positive
-    || maxRisetime.rpm.positive < risetimes.rpm.positive)) {
+  if (risetimes.rpm &amp;&amp; (typeof risetimes.rpm.positive !== 'number'
+    || risetimes.rpm.positive &lt; minRisetime.rpm.positive
+    || maxRisetime.rpm.positive &lt; risetimes.rpm.positive)) {
     throw new Error(`RPM risetime positive is too small or too large. Limits: ${minRisetime.rpm.positive} %/s to ${maxRisetime.rpm.positive} %/s.`);
   }
 
-  if (risetimes.rpm && (typeof risetimes.rpm.negative !== 'number'
+  if (risetimes.rpm &amp;&amp; (typeof risetimes.rpm.negative !== 'number'
     || risetimes.rpm.negative > minRisetime.rpm.negative
     || maxRisetime.rpm.negative > risetimes.rpm.negative)) {
     throw new Error(`RPM risetime negative is too small or too large. Limits: ${minRisetime.rpm.negative} %/s to ${maxRisetime.rpm.negative} %/s.`);
   }
 
-  if (risetimes.pitch && (typeof risetimes.pitch.positive !== 'number'
-    || risetimes.pitch.positive < minRisetime.pitch.positive
-    || maxRisetime.pitch.positive < risetimes.pitch.positive)) {
+  if (risetimes.pitch &amp;&amp; (typeof risetimes.pitch.positive !== 'number'
+    || risetimes.pitch.positive &lt; minRisetime.pitch.positive
+    || maxRisetime.pitch.positive &lt; risetimes.pitch.positive)) {
     throw new Error(`Pitch risetime positive is too small or too large. Limits: ${minRisetime.pitch.positive} %/s to ${maxRisetime.pitch.positive} %/s.`);
   }
 
-  if (risetimes.pitch && (typeof risetimes.pitch.negative !== 'number'
+  if (risetimes.pitch &amp;&amp; (typeof risetimes.pitch.negative !== 'number'
     || risetimes.pitch.negative > minRisetime.pitch.negative
     || maxRisetime.pitch.negative > risetimes.pitch.negative)) {
     throw new Error(`Pitch risetime negative is too small or too large. Limits: ${minRisetime.pitch.negative} %/s to ${maxRisetime.pitch.negative} %/s.`);
   }
 
-  if (risetimes.azimuth && (typeof risetimes.azimuth.positive !== 'number'
-    || risetimes.azimuth.positive < minRisetime.azimuth.positive
-    || maxRisetime.azimuth.positive < risetimes.azimuth.positive)) {
+  if (risetimes.azimuth &amp;&amp; (typeof risetimes.azimuth.positive !== 'number'
+    || risetimes.azimuth.positive &lt; minRisetime.azimuth.positive
+    || maxRisetime.azimuth.positive &lt; risetimes.azimuth.positive)) {
     throw new Error(`Azimuth risetime positive is too small or too large. Limits: ${minRisetime.azimuth.positive} °/s to ${maxRisetime.azimuth.positive} °/s.`);
   }
 
-  if (risetimes.azimuth && (typeof risetimes.azimuth.negative !== 'number'
+  if (risetimes.azimuth &amp;&amp; (typeof risetimes.azimuth.negative !== 'number'
     || risetimes.azimuth.negative > minRisetime.azimuth.negative
     || maxRisetime.azimuth.negative > risetimes.azimuth.negative)) {
     throw new Error(`Azimuth risetime negative is too small or too large. Limits: ${minRisetime.azimuth.negative} °/s to ${maxRisetime.azimuth.negative} °/s.`);
   }
 
-  if (typeof pitchExponent.positive !== 'number' || pitchExponent.positive < minPitchExponent || maxPitchExponent < pitchExponent.positive) {
+  if (typeof pitchExponent.positive !== 'number' || pitchExponent.positive &lt; minPitchExponent || maxPitchExponent &lt; pitchExponent.positive) {
     throw new Error(`pitch exponent positive is too small or too large. Limits: ${minPitchExponent} to ${maxPitchExponent}.`);
   }
 
-  if (typeof pitchExponent.negative !== 'number' || pitchExponent.negative < minPitchExponent || maxPitchExponent < pitchExponent.negative) {
+  if (typeof pitchExponent.negative !== 'number' || pitchExponent.negative &lt; minPitchExponent || maxPitchExponent &lt; pitchExponent.negative) {
     throw new Error(`pitch exponent negative is too small or too large. Limits: ${minPitchExponent} to ${maxPitchExponent}.`);
   }
 
   if (typeof pitchPowerExponent.positive !== 'number' ||
-    pitchPowerExponent.positive < minPitchPowerExponent ||
-    maxPitchPowerExponent < pitchPowerExponent.positive) {
+    pitchPowerExponent.positive &lt; minPitchPowerExponent ||
+    maxPitchPowerExponent &lt; pitchPowerExponent.positive) {
     throw new Error(`pitch power exponent positive is too small or too large. Limits: ${minPitchPowerExponent} to ${maxPitchPowerExponent}.`);
   }
 
   if (typeof pitchPowerExponent.negative !== 'number' ||
-    pitchPowerExponent.negative < minPitchPowerExponent ||
-    maxPitchPowerExponent < pitchPowerExponent.negative) {
+    pitchPowerExponent.negative &lt; minPitchPowerExponent ||
+    maxPitchPowerExponent &lt; pitchPowerExponent.negative) {
     throw new Error(`pitch power exponent negative is too small or too large. Limits: ${minPitchPowerExponent} to ${maxPitchPowerExponent}.`);
   }
 }
@@ -253,3 +281,26 @@ function Thruster(data) {
 }
 
 export default Thruster;
+</code></pre>
+        </article>
+    </section>
+
+
+
+
+</div>
+
+<nav>
+    <h2><a href="index.html">Home</a></h2><h3>Global</h3><ul><li><a href="global.html#assertUiThrusterConstructorInput">assertUiThrusterConstructorInput</a></li><li><a href="global.html#autopilotAlloc">autopilotAlloc</a></li><li><a href="global.html#calculateDisplacement">calculateDisplacement</a></li><li><a href="global.html#calculateDrag">calculateDrag</a></li><li><a href="global.html#calculateForces">calculateForces</a></li><li><a href="global.html#calculateFrontalWindArea">calculateFrontalWindArea</a></li><li><a href="global.html#calculateLateralWindArea">calculateLateralWindArea</a></li><li><a href="global.html#calculateMass">calculateMass</a></li><li><a href="global.html#calculateMaxForce">calculateMaxForce</a></li><li><a href="global.html#dragBasedTrigonometric">dragBasedTrigonometric</a></li><li><a href="global.html#Estimator">Estimator</a></li><li><a href="global.html#generateNPD">generateNPD</a></li><li><a href="global.html#getFeedback">getFeedback</a></li><li><a href="global.html#getFeedbackState">getFeedbackState</a></li><li><a href="global.html#getForces">getForces</a></li><li><a href="global.html#getPositionInLatLon">getPositionInLatLon</a></li><li><a href="global.html#getPower">getPower</a></li><li><a href="global.html#getRandomBetween">getRandomBetween</a></li><li><a href="global.html#headingController">headingController</a></li><li><a href="global.html#isAzi">isAzi</a></li><li><a href="global.html#knotsInMps">knotsInMps</a></li><li><a href="global.html#maxBasedTrigonometric">maxBasedTrigonometric</a></li><li><a href="global.html#motion">motion</a></li><li><a href="global.html#mpsInKnots">mpsInKnots</a></li><li><a href="global.html#normalizeRisetimes">normalizeRisetimes</a></li><li><a href="global.html#setDemand">setDemand</a></li><li><a href="global.html#simulationState">simulationState</a></li><li><a href="global.html#thrusterFeedbackState">thrusterFeedbackState</a></li><li><a href="global.html#transformBODYToNED">transformBODYToNED</a></li><li><a href="global.html#transformNEDToBODY">transformNEDToBODY</a></li><li><a href="global.html#truncToDecimal">truncToDecimal</a></li><li><a href="global.html#U10toUz">U10toUz</a></li><li><a href="global.html#unwrapAngle">unwrapAngle</a></li><li><a href="global.html#vesselControlMode">vesselControlMode</a></li><li><a href="global.html#VesselModel">VesselModel</a></li><li><a href="global.html#wrapTo0To2pi">wrapTo0To2pi</a></li><li><a href="global.html#wrapTo0To360">wrapTo0To360</a></li><li><a href="global.html#wrapToPipi">wrapToPipi</a></li></ul>
+</nav>
+
+<br class="clear">
+
+<footer>
+    Documentation generated by <a href="https://github.com/jsdoc3/jsdoc">JSDoc 3.5.5</a> on Fri Feb 02 2018 21:47:55 GMT+0100 (W. Europe Standard Time)
+</footer>
+
+<script> prettyPrint(); </script>
+<script src="scripts/linenumber.js"> </script>
+</body>
+</html>

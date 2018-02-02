@@ -8,7 +8,7 @@ import { motion } from '../../util/enums';
 import MapUtil from './MapUtil';
 import './Map.css';
 
-class Map extends Component {
+export class UnconnectedMap extends Component {
   constructor() {
     super();
     this.state = {
@@ -213,6 +213,16 @@ class Map extends Component {
   }
 }
 
+UnconnectedMap.propTypes = {
+  simulationTime: PropTypes.number.isRequired,
+  position: PropTypes.objectOf(PropTypes.arrayOf(PropTypes.number)).isRequired,
+  zoomlevel: PropTypes.number.isRequired,
+  motion: PropTypes.number.isRequired,
+  increaseZoomlevel: PropTypes.func.isRequired,
+  decreaseZoomlevel: PropTypes.func.isRequired,
+  toggleMotion: PropTypes.func.isRequired,
+};
+
 const mapStateToProps = state => ({
   simulationTime: state.simulation.time,
   position: state.timeseries.model.position,
@@ -226,16 +236,6 @@ const mapDispatchToProps = dispatch => ({
   toggleMotion: () => dispatch(toggleMotion()),
 });
 
-const ConnectedMap = connect(mapStateToProps, mapDispatchToProps)(Map);
+const Map = connect(mapStateToProps, mapDispatchToProps)(UnconnectedMap);
 
-Map.propTypes = {
-  simulationTime: PropTypes.number.isRequired,
-  position: PropTypes.objectOf(PropTypes.arrayOf(PropTypes.number)).isRequired,
-  zoomlevel: PropTypes.number.isRequired,
-  motion: PropTypes.number.isRequired,
-  increaseZoomlevel: PropTypes.func.isRequired,
-  decreaseZoomlevel: PropTypes.func.isRequired,
-  toggleMotion: PropTypes.func.isRequired,
-};
-
-export default ConnectedMap;
+export default Map;

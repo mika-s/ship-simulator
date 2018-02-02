@@ -1,12 +1,14 @@
 import { LatLonEllipsoidal } from 'geodesy';
 
+const { sqrt, atan2, PI } = Math;
+
 /**
 * Get the new position in latitude and longitude, given old lat/lon-position
 * and new/previous position in meters.
-* @param {object} previousLatLonPos   - Object with previous latitude and longitude in degrees.
-* @param {object} newInMeterPos       - Object with new position in meters.
-* @param {object} previousInMeterPos  - Object with previous position in meters.
-* @returns {object}                   - Object with the new position in latitude
+* @param {Object} previousLatLonPos   - Object with previous latitude and longitude in degrees.
+* @param {Object} newInMeterPos       - Object with new position in meters.
+* @param {Object} previousInMeterPos  - Object with previous position in meters.
+* @returns {Object}                   - Object with the new position in latitude
 *                                       and longitude in degrees.
 */
 export function getPositionInLatLon(previousLatLonPos, newInMeterPos, previousInMeterPos) {
@@ -15,8 +17,8 @@ export function getPositionInLatLon(previousLatLonPos, newInMeterPos, previousIn
   const lonΔ = (newInMeterPos.longitude - previousInMeterPos.longitude);
   const latΔ = (newInMeterPos.latitude - previousInMeterPos.latitude);
 
-  const distance = Math.sqrt((lonΔ ** 2) + (latΔ ** 2));
-  const bearing = Math.atan2(lonΔ, latΔ) * (180.0 / Math.PI);
+  const distance = sqrt((lonΔ ** 2) + (latΔ ** 2));
+  const bearing = atan2(lonΔ, latΔ) * (180.0 / PI);
 
   const newPosition = position.destinationPoint(distance, bearing);
 

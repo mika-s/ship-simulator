@@ -1,14 +1,17 @@
 {
   "name": "ship-simulator",
-  "version": "0.2.3",
+  "version": "0.2.4",
   "private": true,
   "description": "Simulates a ship.",
   "main": "app.js",
   "scripts": {
     "test": "echo \"Error: no test specified\" && exit 1",
     "start": "node app.js",
+    "createdoc-msg": "echo 'Creating documentation...' && exit 0",
+    "createdoc": "jsdoc frontend/src -r -d docs/jsdoc",
     "postinstall": "cd frontend && npm install && npm run build"
   },
+  "pre-commit": [ "createdoc-msg", "createdoc" ],
   "keywords": [
     "ship",
     "simulator"
@@ -31,8 +34,10 @@
     "eslint-plugin-import": "^2.8.0",
     "eslint-plugin-jsx-a11y": "^6.0.3",
     "eslint-plugin-react": "^7.5.1",
+    "jsdoc": "^3.5.5",
     "mocha": "^4.0.1",
     "nodemon": "^1.14.1",
+    "pre-commit": "^1.2.2",
     "sinon": "^4.1.3"
   }
 }
