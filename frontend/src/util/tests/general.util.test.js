@@ -1,4 +1,4 @@
-import { truncToDecimal, getRandomBetween, mpsInKnots, knotsInMps } from '../general.util';
+import { truncToDecimal, getRandomBetween, meanOfArray, mpsInKnots, knotsInMps } from '../general.util';
 
 it('truncToDecimal(20.12345, 2) = 20.12', () => {
   const truncatedNumber = truncToDecimal(20.12345, 2);
@@ -42,6 +42,34 @@ it('getRandomBetween(10, 20) returns a number between 10 and 20', () => {
   expect(typeof randomNumber).toEqual('number');
   expect(randomNumber).toBeGreaterThanOrEqual(10);
   expect(randomNumber).toBeLessThan(20);
+});
+
+it('meanOfArray([10, 20, 30]) returns 20', () => {
+  const array = [10, 20, 30];
+  const mean = meanOfArray(array);
+  expect(typeof mean).toEqual('number');
+  expect(mean).toEqual(20);
+});
+
+it('meanOfArray([0, 0]) returns 0', () => {
+  const array = [0, 0];
+  const mean = meanOfArray(array);
+  expect(typeof mean).toEqual('number');
+  expect(mean).toEqual(0);
+});
+
+it('meanOfArray([0, 0, 15]) returns 5', () => {
+  const array = [0, 0, 15];
+  const mean = meanOfArray(array);
+  expect(typeof mean).toEqual('number');
+  expect(mean).toEqual(5);
+});
+
+it('meanOfArray([0, 0, -15]) returns -5', () => {
+  const array = [0, 0, -15];
+  const mean = meanOfArray(array);
+  expect(typeof mean).toEqual('number');
+  expect(mean).toEqual(-5);
 });
 
 it('mpsInKnots(1) converts m/s to knots', () => {

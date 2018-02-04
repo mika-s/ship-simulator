@@ -1,4 +1,14 @@
 /**
+* Truncate to a given number of decimals.
+* @param {number} number   - The number to truncate.
+* @param {number} decimals - Number of decimals.
+* @returns {number} The value of the given number, truncated to given number of decimals.
+*/
+export function truncToDecimal(number, decimals) {
+  return Math.trunc(number * (10 ** decimals)) / (10 ** decimals);
+}
+
+/**
 * Get a random number between min and max.
 * Can be equal min, but not max: [min, max).
 * @param {number} min    - Minimum value.
@@ -7,6 +17,22 @@
 */
 export function getRandomBetween(min, max) {
   return (Math.random() * (max - min)) + min;
+}
+
+/**
+* Find the mean value of an array of numbers.
+* @param {number[]} array    - Minimum value.
+* @returns {number} The mean value of the array.
+*/
+export function meanOfArray(array) {
+  let sum = 0;
+  for (let i = 0; i < array.length; i += 1) {
+    sum += array[i];
+  }
+
+  const mean = sum / array.length;
+
+  return mean;
 }
 
 /**
@@ -25,14 +51,4 @@ export function mpsInKnots(mps) {
 */
 export function knotsInMps(knots) {
   return 0.514444 * knots;
-}
-
-/**
-* Truncate to a given number of decimals.
-* @param {number} number   - The number to truncate.
-* @param {number} decimals - Number of decimals.
-* @returns {number} The value of the given number, truncated to given number of decimals.
-*/
-export function truncToDecimal(number, decimals) {
-  return Math.trunc(number * (10 ** decimals)) / (10 ** decimals);
 }

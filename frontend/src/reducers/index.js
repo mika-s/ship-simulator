@@ -20,7 +20,7 @@ export default function rootreducer(state = initialState, action) {
     control: uiControl, wind: uiWind, current: uiCurrent, position: uiPosition,
   } = state.ui;
 
-  let positionAndVelocity = {};
+  let estimated = {};
   let controllerData = { forces: {}, data: {} };
   let demands = [];
   let forces = { thrusters: 0, wind: 0, current: 0 };
@@ -28,7 +28,7 @@ export default function rootreducer(state = initialState, action) {
 
   if (action.type === 'SIMULATE' || action.type === 'STOP_SIMULATION') {
     // Estimator
-    positionAndVelocity = estimatePositionAndVelocity(
+    estimated = estimatePositionAndVelocity(
       state.simulation.frequency,
       state.estimator,
       referencesystems.gpses,
@@ -38,7 +38,7 @@ export default function rootreducer(state = initialState, action) {
     // Controller
     controllerData = calculateControllerDemands(
       state.control,
-      positionAndVelocity,
+      estimated,
     );
 
     // Thruster allocation
@@ -73,10 +73,10 @@ export default function rootreducer(state = initialState, action) {
       controllerData.data.summedHeadingError,
     ),
 
-    estimator: estimatorReducer(state.estimator, action, state.ui.estimator, positionAndVelocity),
+    estimator: estimatorReducer(state.estimator, action, state.ui.estimator, estimated),
 
     timeseries: timeseriesReducer(
-      state.timeseries, action, state.simulation.time, positionAndVelocity, controllerData.data,
+      state.timeseries, action, state.simulation.time, estimated, controllerData.data,
       newModel, sensors, referencesystems, controllerData.data,
     ),
 

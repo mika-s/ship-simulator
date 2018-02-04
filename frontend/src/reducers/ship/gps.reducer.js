@@ -5,8 +5,8 @@ function getPosition(model) {
   const maxLatitude = 90.0;
   const minLongitude = -180.0;
   const maxLongitude = 180.0;
-  const minNoiseAmplitude = -0.5 * 10e-8;
-  const maxNoiseAmplitude = 0.5 * 10e-8;
+  const minNoiseAmplitude = -0.4 * 10e-8;
+  const maxNoiseAmplitude = 0.4 * 10e-8;
 
   // Add measurement noise.
   let newLatitude = model.position.latitude +
@@ -22,9 +22,9 @@ function getPosition(model) {
   newLongitude = Math.min(newLongitude, maxLongitude);
   newLongitude = Math.max(newLongitude, minLongitude);
 
-  // Remove unnecessary decimals. Keep 6.
-  newLatitude = truncToDecimal(newLatitude, 6);
-  newLongitude = truncToDecimal(newLongitude, 6);
+  // Remove unnecessary decimals. Keep 8.
+  newLatitude = truncToDecimal(newLatitude, 8);
+  newLongitude = truncToDecimal(newLongitude, 8);
 
   return {
     latitude: newLatitude,

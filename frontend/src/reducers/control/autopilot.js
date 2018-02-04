@@ -10,9 +10,9 @@ const {
 * @param {number} heading           - The vessel's heading.
 * @param {number} rot               - The vessel's rot.
 * @returns {object} An object containing:
-*                   - the forces in surge, sway and yaw
-*                   - the summed heading error
-*                   - an object containing p, i and d forces.
+*                   - The control force in yaw.
+*                   - The summed heading error.
+*                   - An object containing p, i and d forces.
 */
 export function headingController(autopilot, heading, rot) {
   const { sector, maxI } = autopilot.controllers.headingPid.antiWindup;
@@ -62,15 +62,67 @@ export function headingController(autopilot, heading, rot) {
   const p = autopilot.controllers.headingPid.gain.p * headingError;
   const i = autopilot.controllers.headingPid.gain.i * summedHeadingError;
   const d = autopilot.controllers.headingPid.gain.d * derivativeHeadingError;
-  const force = p + i + d;
-
-  const forces = { surge: 0.0, sway: 0.0, yaw: force };
+  const yawForce = p + i + d;
 
   return {
-    forces,
+    yawForce,
     summedHeadingError,
     pid: { p, i, d },
   };
+}
+
+/**
+* Find needed control force in surge to keep wanted vessel speed.
+* @param {number} autopilot         - The autopilot object.
+* @param {number} speed             - The vessel's speed.
+* @param {number} acceleration      - The vessel's acceleration.
+* @returns {number} The control force in surge.
+*/
+export function speedController(autopilot, speed, acceleration) {
+  const { sector, maxI } = autopilot.controllers.speedPid.antiWindup;
+  const desiredAcceleration = 0.0;
+  const iDieConstant = 15;
+  const iDieSector = 0.1;
+
+  let speedError;
+  let summedSpeedError;
+  let derivativeSpeedError;
+
+  if (autopilot.speed !== 0 && autopilot.active) {
+    const error = autopilot.speed - speed;
+    const derror = desiredAcceleration - acceleration;
+
+    speedError = error;
+    derivativeSpeedError = derror;
+  } else {
+    speedError = 0.0;
+    summedSpeedError = 0.0;
+    derivativeSpeedError = 0.0;
+  }
+
+  // Anti-windup
+  if (-sector < speedError && speedError < sector) {
+    summedSpeedError = autopilot.controllers.speedPid.summedError + speedError;
+
+    summedSpeedError = min(summedSpeedError, maxI);
+    summedSpeedError = max(summedSpeedError, -maxI);
+
+    // Let I-term die out over time.
+    if (summedSpeedError > 0 && abs(speedError) < iDieSector) {
+      summedSpeedError = max(0, summedSpeedError - iDieConstant);
+    } else if (summedSpeedError < 0 && abs(speedError) < iDieSector) {
+      summedSpeedError = min(0, summedSpeedError + iDieConstant);
+    }
+  } else {
+    summedSpeedError = 0.0;
+  }
+
+  const p = autopilot.controllers.speedPid.gain.p * speedError;
+  const i = autopilot.controllers.speedPid.gain.i * summedSpeedError;
+  const d = autopilot.controllers.speedPid.gain.d * derivativeSpeedError;
+  const surgeForce = p + i + d;
+
+  return surgeForce;
 }
 
 /**
@@ -100,8 +152,8 @@ export function autopilotAlloc(headingControlForce, maxRudderAngle, thrusters) {
       azimuth = wrapTo0To360(azimuth);
 
       demands.push({
-        pitch: thruster.controlType === 'pitch' ? 1.0 : 0.0,
-        rpm: thruster.controlType === 'rpm' ? 1.0 : 0.0,
+        pitch: 0.0,
+        rpm: 0.0,
         azimuth,
       });
     } else {

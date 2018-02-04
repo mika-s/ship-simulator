@@ -1,4 +1,4 @@
-export default function estimatorReducer(state, action, uiEstimator, positionAndVelocity) {
+export default function estimatorReducer(state, action, uiEstimator, estimated) {
   switch (action.type) {
     case 'SIMULATE':
       return {
@@ -7,8 +7,9 @@ export default function estimatorReducer(state, action, uiEstimator, positionAnd
           ...state.alphabeta,
           alpha: uiEstimator.alphabeta.alpha,
           beta: uiEstimator.alphabeta.beta,
-          position: positionAndVelocity.position,
-          velocity: positionAndVelocity.velocity,
+          position: estimated.position,
+          velocity: estimated.velocity,
+          acceleration: estimated.acceleration,
         },
       };
     default:

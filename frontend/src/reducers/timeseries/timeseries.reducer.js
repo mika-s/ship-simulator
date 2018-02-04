@@ -2,7 +2,7 @@ import { truncToDecimal } from '../../util/general.util';
 import { updateArray } from './timeseries.util';
 
 export default function timeseriesReducer(
-  state, action, time, estimator, autopilot,
+  state, action, time, estimated, autopilot,
   model, sensors, referencesystems,
 ) {
   switch (action.type) {
@@ -15,29 +15,29 @@ export default function timeseriesReducer(
             position: {
               longitude: updateArray(
                 state.estimator.alphabeta.position.longitude,
-                truncToDecimal(estimator.position.longitude, 7),
+                truncToDecimal(estimated.position.longitude, 7),
               ),
               latitude: updateArray(
                 state.estimator.alphabeta.position.latitude,
-                truncToDecimal(estimator.position.latitude, 7),
+                truncToDecimal(estimated.position.latitude, 7),
               ),
               heading: updateArray(
                 state.estimator.alphabeta.position.heading,
-                truncToDecimal(estimator.position.heading, 2),
+                truncToDecimal(estimated.position.heading, 2),
               ),
             },
             velocity: {
               u: updateArray(
                 state.estimator.alphabeta.velocity.u,
-                truncToDecimal(estimator.velocity.u, 1),
+                truncToDecimal(estimated.velocity.u, 1),
               ),
               v: updateArray(
                 state.estimator.alphabeta.velocity.v,
-                truncToDecimal(estimator.velocity.v, 1),
+                truncToDecimal(estimated.velocity.v, 1),
               ),
               r: updateArray(
                 state.estimator.alphabeta.velocity.r,
-                truncToDecimal(estimator.velocity.r, 1),
+                truncToDecimal(estimated.velocity.r, 1),
               ),
             },
           },

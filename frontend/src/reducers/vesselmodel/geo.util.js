@@ -8,8 +8,7 @@ const { sqrt, atan2, PI } = Math;
 * @param {Object} previousLatLonPos   - Object with previous latitude and longitude in degrees.
 * @param {Object} newInMeterPos       - Object with new position in meters.
 * @param {Object} previousInMeterPos  - Object with previous position in meters.
-* @returns {Object}                   - Object with the new position in latitude
-*                                       and longitude in degrees.
+* @returns {Object} Object with the new position in latitude and longitude in degrees.
 */
 export function getPositionInLatLon(previousLatLonPos, newInMeterPos, previousInMeterPos) {
   const position = new LatLonEllipsoidal(previousLatLonPos.latitude, previousLatLonPos.longitude);

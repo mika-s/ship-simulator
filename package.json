@@ -7,11 +7,9 @@
   "scripts": {
     "test": "echo \"Error: no test specified\" && exit 1",
     "start": "node app.js",
-    "createdoc-msg": "echo 'Creating documentation...' && exit 0",
     "createdoc": "jsdoc frontend/src -r -d docs/jsdoc",
     "postinstall": "cd frontend && npm install && npm run build"
   },
-  "pre-commit": [ "createdoc-msg", "createdoc" ],
   "keywords": [
     "ship",
     "simulator"
@@ -37,7 +35,6 @@
     "jsdoc": "^3.5.5",
     "mocha": "^4.0.1",
     "nodemon": "^1.14.1",
-    "pre-commit": "^1.2.2",
     "sinon": "^4.1.3"
   }
 }

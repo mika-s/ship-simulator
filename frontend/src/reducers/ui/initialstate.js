@@ -162,8 +162,16 @@ const uiInitialState = {
   },
   estimator: {
     alphabeta: {
-      alpha: 0.0,
-      beta: 0.0,
+      alpha: {
+        latitude: 0.0,
+        longitude: 0.0,
+        heading: 0.0,
+      },
+      beta: {
+        latitude: 0.0,
+        longitude: 0.0,
+        heading: 0.0,
+      },
     },
   },
 };

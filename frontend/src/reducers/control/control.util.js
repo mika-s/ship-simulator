@@ -1,8 +1,8 @@
 import { vesselControlMode } from '../../util/enums';
-import { headingController, autopilotAlloc } from '../control/autopilot';
+import { headingController, speedController, autopilotAlloc } from '../control/autopilot';
 
-export function calculateControllerDemands(control, positionAndVelocity) {
-  let forces;
+export function calculateControllerDemands(control, estimated) {
+  let forces = { surge: 0.0, sway: 0.0, yaw: 0.0 };
   let controllerOutput;
   const data = {};
 
@@ -10,12 +10,18 @@ export function calculateControllerDemands(control, positionAndVelocity) {
     case vesselControlMode.AUTOPILOT:
       controllerOutput = headingController(
         control.autopilot,
-        positionAndVelocity.position.heading,
-        positionAndVelocity.velocity.r,
+        estimated.position.heading,
+        estimated.velocity.r,
       );
-      ({ forces } = controllerOutput);
+      ({ yawForce: forces.yaw } = controllerOutput);
       data.summedHeadingError = controllerOutput.summedHeadingError;
       data.pid = controllerOutput.pid;
+
+      forces.surge = speedController(
+        control.autopilot,
+        estimated.velocity.u,
+        estimated.acceleration.u,
+      );
       break;
     default:
       forces = { surge: 0.0, sway: 0.0, yaw: 0.0 };
