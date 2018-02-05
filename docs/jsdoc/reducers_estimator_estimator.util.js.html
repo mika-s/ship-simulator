@@ -2,7 +2,7 @@
 <html lang="en">
 <head>
     <meta charset="utf-8">
-    <title>JSDoc: Source: util/enums.js</title>
+    <title>JSDoc: Source: reducers/estimator/estimator.util.js</title>
 
     <script src="scripts/prettify/prettify.js"> </script>
     <script src="scripts/prettify/lang-css.js"> </script>
@@ -17,7 +17,7 @@
 
 <div id="main">
 
-    <h1 class="page-title">Source: util/enums.js</h1>
+    <h1 class="page-title">Source: reducers/estimator/estimator.util.js</h1>
 
     
 
@@ -26,48 +26,83 @@
     
     <section>
         <article>
-            <pre class="prettyprint source linenums"><code>/**
- * Enum for simulation state.
- * @readonly
- * @enum {number}
- */
-const simulationState = { RUNNING: 1, PAUSED: 2, STOPPED: 3 };
+            <pre class="prettyprint source linenums"><code>import { meanOfArray } from '../../util/general.util';
+import { estimateForHeading, estimateForLatitudeAndLongitude } from './alphabeta';
 
 /**
- * Enum for feedback state of a thruster.
- * @readonly
- * @enum {number}
- */
-const thrusterFeedbackState = {
-  AT_POSITION: 1,
-  INCREASING_BY_RT: 2,
-  INCREASING_LT_RT: 3,
-  DECREASING_BY_RT: 4,
-  DECREASING_LT_RT: 5,
-};
+* Get the filtered heading from the Gyrocompasses.
+* @param {Object[]} gyrocompasses   - An array of Gyrocompass objects.
+* @returns {number} The filtered heading.
+*/
+function getHeadingFromGyrocompasses(gyrocompasses) {
+  const headings = [];
+
+  for (let gyroIdx = 0; gyroIdx &lt; gyrocompasses.length; gyroIdx += 1) {
+    headings.push(gyrocompasses[gyroIdx].heading);
+  }
+
+  return meanOfArray(headings);
+}
 
 /**
- * Enum for motion type in the map.
- * @readonly
- * @enum {number}
- */
-const motion = {
-  TRUE: 1, RELATIVE: 2,
-};
+* Get the filtered position from the GPSes.
+* @param {Object[]} gpses          - An array of GPS objects.
+* @returns {Object} Object with the filtered position.
+*/
+function getPositionFromGpses(gpses) {
+  const latitudes = [];
+  const longitudes = [];
+
+  for (let gpsIdx = 0; gpsIdx &lt; gpses.length; gpsIdx += 1) {
+    latitudes.push(gpses[gpsIdx].position.latitude);
+    longitudes.push(gpses[gpsIdx].position.longitude);
+  }
+
+  return {
+    latitude: meanOfArray(latitudes),
+    longitude: meanOfArray(longitudes),
+  };
+}
 
 /**
- * Enum for the vessel's control mode.
- * @readonly
- * @enum {number}
- */
-const vesselControlMode = {
-  STANDBY: 1,
-  TEST: 2,
-  LEVER: 3,
-  AUTOPILOT: 4,
-};
+* Estimate the position and velocity of the vessel.
+* @param {number} frequency        - The working frequency of the system.
+* @param {Object} estimator        - The estimator object.
+* @param {Object[]} gpses          - An array of GPS objects.
+* @param {Object[]} gyrocompasses  - An array of Gyrocompass objects.
+* @returns {Object} Object with the estimated position, velocity and acceleration.
+*/
+export function estimatePositionAndVelocity(frequency, estimator, gpses, gyrocompasses) {
+  const filteredGyroHeading = getHeadingFromGyrocompasses(gyrocompasses);
+  const filteredGpsPosition = getPositionFromGpses(gpses, estimator.alphabeta.heading);
+  let heading;
+  let latitudeAndLongitude;
 
-export { simulationState, thrusterFeedbackState, motion, vesselControlMode };
+  switch (estimator.estimatorChoice.heading) {
+    case 'alphabeta':
+      heading = estimateForHeading(frequency, estimator, filteredGyroHeading);
+      break;
+    default:
+      throw new Error('Invalid estimator choice for heading.');
+  }
+
+  switch (estimator.estimatorChoice.latitudeAndLongitude) {
+    case 'alphabeta':
+      latitudeAndLongitude = estimateForLatitudeAndLongitude(
+        frequency, estimator, filteredGpsPosition,
+        heading.position.heading,
+      );
+      break;
+    default:
+      throw new Error('Invalid estimator choice for heading.');
+  }
+
+  const position = Object.assign({}, latitudeAndLongitude.position, heading.position);
+  const velocity = Object.assign({}, latitudeAndLongitude.velocity, heading.velocity);
+  const acceleration = Object.assign({}, latitudeAndLongitude.acceleration, heading.acceleration);
+
+  return { position, velocity, acceleration };
+}
 </code></pre>
         </article>
     </section>

@@ -1,4 +1,8 @@
 {
+  "estimatorChoice": {
+    "latitudeAndLongitude": "alphabeta",
+    "heading": "alphabeta"
+  },
   "alphabeta": {
     "alpha": {
       "latitude": 1.0,

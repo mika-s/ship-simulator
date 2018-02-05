@@ -1,6 +1,10 @@
 import Estimator from '../constructors/estimator';
 
 const estimatorInitialState = {
+  estimatorChoice: {
+    latitudeAndLongitude: '',
+    heading: '',
+  },
   alphabeta: {
     alpha: {
       latitude: 0.0,

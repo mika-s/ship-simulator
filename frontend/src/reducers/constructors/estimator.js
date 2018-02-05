@@ -6,6 +6,7 @@
 * @returns {Object} The modified estimator initial state object.
 */
 function Estimator(estimatorInitialState, initialVessel, initialEstimator) {
+  estimatorInitialState.estimatorChoice = initialEstimator.estimatorChoice;
   estimatorInitialState.alphabeta.position.heading = initialVessel.model.position.heading;
   estimatorInitialState.alphabeta.alpha = initialEstimator.alphabeta.alpha;
   estimatorInitialState.alphabeta.beta = initialEstimator.alphabeta.beta;
