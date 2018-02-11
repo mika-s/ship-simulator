@@ -1,6 +1,12 @@
 import { vesselControlMode } from '../../util/enums';
 import { headingController, speedController, autopilotAlloc } from '../control/autopilot';
 
+/**
+* Calculate the controller demands.
+* @param {Object}      control    The control object.
+* @param {Object}      estimated  The estimator object.
+* @returns {Object} The controller demands in surge, sway and heading.
+*/
 export function calculateControllerDemands(control, estimated) {
   let forces = { surge: 0.0, sway: 0.0, yaw: 0.0 };
   let controllerOutputSurge;
@@ -39,6 +45,14 @@ export function calculateControllerDemands(control, estimated) {
   return { forces, data };
 }
 
+/**
+* Calculate thruster demands from control forces.
+* @param {number}      controllerData    Data from the controller.
+* @param {number}      control           The controller object.
+* @param {Object[]}    thrusters         An array of thruster objects.
+* @param {Object[]}    uiThrusters       An array of UI thruster objects.
+* @returns {Object} The demands for all the thrusters.
+*/
 export function calculateThrusterDemands(controllerData, control, thrusters, uiThrusters) {
   let demands = [];
 

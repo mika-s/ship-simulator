@@ -61,6 +61,21 @@ export default function timeseriesReducer(
                 truncToDecimal(autopilot.headingPid.d, 3),
               ),
             },
+            speedPid: {
+              ...state.autopilot.controllers.speedPid,
+              p: updateArray(
+                state.autopilot.controllers.speedPid.p,
+                truncToDecimal(autopilot.speedPid.p, 3),
+              ),
+              i: updateArray(
+                state.autopilot.controllers.speedPid.i,
+                truncToDecimal(autopilot.speedPid.i, 3),
+              ),
+              d: updateArray(
+                state.autopilot.controllers.speedPid.d,
+                truncToDecimal(autopilot.speedPid.d, 3),
+              ),
+            },
           },
         },
         model: {
@@ -95,34 +110,21 @@ export default function timeseriesReducer(
 
         estimator: {
           alphabeta: {
-            position: {
-              longitude: [],
-              latitude: [],
-              heading: [],
-            },
-            velocity: {
-              u: [],
-              v: [],
-              r: [],
-            },
+            position: { longitude: [], latitude: [], heading: [] },
+            velocity: { u: [], v: [], r: [] },
           },
         },
 
-        model: {
-          position: {
-            latitude: [],
-            longitude: [],
-            heading: [],
+        autopilot: {
+          controllers: {
+            headingPid: { p: [], i: [], d: [] },
+            speedPid: { p: [], i: [], d: [] },
           },
         },
-        sensors: {
-          roll: [],
-          pitch: [],
-        },
 
-        referencesystems: {
-          speed: [],
-        },
+        model: { position: { latitude: [], longitude: [], heading: [] } },
+        sensors: { roll: [], pitch: [] },
+        referencesystems: { speed: [] },
       };
     default:
       return state;

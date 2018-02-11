@@ -47,6 +47,14 @@ function getROT(modelRot) {
   return newRot;
 }
 
+/**
+* The reducer for a single gyrocompass.
+* @param {Object}    state          The state object (rootstate.ship.gyrocompasses[i]).
+* @param {Object}    action         The action object.
+* @param {number}    modelHeading   The heading of the vessel model.
+* @param {number}    modelRot       The ROT of the vessel model.
+* @returns {Object} The gyrocompass updated.
+*/
 export default function gyroReducer(state, action, modelHeading, modelRot) {
   switch (action.type) {
     case 'SIMULATE':

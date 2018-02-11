@@ -34,6 +34,13 @@ const estimatorInitialState = {
   },
 };
 
+/**
+* Get the initial state for the redux store for the estimator section.
+* Merges hardcoded values with the values from the settings files.
+* @param {Object}      initialVessel       The initial vessel values from the settings file.
+* @param {Object}      initialEstimator    The initial estimator values from the settings file.
+* @returns {Object} The initial state for the estimator section.
+*/
 function getInitialState(initialVessel, initialEstimator) {
   return Estimator(estimatorInitialState, initialVessel, initialEstimator);
 }
