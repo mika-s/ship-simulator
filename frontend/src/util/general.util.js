@@ -1,7 +1,7 @@
 /**
 * Truncate to a given number of decimals.
-* @param {number} number   - The number to truncate.
-* @param {number} decimals - Number of decimals.
+* @param {number} number    The number to truncate.
+* @param {number} decimals  Number of decimals.
 * @returns {number} The value of the given number, truncated to given number of decimals.
 */
 export function truncToDecimal(number, decimals) {
@@ -11,8 +11,8 @@ export function truncToDecimal(number, decimals) {
 /**
 * Get a random number between min and max.
 * Can be equal min, but not max: [min, max).
-* @param {number} min    - Minimum value.
-* @param {number} max    - Maximum value.
+* @param {number} min    Minimum value.
+* @param {number} max    Maximum value.
 * @returns {number} A random number between min and max.
 */
 export function getRandomBetween(min, max) {
@@ -21,7 +21,7 @@ export function getRandomBetween(min, max) {
 
 /**
 * Find the mean value of an array of numbers.
-* @param {number[]} array    - Minimum value.
+* @param {number[]} array    Minimum value.
 * @returns {number} The mean value of the array.
 */
 export function meanOfArray(array) {
@@ -37,7 +37,7 @@ export function meanOfArray(array) {
 
 /**
 * Convert a number in m/s to knots.
-* @param {number} mps    - Number in m/s.
+* @param {number} mps    Number in m/s.
 * @returns {number} Number in knots.
 */
 export function mpsInKnots(mps) {
@@ -46,7 +46,7 @@ export function mpsInKnots(mps) {
 
 /**
 * Convert a number in knots to m/s.
-* @param {number} knots  - Number in knots.
+* @param {number} knots  Number in knots.
 * @returns {number} Number in m/s.
 */
 export function knotsInMps(knots) {

@@ -1,8 +1,7 @@
 import { getRandomBetween, truncToDecimal } from '../../util/general.util';
+import { wrapTo0To360 } from '../../util/kinematics.util';
 
 function getHeading(modelHeading) {
-  const minHeading = 0.0;
-  const maxHeading = 2 * Math.PI;
   const minNoiseAmplitude = -0.01;
   const maxNoiseAmplitude = 0.01;
 
@@ -10,12 +9,11 @@ function getHeading(modelHeading) {
   let newHeading = modelHeading +
     getRandomBetween(minNoiseAmplitude, maxNoiseAmplitude);
 
-  // Apply clip limits.
-  newHeading = Math.min(newHeading, maxHeading);
-  newHeading = Math.max(newHeading, minHeading);
-
   // Convert to degrees.
   newHeading *= (180.0 / Math.PI);
+
+  // Wrap.
+  newHeading = wrapTo0To360(newHeading);
 
   // Remove unnecessary decimals. Keep 1.
   newHeading = truncToDecimal(newHeading, 1);

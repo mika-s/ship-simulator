@@ -26,6 +26,9 @@ Unit test everything testable.
 
 Heading graph should show gyro heading (or filtered gyro heading).
 
+Add some margins or padding to the graphs on the dashboard to prevent
+the axes from not being shown.
+
 ## Structure
 
 VesselModel calculations in middleware?

@@ -4,7 +4,7 @@ const {
 
 /**
 * Transform from NED to BODY. I.e. latitude, longitude, heading to surge, sway, heading.
-* @param {Object} bodyPostion   - Object containing latitude, longitude, heading (rad).
+* @param {Object} bodyPostion   Object containing latitude, longitude, heading (rad).
 * @returns {Object} Object containing surge, sway, heading.
 */
 export function transformNEDToBODY(nedPosition) {
@@ -18,7 +18,7 @@ export function transformNEDToBODY(nedPosition) {
 
 /**
 * Transform from BODY to NED. I.e. surge, sway, heading to latitude, longitude, heading.
-* @param {Object} bodyPostion   - Object containing surge (m), sway (m), heading (rad).
+* @param {Object} bodyPostion   Object containing surge (m), sway (m), heading (rad).
 * @returns {Object} Object containing latitude, longitude, heading.
 */
 export function transformBODYToNED(bodyPostion) {
@@ -32,7 +32,7 @@ export function transformBODYToNED(bodyPostion) {
 
 /**
 * Wrap an angle in the range -∞,∞ to 0,360°.
-* @param {number} angle     - The angle to wrap.
+* @param {number} angle     The angle to wrap.
 * @returns {number} The wrapped angle.
 */
 export function wrapTo0To360(angle) {
@@ -41,7 +41,7 @@ export function wrapTo0To360(angle) {
 
 /**
 * Wrap an angle in the range -∞,∞ to 0,2π.
-* @param {number} angle     - The angle to wrap.
+* @param {number} angle     The angle to wrap.
 * @returns {number} The wrapped angle.
 */
 export function wrapTo0To2pi(angle) {
@@ -50,7 +50,7 @@ export function wrapTo0To2pi(angle) {
 
 /**
 * Wrap an angle in the range -∞,∞ to -π to π.
-* @param {number} angle     - The angle to wrap.
+* @param {number} angle     The angle to wrap.
 * @returns {Object} An object containing the wrapped angle and number of revolutions.
 */
 export function wrapToPipi(angle) {
@@ -67,8 +67,8 @@ export function wrapToPipi(angle) {
 
 /**
 * Unwrap the angle
-* @param {number} previousAngle   - The previous angle.
-* @param {number} newAngle        - The new angle.
+* @param {number} previousAngle   The previous angle.
+* @param {number} newAngle        The new angle.
 * @returns {Object} The angle unwrapped.
 */
 export function unwrapAngle(previousAngle, newAngle) {

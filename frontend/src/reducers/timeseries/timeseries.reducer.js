@@ -50,15 +50,15 @@ export default function timeseriesReducer(
               ...state.autopilot.controllers.headingPid,
               p: updateArray(
                 state.autopilot.controllers.headingPid.p,
-                truncToDecimal(autopilot.pid.p, 3),
+                truncToDecimal(autopilot.headingPid.p, 3),
               ),
               i: updateArray(
                 state.autopilot.controllers.headingPid.i,
-                truncToDecimal(autopilot.pid.i, 3),
+                truncToDecimal(autopilot.headingPid.i, 3),
               ),
               d: updateArray(
                 state.autopilot.controllers.headingPid.d,
-                truncToDecimal(autopilot.pid.d, 3),
+                truncToDecimal(autopilot.headingPid.d, 3),
               ),
             },
           },

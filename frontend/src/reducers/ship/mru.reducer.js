@@ -37,6 +37,14 @@ function getPitch(pitch) {
   return newPitch;
 }
 
+/**
+* The reducer for a single mru.
+* @param {Object}    state             The state object (rootstate.ship.mrus[i]).
+* @param {Object}    action            The action object.
+* @param {number}    modelRoll         The roll from the vessel model.
+* @param {number}    modelPitch        The pitch from the vessel model.
+* @returns {Object} The mru section updated.
+*/
 export default function mruReducer(state, action, modelRoll, modelPitch) {
   switch (action.type) {
     case 'SIMULATE':

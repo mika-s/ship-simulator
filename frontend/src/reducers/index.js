@@ -71,13 +71,14 @@ export default function rootreducer(state = initialState, action) {
     control: controlReducer(
       state.control, action, uiControl,
       controllerData.data.summedHeadingError,
+      controllerData.data.summedSpeedError,
     ),
 
     estimator: estimatorReducer(state.estimator, action, state.ui.estimator, estimated),
 
     timeseries: timeseriesReducer(
       state.timeseries, action, state.simulation.time, estimated, controllerData.data,
-      newModel, sensors, referencesystems, controllerData.data,
+      newModel, sensors, referencesystems,
     ),
 
     simulation: simulationReducer(state.simulation, action),

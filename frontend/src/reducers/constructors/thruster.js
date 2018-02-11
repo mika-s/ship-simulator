@@ -31,8 +31,8 @@ function calculateMaxForce(type, maxPower) {
     throw new Error('Illegal thruster type.');
   }
 
-  const maxForcePositive = conversionFactorPositive * (maxPower.positive / 9.81);
-  const maxForceNegative = conversionFactorNegative * (maxPower.negative / 9.81);
+  const maxForcePositive = conversionFactorPositive * (maxPower.positive / grav);
+  const maxForceNegative = conversionFactorNegative * (maxPower.negative / grav);
 
   return { positive: maxForcePositive, negative: maxForceNegative };
 }

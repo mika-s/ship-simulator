@@ -3,9 +3,9 @@
     "controllers": {
       "headingPid": {
         "gain": {
-          "p": 1.2,
+          "p": 1.3,
           "i": 0.002,
-          "d": 1.8
+          "d": 1.7
         },
         "antiWindup": {
           "sector": 15,
@@ -14,7 +14,7 @@
       },
       "speedPid": {
         "gain": {
-          "p": 5,
+          "p": 12,
           "i": 1,
           "d": 1
         },

@@ -6,9 +6,9 @@ const {
 
 /**
 * Find needed control force in heading.
-* @param {number} autopilot         - The autopilot object.
-* @param {number} heading           - The vessel's heading.
-* @param {number} rot               - The vessel's rot.
+* @param {number} autopilot         The autopilot object.
+* @param {number} heading           The vessel's heading.
+* @param {number} rot               The vessel's rot.
 * @returns {object} An object containing:
 *                   - The control force in yaw.
 *                   - The summed heading error.
@@ -73,9 +73,9 @@ export function headingController(autopilot, heading, rot) {
 
 /**
 * Find needed control force in surge to keep wanted vessel speed.
-* @param {number} autopilot         - The autopilot object.
-* @param {number} speed             - The vessel's speed.
-* @param {number} acceleration      - The vessel's acceleration.
+* @param {number} autopilot         The autopilot object.
+* @param {number} speed             The vessel's speed.
+* @param {number} acceleration      The vessel's acceleration.
 * @returns {number} The control force in surge.
 */
 export function speedController(autopilot, speed, acceleration) {
@@ -122,18 +122,23 @@ export function speedController(autopilot, speed, acceleration) {
   const d = autopilot.controllers.speedPid.gain.d * derivativeSpeedError;
   const surgeForce = p + i + d;
 
-  return surgeForce;
+  return {
+    surgeForce,
+    summedSpeedError,
+    pid: { p, i, d },
+  };
 }
 
 /**
 * Allocate demands to the thrusters depending on the heading control force.
-* @param {number}      headingControlForce  - The heading control force.
-* @param {number}      maxRudderAngle       - Maximum rudder angle.
-* @param {Object[]}    thrusters            - An array of thruster objects.
+* @param {number}      surgeControlForce    The surge control force.
+* @param {number}      headingControlForce  The heading control force.
+* @param {number}      maxRudderAngle       Maximum rudder angle.
+* @param {Object[]}    thrusters            An array of thruster objects.
 * @returns {Object} The demands for all the thrusters.
 */
-export function autopilotAlloc(headingControlForce, maxRudderAngle, thrusters) {
-  const rudderGain = -0.1;
+export function autopilotAlloc(surgeControlForce, headingControlForce, maxRudderAngle, thrusters) {
+  const rudderGain = -0.11;
   const demands = [];
 
   for (let thrIdx = 0; thrIdx < thrusters.length; thrIdx += 1) {
@@ -146,14 +151,30 @@ export function autopilotAlloc(headingControlForce, maxRudderAngle, thrusters) {
         azimuth: 90.0,
       });
     } else if (thruster.thrusterType === 'azimuth' || thruster.thrusterType === 'propeller') {
+      let rpm;
+      let pitch;
       let azimuth = rudderGain * headingControlForce;
       azimuth = Math.max(-maxRudderAngle, azimuth);
       azimuth = Math.min(maxRudderAngle, azimuth);
       azimuth = wrapTo0To360(azimuth);
 
+      if (thruster.controlType === 'rpm') {
+        pitch = 0.0;
+        rpm = (surgeControlForce / thruster.maxForce.positive)
+          ** (1 / thruster.rpmExponent.positive);
+
+        rpm = Math.min(1.0, rpm);
+      } else {
+        rpm = 0.0;
+        pitch = (surgeControlForce / thruster.maxForce.positive)
+          ** (1 / thruster.pitchExponent.positive);
+
+        pitch = Math.min(1.0, pitch);
+      }
+
       demands.push({
-        pitch: 0.0,
-        rpm: 0.0,
+        pitch,
+        rpm,
         azimuth,
       });
     } else {

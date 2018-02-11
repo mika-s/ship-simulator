@@ -108,7 +108,7 @@ function getFeedbackState(difference, risetimes) {
   } else if (difference < 0 && difference >= rtNeg) {
     state = thrusterFeedbackState.DECREASING_LT_RT;
   } else {
-    throw new Error('Illegal state');
+    throw new Error(`Illegal state: ${difference}, ${rtPos}, ${rtNeg}.`);
   }
 
   return state;
@@ -157,7 +157,7 @@ export function getFeedback(thruster) {
       newFeedback[type] = thruster.demand[type];
       break;
     default:
-      throw new Error('Illegal feedback state for the thruster.');
+      throw new Error(`Illegal feedback state for the thruster: ${feedbackState}.`);
   }
 
   if (isAzi(thruster.thrusterType)) {
@@ -189,7 +189,7 @@ export function getFeedback(thruster) {
         newFeedback.azimuth = thruster.demand.azimuth;
         break;
       default:
-        throw new Error('Illegal feedback state for the thruster.');
+        throw new Error(`Illegal feedback state for the thruster: ${aziFeedbackState}.`);
     }
   } else {
     newFeedback.azimuth = thruster.feedback.azimuth;

@@ -3,30 +3,36 @@ import { headingController, speedController, autopilotAlloc } from '../control/a
 
 export function calculateControllerDemands(control, estimated) {
   let forces = { surge: 0.0, sway: 0.0, yaw: 0.0 };
-  let controllerOutput;
+  let controllerOutputSurge;
+  let controllerOutputYaw;
   const data = {};
 
   switch (control.mode) {
     case vesselControlMode.AUTOPILOT:
-      controllerOutput = headingController(
+      controllerOutputYaw = headingController(
         control.autopilot,
         estimated.position.heading,
         estimated.velocity.r,
       );
-      ({ yawForce: forces.yaw } = controllerOutput);
-      data.summedHeadingError = controllerOutput.summedHeadingError;
-      data.pid = controllerOutput.pid;
+      ({ yawForce: forces.yaw } = controllerOutputYaw);
+      data.summedHeadingError = controllerOutputYaw.summedHeadingError;
+      data.headingPid = controllerOutputYaw.pid;
 
-      forces.surge = speedController(
+      controllerOutputSurge = speedController(
         control.autopilot,
         estimated.velocity.u,
-        estimated.acceleration.u,
+        estimated.acceleration.ud,
       );
+      ({ surgeForce: forces.surge } = controllerOutputSurge);
+      data.summedSpeedError = controllerOutputSurge.summedSpeedError;
+      data.speedPid = controllerOutputSurge.pid;
       break;
     default:
       forces = { surge: 0.0, sway: 0.0, yaw: 0.0 };
       data.summedHeadingError = 0.0;
-      data.pid = { p: 0.0, i: 0.0, d: 0.0 };
+      data.summedSpeedError = 0.0;
+      data.headingPid = { p: 0.0, i: 0.0, d: 0.0 };
+      data.speedPid = { p: 0.0, i: 0.0, d: 0.0 };
       break;
   }
 
@@ -66,6 +72,7 @@ export function calculateThrusterDemands(controllerData, control, thrusters, uiT
       break;
     case vesselControlMode.AUTOPILOT:
       demands = autopilotAlloc(
+        controllerData.forces.surge,
         controllerData.forces.yaw,
         control.autopilot.maxRudderAngle,
         thrusters,

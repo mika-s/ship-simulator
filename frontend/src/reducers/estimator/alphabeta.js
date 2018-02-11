@@ -66,7 +66,7 @@ function alphabetaFilter(frequency, alpha, beta, x, xdot, measuredX, isHeading) 
   ) * (180.0 / PI) : measuredX;
 
   const prevEstimatedX = x;
-  const prevEstimatedXdot = x / secInMin;
+  const prevEstimatedXdot = xdot / secInMin;
 
   // prediction step
   const predictedX = prevEstimatedX + (prevEstimatedXdot * dt);

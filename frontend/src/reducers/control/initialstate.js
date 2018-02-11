@@ -28,6 +28,12 @@ const controlInitialState = {
   },
 };
 
+/**
+* Get the initial state for the redux store for the control section.
+* Merges hardcoded values with the values from the settings file.
+* @param {Object}      initialController    The initial controller values from the settings file.
+* @returns {Object} The initial state for the control section.
+*/
 function getInitialState(initialController) {
   controlInitialState.autopilot.controllers.headingPid.gain =
     initialController.autopilot.controllers.headingPid.gain;
