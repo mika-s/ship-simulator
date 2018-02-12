@@ -19,6 +19,10 @@ function assertGpsConstructorInput(number, position) {
   }
 }
 
+/**
+* Constructor function for a GPS.
+* @param {Object} data    Object with initial data.
+*/
 function GPS(data) {
   const { number, initialPosition } = data;
   assertGpsConstructorInput(number, initialPosition);

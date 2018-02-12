@@ -3,25 +3,24 @@
     "controllers": {
       "headingPid": {
         "gain": {
-          "p": 3.5,
-          "i": 0.003,
-          "d": 2.3
+          "p": 4.2,
+          "i": 0.004,
+          "d": 3.0
         },
         "antiWindup": {
           "sector": 15,
-          "maxI": 500
+          "maxI": 5.0
         }
       },
       "speedPid": {
         "gain": {
           "p": 25,
-          "i": 1.5,
+          "i": 0.1,
           "d": 1
         },
-        "maxSpeed": 6.0,
         "antiWindup": {
-          "sector": 0.5,
-          "maxI": 500
+          "sector": 30.0,
+          "maxI": 100.0
         }
       }
     }

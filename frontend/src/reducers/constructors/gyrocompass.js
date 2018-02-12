@@ -13,7 +13,10 @@ function assertGyrocompassConstructorInput(number, heading) {
   }
 }
 
-
+/**
+* Constructor function for a Gyrocompass.
+* @param {Object} data    Object with initial data.
+*/
 function Gyrocompass(data) {
   const { number, initialHeading } = data;
   assertGyrocompassConstructorInput(number, initialHeading);

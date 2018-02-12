@@ -29,6 +29,8 @@ Heading graph should show gyro heading (or filtered gyro heading).
 Add some margins or padding to the graphs on the dashboard to prevent
 the axes from not being shown.
 
+Fix lever values when changing mode or stopping the simulator.
+
 ## Structure
 
 VesselModel calculations in middleware?

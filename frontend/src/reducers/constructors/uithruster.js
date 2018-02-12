@@ -13,6 +13,10 @@ function assertUiThrusterConstructorInput(number) {
   }
 }
 
+/**
+* Constructor function for a UI thruster.
+* @param {Object} data    Object with initial data.
+*/
 function UiThruster(data) {
   const { number } = data;
   assertUiThrusterConstructorInput(number);

@@ -19,6 +19,10 @@ function assertWindsensorConstructorInput(number, speed, direction) {
   }
 }
 
+/**
+* Constructor function for a Windsensor.
+* @param {Object} data    Object with initial data.
+*/
 function Windsensor(data) {
   const { number, initialSpeed, initialDirection } = data;
   assertWindsensorConstructorInput(number, initialSpeed, initialDirection);

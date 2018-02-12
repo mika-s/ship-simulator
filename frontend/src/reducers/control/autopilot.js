@@ -19,6 +19,7 @@ export function headingController(autopilot, heading, rot) {
   const desiredRot = 0.0;
   const iDieConstant = 15;
   const iDieSector = 2.0;
+  const maxIadjusted = maxI / autopilot.controllers.headingPid.gain.i;
 
   let headingError;
   let summedHeadingError;
@@ -46,8 +47,8 @@ export function headingController(autopilot, heading, rot) {
   if (-sector < headingError && headingError < sector) {
     summedHeadingError = autopilot.controllers.headingPid.summedError + headingError;
 
-    summedHeadingError = min(summedHeadingError, maxI);
-    summedHeadingError = max(summedHeadingError, -maxI);
+    summedHeadingError = min(summedHeadingError, maxIadjusted);
+    summedHeadingError = max(summedHeadingError, -maxIadjusted);
 
     // Let I-term die out over time.
     if (summedHeadingError > 0 && abs(headingError) < iDieSector) {
@@ -81,8 +82,9 @@ export function headingController(autopilot, heading, rot) {
 export function speedController(autopilot, speed, acceleration) {
   const { sector, maxI } = autopilot.controllers.speedPid.antiWindup;
   const desiredAcceleration = 0.0;
-  const iDieConstant = 15;
+  const iDieConstant = 5;
   const iDieSector = 0.1;
+  const maxIadjusted = maxI / autopilot.controllers.speedPid.gain.i;
 
   let speedError;
   let summedSpeedError;
@@ -104,8 +106,8 @@ export function speedController(autopilot, speed, acceleration) {
   if (-sector < speedError && speedError < sector) {
     summedSpeedError = autopilot.controllers.speedPid.summedError + speedError;
 
-    summedSpeedError = min(summedSpeedError, maxI);
-    summedSpeedError = max(summedSpeedError, -maxI);
+    summedSpeedError = min(summedSpeedError, maxIadjusted);
+    summedSpeedError = max(summedSpeedError, -maxIadjusted);
 
     // Let I-term die out over time.
     if (summedSpeedError > 0 && abs(speedError) < iDieSector) {

@@ -2,7 +2,7 @@
 <html lang="en">
 <head>
     <meta charset="utf-8">
-    <title>JSDoc: Source: util/kinematics.util.js</title>
+    <title>JSDoc: Source: reducers/control/control.util.js</title>
 
     <script src="scripts/prettify/prettify.js"> </script>
     <script src="scripts/prettify/lang-css.js"> </script>
@@ -17,7 +17,7 @@
 
 <div id="main">
 
-    <h1 class="page-title">Source: util/kinematics.util.js</h1>
+    <h1 class="page-title">Source: reducers/control/control.util.js</h1>
 
     
 
@@ -26,86 +26,105 @@
     
     <section>
         <article>
-            <pre class="prettyprint source linenums"><code>const {
-  PI, abs, sign, sin, cos, trunc,
-} = Math;
+            <pre class="prettyprint source linenums"><code>import { vesselControlMode } from '../../util/enums';
+import { headingController, speedController, autopilotAlloc } from '../control/autopilot';
 
 /**
-* Transform from NED to BODY. I.e. latitude, longitude, heading to surge, sway, heading.
-* @param {Object} bodyPostion   Object containing latitude, longitude, heading (rad).
-* @returns {Object} Object containing surge, sway, heading.
+* Calculate the controller demands.
+* @param {Object}      control    The control object.
+* @param {Object}      estimated  The estimator object.
+* @returns {Object} The controller demands in surge, sway and heading.
 */
-export function transformNEDToBODY(nedPosition) {
-  const { latitude, longitude, heading } = nedPosition;
+export function calculateControllerDemands(control, estimated) {
+  let forces = { surge: 0.0, sway: 0.0, yaw: 0.0 };
+  let controllerOutputSurge;
+  let controllerOutputYaw;
+  const data = {};
 
-  const surge = (cos(heading) * latitude) + (sin(heading) * longitude);
-  const sway = -(sin(heading) * latitude) + (cos(heading) * longitude);
+  switch (control.mode) {
+    case vesselControlMode.AUTOPILOT:
+      controllerOutputYaw = headingController(
+        control.autopilot,
+        estimated.position.heading,
+        estimated.velocity.r,
+      );
+      ({ yawForce: forces.yaw } = controllerOutputYaw);
+      data.summedHeadingError = controllerOutputYaw.summedHeadingError;
+      data.headingPid = controllerOutputYaw.pid;
 
-  return { surge, sway, heading };
+      controllerOutputSurge = speedController(
+        control.autopilot,
+        estimated.velocity.u,
+        estimated.acceleration.ud,
+      );
+      ({ surgeForce: forces.surge } = controllerOutputSurge);
+      data.summedSpeedError = controllerOutputSurge.summedSpeedError;
+      data.speedPid = controllerOutputSurge.pid;
+      break;
+    default:
+      forces = { surge: 0.0, sway: 0.0, yaw: 0.0 };
+      data.summedHeadingError = 0.0;
+      data.summedSpeedError = 0.0;
+      data.headingPid = { p: 0.0, i: 0.0, d: 0.0 };
+      data.speedPid = { p: 0.0, i: 0.0, d: 0.0 };
+      break;
+  }
+
+  return { forces, data };
 }
 
 /**
-* Transform from BODY to NED. I.e. surge, sway, heading to latitude, longitude, heading.
-* @param {Object} bodyPostion   Object containing surge (m), sway (m), heading (rad).
-* @returns {Object} Object containing latitude, longitude, heading.
+* Calculate thruster demands from control forces.
+* @param {number}      controllerData    Data from the controller.
+* @param {number}      control           The controller object.
+* @param {Object[]}    thrusters         An array of thruster objects.
+* @param {Object[]}    uiThrusters       An array of UI thruster objects.
+* @returns {Object} The demands for all the thrusters.
 */
-export function transformBODYToNED(bodyPostion) {
-  const { surge, sway, heading } = bodyPostion;
+export function calculateThrusterDemands(controllerData, control, thrusters, uiThrusters) {
+  let demands = [];
 
-  const latitude = (cos(heading) * surge) - (sin(heading) * sway);
-  const longitude = (sin(heading) * surge) + (cos(heading) * sway);
+  switch (control.mode) {
+    case vesselControlMode.STANDBY:
+      for (let thrIdx = 0; thrIdx &lt; uiThrusters.length; thrIdx += 1) {
+        demands.push({
+          pitch: 0.0,
+          rpm: 0.0,
+          azimuth: 0.0,
+        });
+      }
+      break;
+    case vesselControlMode.TEST:
+      for (let thrIdx = 0; thrIdx &lt; uiThrusters.length; thrIdx += 1) {
+        demands.push({
+          pitch: uiThrusters[thrIdx].demand.pitch,
+          rpm: uiThrusters[thrIdx].demand.rpm,
+          azimuth: uiThrusters[thrIdx].demand.azimuth,
+        });
+      }
+      break;
+    case vesselControlMode.LEVER:
+      for (let thrIdx = 0; thrIdx &lt; uiThrusters.length; thrIdx += 1) {
+        demands.push({
+          pitch: uiThrusters[thrIdx].demand.pitch,
+          rpm: uiThrusters[thrIdx].demand.rpm,
+          azimuth: uiThrusters[thrIdx].demand.azimuth,
+        });
+      }
+      break;
+    case vesselControlMode.AUTOPILOT:
+      demands = autopilotAlloc(
+        controllerData.forces.surge,
+        controllerData.forces.yaw,
+        control.autopilot.maxRudderAngle,
+        thrusters,
+      );
+      break;
+    default:
+      throw new Error(`Invalid control mode ${control.mode}`);
+  }
 
-  return { latitude, longitude, heading };
-}
-
-/**
-* Wrap an angle in the range -∞,∞ to 0,360°.
-* @param {number} angle     The angle to wrap.
-* @returns {number} The wrapped angle.
-*/
-export function wrapTo0To360(angle) {
-  return (angle % 360) + (angle &lt; 0 ? 360 : 0);
-}
-
-/**
-* Wrap an angle in the range -∞,∞ to 0,2π.
-* @param {number} angle     The angle to wrap.
-* @returns {number} The wrapped angle.
-*/
-export function wrapTo0To2pi(angle) {
-  return (angle % (2 * PI)) + (angle &lt; 0 ? (2 * PI) : 0);
-}
-
-/**
-* Wrap an angle in the range -∞,∞ to -π to π.
-* @param {number} angle     The angle to wrap.
-* @returns {Object} An object containing the wrapped angle and number of revolutions.
-*/
-export function wrapToPipi(angle) {
-  const revolutions = trunc((angle + (sign(angle) * PI)) / (2 * PI));
-
-  const part1 = (angle + (sign(angle) * PI)) % (2 * PI);
-  const part21 = 2 * (sign(abs(((angle + PI) % (2 * PI)) / (2 * PI))) - 1);
-  const part2 = (sign(sign(angle) + part21)) * PI;
-
-  const outputAngle = part1 - part2;
-
-  return { angle: outputAngle, revolutions };
-}
-
-/**
-* Unwrap the angle
-* @param {number} previousAngle   The previous angle.
-* @param {number} newAngle        The new angle.
-* @returns {Object} The angle unwrapped.
-*/
-export function unwrapAngle(previousAngle, newAngle) {
-  let difference = newAngle - previousAngle;
-
-  if (difference > PI) difference -= 2 * PI;
-  else if (difference &lt; -PI) difference += 2 * PI;
-
-  return previousAngle + difference;
+  return demands;
 }
 </code></pre>
         </article>

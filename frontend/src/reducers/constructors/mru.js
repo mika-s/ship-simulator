@@ -19,6 +19,10 @@ function assertMruConstructorInput(number, roll, pitch) {
   }
 }
 
+/**
+* Constructor function for an MRU.
+* @param {Object} data    Object with initial data.
+*/
 function MRU(data) {
   const { number, initialRoll, initialPitch } = data;
   assertMruConstructorInput(number, initialRoll, initialPitch);

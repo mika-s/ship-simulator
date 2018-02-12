@@ -207,6 +207,10 @@ function assertThrusterConstructorInput(
   }
 }
 
+/**
+* Constructor function for a thruster.
+* @param {Object} data    Object with initial data.
+*/
 function Thruster(data) {
   const {
     number, name, thrusterType, controlType,

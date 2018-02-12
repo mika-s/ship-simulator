@@ -14,7 +14,7 @@ const min = {
   autopilotHeadingPid2: -3.0,
   autopilotHeadingPid3: -50.0,
   autopilotSpeedPid: -50.0,
-  autopilotSpeedPid2: -3.0,
+  autopilotSpeedPid2: -100.0,
   autopilotSpeedPid3: -50.0,
 };
 
@@ -31,7 +31,7 @@ const max = {
   autopilotHeadingPid2: 3.0,
   autopilotHeadingPid3: 50.0,
   autopilotSpeedPid: 50.0,
-  autopilotSpeedPid2: 3.0,
+  autopilotSpeedPid2: 100.0,
   autopilotSpeedPid3: 50.0,
 };
 

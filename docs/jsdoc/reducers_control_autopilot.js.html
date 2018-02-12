@@ -34,9 +34,9 @@ const {
 
 /**
 * Find needed control force in heading.
-* @param {number} autopilot         - The autopilot object.
-* @param {number} heading           - The vessel's heading.
-* @param {number} rot               - The vessel's rot.
+* @param {number} autopilot         The autopilot object.
+* @param {number} heading           The vessel's heading.
+* @param {number} rot               The vessel's rot.
 * @returns {object} An object containing:
 *                   - The control force in yaw.
 *                   - The summed heading error.
@@ -47,6 +47,7 @@ export function headingController(autopilot, heading, rot) {
   const desiredRot = 0.0;
   const iDieConstant = 15;
   const iDieSector = 2.0;
+  const maxIadjusted = maxI / autopilot.controllers.headingPid.gain.i;
 
   let headingError;
   let summedHeadingError;
@@ -74,8 +75,8 @@ export function headingController(autopilot, heading, rot) {
   if (-sector &lt; headingError &amp;&amp; headingError &lt; sector) {
     summedHeadingError = autopilot.controllers.headingPid.summedError + headingError;
 
-    summedHeadingError = min(summedHeadingError, maxI);
-    summedHeadingError = max(summedHeadingError, -maxI);
+    summedHeadingError = min(summedHeadingError, maxIadjusted);
+    summedHeadingError = max(summedHeadingError, -maxIadjusted);
 
     // Let I-term die out over time.
     if (summedHeadingError > 0 &amp;&amp; abs(headingError) &lt; iDieSector) {
@@ -101,16 +102,17 @@ export function headingController(autopilot, heading, rot) {
 
 /**
 * Find needed control force in surge to keep wanted vessel speed.
-* @param {number} autopilot         - The autopilot object.
-* @param {number} speed             - The vessel's speed.
-* @param {number} acceleration      - The vessel's acceleration.
+* @param {number} autopilot         The autopilot object.
+* @param {number} speed             The vessel's speed.
+* @param {number} acceleration      The vessel's acceleration.
 * @returns {number} The control force in surge.
 */
 export function speedController(autopilot, speed, acceleration) {
   const { sector, maxI } = autopilot.controllers.speedPid.antiWindup;
   const desiredAcceleration = 0.0;
-  const iDieConstant = 15;
+  const iDieConstant = 5;
   const iDieSector = 0.1;
+  const maxIadjusted = maxI / autopilot.controllers.speedPid.gain.i;
 
   let speedError;
   let summedSpeedError;
@@ -132,8 +134,8 @@ export function speedController(autopilot, speed, acceleration) {
   if (-sector &lt; speedError &amp;&amp; speedError &lt; sector) {
     summedSpeedError = autopilot.controllers.speedPid.summedError + speedError;
 
-    summedSpeedError = min(summedSpeedError, maxI);
-    summedSpeedError = max(summedSpeedError, -maxI);
+    summedSpeedError = min(summedSpeedError, maxIadjusted);
+    summedSpeedError = max(summedSpeedError, -maxIadjusted);
 
     // Let I-term die out over time.
     if (summedSpeedError > 0 &amp;&amp; abs(speedError) &lt; iDieSector) {
@@ -150,18 +152,23 @@ export function speedController(autopilot, speed, acceleration) {
   const d = autopilot.controllers.speedPid.gain.d * derivativeSpeedError;
   const surgeForce = p + i + d;
 
-  return surgeForce;
+  return {
+    surgeForce,
+    summedSpeedError,
+    pid: { p, i, d },
+  };
 }
 
 /**
 * Allocate demands to the thrusters depending on the heading control force.
-* @param {number}      headingControlForce  - The heading control force.
-* @param {number}      maxRudderAngle       - Maximum rudder angle.
-* @param {Object[]}    thrusters            - An array of thruster objects.
+* @param {number}      surgeControlForce    The surge control force.
+* @param {number}      headingControlForce  The heading control force.
+* @param {number}      maxRudderAngle       Maximum rudder angle.
+* @param {Object[]}    thrusters            An array of thruster objects.
 * @returns {Object} The demands for all the thrusters.
 */
-export function autopilotAlloc(headingControlForce, maxRudderAngle, thrusters) {
-  const rudderGain = -0.1;
+export function autopilotAlloc(surgeControlForce, headingControlForce, maxRudderAngle, thrusters) {
+  const rudderGain = -0.11;
   const demands = [];
 
   for (let thrIdx = 0; thrIdx &lt; thrusters.length; thrIdx += 1) {
@@ -174,14 +181,30 @@ export function autopilotAlloc(headingControlForce, maxRudderAngle, thrusters) {
         azimuth: 90.0,
       });
     } else if (thruster.thrusterType === 'azimuth' || thruster.thrusterType === 'propeller') {
+      let rpm;
+      let pitch;
       let azimuth = rudderGain * headingControlForce;
       azimuth = Math.max(-maxRudderAngle, azimuth);
       azimuth = Math.min(maxRudderAngle, azimuth);
       azimuth = wrapTo0To360(azimuth);
 
+      if (thruster.controlType === 'rpm') {
+        pitch = 0.0;
+        rpm = (surgeControlForce / thruster.maxForce.positive)
+          ** (1 / thruster.rpmExponent.positive);
+
+        rpm = Math.min(1.0, rpm);
+      } else {
+        rpm = 0.0;
+        pitch = (surgeControlForce / thruster.maxForce.positive)
+          ** (1 / thruster.pitchExponent.positive);
+
+        pitch = Math.min(1.0, pitch);
+      }
+
       demands.push({
-        pitch: 0.0,
-        rpm: 0.0,
+        pitch,
+        rpm,
         azimuth,
       });
     } else {
@@ -201,13 +224,13 @@ export function autopilotAlloc(headingControlForce, maxRudderAngle, thrusters) {
 </div>
 
 <nav>
-    <h2><a href="index.html">Home</a></h2><h3>Global</h3><ul><li><a href="global.html#alphabetaFilter">alphabetaFilter</a></li><li><a href="global.html#assertUiThrusterConstructorInput">assertUiThrusterConstructorInput</a></li><li><a href="global.html#autopilotAlloc">autopilotAlloc</a></li><li><a href="global.html#calculateDisplacement">calculateDisplacement</a></li><li><a href="global.html#calculateDrag">calculateDrag</a></li><li><a href="global.html#calculateForces">calculateForces</a></li><li><a href="global.html#calculateFrontalWindArea">calculateFrontalWindArea</a></li><li><a href="global.html#calculateLateralWindArea">calculateLateralWindArea</a></li><li><a href="global.html#calculateMass">calculateMass</a></li><li><a href="global.html#calculateMaxForce">calculateMaxForce</a></li><li><a href="global.html#dragBasedTrigonometric">dragBasedTrigonometric</a></li><li><a href="global.html#estimateForHeading">estimateForHeading</a></li><li><a href="global.html#estimateForLatitudeAndLongitude">estimateForLatitudeAndLongitude</a></li><li><a href="global.html#estimatePositionAndVelocity">estimatePositionAndVelocity</a></li><li><a href="global.html#Estimator">Estimator</a></li><li><a href="global.html#generateNPD">generateNPD</a></li><li><a href="global.html#getFeedback">getFeedback</a></li><li><a href="global.html#getFeedbackState">getFeedbackState</a></li><li><a href="global.html#getForces">getForces</a></li><li><a href="global.html#getHeadingFromGyrocompasses">getHeadingFromGyrocompasses</a></li><li><a href="global.html#getPositionFromGpses">getPositionFromGpses</a></li><li><a href="global.html#getPositionInDegrees">getPositionInDegrees</a></li><li><a href="global.html#getPositionInLatLon">getPositionInLatLon</a></li><li><a href="global.html#getPositionInMeters">getPositionInMeters</a></li><li><a href="global.html#getPower">getPower</a></li><li><a href="global.html#getRandomBetween">getRandomBetween</a></li><li><a href="global.html#headingController">headingController</a></li><li><a href="global.html#isAzi">isAzi</a></li><li><a href="global.html#knotsInMps">knotsInMps</a></li><li><a href="global.html#maxBasedTrigonometric">maxBasedTrigonometric</a></li><li><a href="global.html#meanOfArray">meanOfArray</a></li><li><a href="global.html#motion">motion</a></li><li><a href="global.html#mpsInKnots">mpsInKnots</a></li><li><a href="global.html#normalizeRisetimes">normalizeRisetimes</a></li><li><a href="global.html#setDemand">setDemand</a></li><li><a href="global.html#simulationState">simulationState</a></li><li><a href="global.html#speedController">speedController</a></li><li><a href="global.html#thrusterFeedbackState">thrusterFeedbackState</a></li><li><a href="global.html#transformBODYToNED">transformBODYToNED</a></li><li><a href="global.html#transformNEDToBODY">transformNEDToBODY</a></li><li><a href="global.html#truncToDecimal">truncToDecimal</a></li><li><a href="global.html#U10toUz">U10toUz</a></li><li><a href="global.html#unwrapAngle">unwrapAngle</a></li><li><a href="global.html#vesselControlMode">vesselControlMode</a></li><li><a href="global.html#VesselModel">VesselModel</a></li><li><a href="global.html#wrapTo0To2pi">wrapTo0To2pi</a></li><li><a href="global.html#wrapTo0To360">wrapTo0To360</a></li><li><a href="global.html#wrapToPipi">wrapToPipi</a></li></ul>
+    <h2><a href="index.html">Home</a></h2><h3>Global</h3><ul><li><a href="global.html#alphabetaFilter">alphabetaFilter</a></li><li><a href="global.html#assertUiThrusterConstructorInput">assertUiThrusterConstructorInput</a></li><li><a href="global.html#autopilotAlloc">autopilotAlloc</a></li><li><a href="global.html#calculateControllerDemands">calculateControllerDemands</a></li><li><a href="global.html#calculateDisplacement">calculateDisplacement</a></li><li><a href="global.html#calculateDrag">calculateDrag</a></li><li><a href="global.html#calculateForces">calculateForces</a></li><li><a href="global.html#calculateFrontalWindArea">calculateFrontalWindArea</a></li><li><a href="global.html#calculateLateralWindArea">calculateLateralWindArea</a></li><li><a href="global.html#calculateMass">calculateMass</a></li><li><a href="global.html#calculateMaxForce">calculateMaxForce</a></li><li><a href="global.html#calculateThrusterDemands">calculateThrusterDemands</a></li><li><a href="global.html#dragBasedTrigonometric">dragBasedTrigonometric</a></li><li><a href="global.html#estimateForHeading">estimateForHeading</a></li><li><a href="global.html#estimateForLatitudeAndLongitude">estimateForLatitudeAndLongitude</a></li><li><a href="global.html#estimatePositionAndVelocity">estimatePositionAndVelocity</a></li><li><a href="global.html#Estimator">Estimator</a></li><li><a href="global.html#generateNPD">generateNPD</a></li><li><a href="global.html#getFeedback">getFeedback</a></li><li><a href="global.html#getFeedbackState">getFeedbackState</a></li><li><a href="global.html#getForces">getForces</a></li><li><a href="global.html#getHeadingFromGyrocompasses">getHeadingFromGyrocompasses</a></li><li><a href="global.html#getInitialState">getInitialState</a></li><li><a href="global.html#getPositionFromGpses">getPositionFromGpses</a></li><li><a href="global.html#getPositionInDegrees">getPositionInDegrees</a></li><li><a href="global.html#getPositionInLatLon">getPositionInLatLon</a></li><li><a href="global.html#getPositionInMeters">getPositionInMeters</a></li><li><a href="global.html#getPower">getPower</a></li><li><a href="global.html#getRandomBetween">getRandomBetween</a></li><li><a href="global.html#GPS">GPS</a></li><li><a href="global.html#Gyrocompass">Gyrocompass</a></li><li><a href="global.html#headingController">headingController</a></li><li><a href="global.html#isAzi">isAzi</a></li><li><a href="global.html#knotsInMps">knotsInMps</a></li><li><a href="global.html#maxBasedTrigonometric">maxBasedTrigonometric</a></li><li><a href="global.html#meanOfArray">meanOfArray</a></li><li><a href="global.html#motion">motion</a></li><li><a href="global.html#mpsInKnots">mpsInKnots</a></li><li><a href="global.html#MRU">MRU</a></li><li><a href="global.html#normalizeRisetimes">normalizeRisetimes</a></li><li><a href="global.html#setDemand">setDemand</a></li><li><a href="global.html#simulationState">simulationState</a></li><li><a href="global.html#speedController">speedController</a></li><li><a href="global.html#Thruster">Thruster</a></li><li><a href="global.html#thrusterFeedbackState">thrusterFeedbackState</a></li><li><a href="global.html#transformBODYToNED">transformBODYToNED</a></li><li><a href="global.html#transformNEDToBODY">transformNEDToBODY</a></li><li><a href="global.html#truncToDecimal">truncToDecimal</a></li><li><a href="global.html#U10toUz">U10toUz</a></li><li><a href="global.html#UiThruster">UiThruster</a></li><li><a href="global.html#unwrapAngle">unwrapAngle</a></li><li><a href="global.html#vesselControlMode">vesselControlMode</a></li><li><a href="global.html#VesselModel">VesselModel</a></li><li><a href="global.html#Windsensor">Windsensor</a></li><li><a href="global.html#wrapTo0To2pi">wrapTo0To2pi</a></li><li><a href="global.html#wrapTo0To360">wrapTo0To360</a></li><li><a href="global.html#wrapToPipi">wrapToPipi</a></li></ul>
 </nav>
 
 <br class="clear">
 
 <footer>
-    Documentation generated by <a href="https://github.com/jsdoc3/jsdoc">JSDoc 3.5.5</a> on Mon Feb 05 2018 21:50:41 GMT+0100 (W. Europe Standard Time)
+    Documentation generated by <a href="https://github.com/jsdoc3/jsdoc">JSDoc 3.5.5</a> on Mon Feb 12 2018 21:07:05 GMT+0100 (W. Europe Standard Time)
 </footer>
 
 <script> prettyPrint(); </script>
