@@ -21,6 +21,11 @@ const timeseriesInitialState = {
         i: [],
         d: [],
       },
+      speedPid: {
+        p: [],
+        i: [],
+        d: [],
+      },
     },
   },
   model: {
@@ -39,6 +44,10 @@ const timeseriesInitialState = {
   },
 };
 
+/**
+* Get the initial state for the redux store for the timeseries section.
+* @returns {Object} The initial state for the timeseries section.
+*/
 function getInitialState() {
   return timeseriesInitialState;
 }

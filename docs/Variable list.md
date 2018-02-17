@@ -4,6 +4,11 @@
 
 | Variable                                            | Dimension   | Unit     | Description                                      |
 |-----------------------------------------------------|-------------|----------|--------------------------------------------------|
+| mode                                                | enum        | -        | The controller mode.                             |
+| autopilot.active                                    | boolean     | -        | Whether the autopilot is active or not.          |
+| autopilot.heading                                   | angle       | deg      | Desired heading for the autopilot.               |
+| autopilot.speed                                     | coeff       | t/°      | Desired speed for the autopilot.                 |
+| autopilot.maxRudderAngle                            | angle       | deg      | The maximum deflection of the rudder/azimuth.    |
 | autopilot.controllers.headingPid.gain.p             | coeff       | t/°      | P gain for heading PID controller for autopilot. |
 | autopilot.controllers.headingPid.gain.i             | coeff       | t/s°     | I gain for heading PID controller for autopilot. |
 | autopilot.controllers.headingPid.gain.d             | coeff       | t(s/°)   | D gain for heading PID controller for autopilot. |

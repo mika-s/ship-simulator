@@ -3,10 +3,10 @@ import { vesselControlMode } from '../../util/enums';
 /**
 * Calculate maximum force, both directions, using IMCA's rules.
 * @param {string} type              - Thruster type: tunnel, azimuth, propeller or waterjet.
-* @param {object} maxPowerPositive  - Maximum power, positive and negative direction.
-* @returns {object}                 - Object containing max force in pos. and neg. direction.
-* @returns {number}                 - Maximum force in positive direction.
-* @returns {number}                 - Maximum force in negative direction.
+* @param {Object} maxPowerPositive  - Maximum power, positive and negative direction.
+* @returns {Object} Object containing max force in pos. and neg. direction.
+* @returns {number} Maximum force in positive direction.
+* @returns {number} Maximum force in negative direction.
 */
 function calculateMaxForce(type, maxPower) {
   const grav = 9.81;
@@ -31,16 +31,16 @@ function calculateMaxForce(type, maxPower) {
     throw new Error('Illegal thruster type.');
   }
 
-  const maxForcePositive = conversionFactorPositive * (maxPower.positive / 9.81);
-  const maxForceNegative = conversionFactorNegative * (maxPower.negative / 9.81);
+  const maxForcePositive = conversionFactorPositive * (maxPower.positive / grav);
+  const maxForceNegative = conversionFactorNegative * (maxPower.negative / grav);
 
   return { positive: maxForcePositive, negative: maxForceNegative };
 }
 
 /**
 * Convert risetimes from %/s and °/s to factor/s.
-* @param {object} risetimes   - The risetimes object.
-* @returns {object}           - The risetimes object with converted values.
+* @param {Object} risetimes   - The risetimes object.
+* @returns {Object} The risetimes object with converted values.
 */
 function normalizeRisetimes(risetimes) {
   const convertedRisetimes = JSON.parse(JSON.stringify(risetimes));
@@ -58,6 +58,20 @@ function normalizeRisetimes(risetimes) {
   return convertedRisetimes;
 }
 
+/**
+* Assert that the constructor input for Thruster is correct.
+* Throws error if assertion fails.
+* @param {number} number              Thruster number.
+* @param {string} name                Name.
+* @param {string} thrusterType        Thruster type.
+* @param {string} controlType         Control type.
+* @param {Object} maxPower            Max power, positive and negative, in kW.
+* @param {Object} location            Location, x and y, in meters.
+* @param {Object} risetimes           Rise times, positive and negative, in %/s and deg/s.
+* @param {Object} misc                Misc. parameters.
+* @param {Object} pitchExponent       Pitch exponent, positive and negative.
+* @param {Object} pitchPowerExponent  Pitch power exponent, positive and negative.
+*/
 function assertThrusterConstructorInput(
   number, name, thrusterType, controlType,
   maxPower, location, risetimes, misc,
@@ -207,6 +221,10 @@ function assertThrusterConstructorInput(
   }
 }
 
+/**
+* Constructor function for a thruster.
+* @param {Object} data    Object with initial data.
+*/
 function Thruster(data) {
   const {
     number, name, thrusterType, controlType,

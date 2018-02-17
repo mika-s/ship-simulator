@@ -145,8 +145,8 @@ const mapStateToProps = state => ({
   active: state.control.autopilot.active,
   heading: state.ui.control.autopilot.heading,
   speed: state.ui.control.autopilot.speed,
-  alpha: state.ui.estimator.alphabeta.alpha,
-  beta: state.ui.estimator.alphabeta.beta,
+  alpha: state.ui.estimator.alphabeta.alpha.heading,
+  beta: state.ui.estimator.alphabeta.beta.heading,
   headingGain: state.ui.control.autopilot.controllers.headingPid.gain,
   speedGain: state.ui.control.autopilot.controllers.speedPid.gain,
 });

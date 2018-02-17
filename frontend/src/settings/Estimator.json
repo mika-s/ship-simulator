@@ -1,6 +1,18 @@
 {
+  "estimatorChoice": {
+    "latitudeAndLongitude": "alphabeta",
+    "heading": "alphabeta"
+  },
   "alphabeta": {
-    "alpha": 0.1,
-    "beta": 0.03
+    "alpha": {
+      "latitude": 1.0,
+      "longitude": 1.0,
+      "heading": 0.2
+    },
+    "beta": {
+      "latitude": 1.0,
+      "longitude": 1.0,
+      "heading": 0.03
+    }
   }
 }

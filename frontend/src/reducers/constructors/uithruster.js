@@ -1,8 +1,7 @@
 /**
 * Assert that the constructor input for UiThruster is correct.
 * Throws error if assertion fails.
-* @param {number} number   - Thruster number.
-* @returns {undefined}     - Doesn't return anything.
+* @param {number} number   Thruster number.
 */
 function assertUiThrusterConstructorInput(number) {
   const minNumber = 1;
@@ -13,6 +12,10 @@ function assertUiThrusterConstructorInput(number) {
   }
 }
 
+/**
+* Constructor function for a UI thruster.
+* @param {Object} data    Object with initial data.
+*/
 function UiThruster(data) {
   const { number } = data;
   assertUiThrusterConstructorInput(number);

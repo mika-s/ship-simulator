@@ -1,3 +1,10 @@
+/**
+* Assert that the constructor input for Windsensor is correct.
+* Throws error if assertion fails.
+* @param {number} number     MRU number.
+* @param {number} speed      Initial wind speed in m/s.
+* @param {number} direction  Initial wind direction in degrees.
+*/
 function assertWindsensorConstructorInput(number, speed, direction) {
   const minNumber = 1;
   const maxNumber = 20;
@@ -19,6 +26,10 @@ function assertWindsensorConstructorInput(number, speed, direction) {
   }
 }
 
+/**
+* Constructor function for a Windsensor.
+* @param {Object} data    Object with initial data.
+*/
 function Windsensor(data) {
   const { number, initialSpeed, initialDirection } = data;
   assertWindsensorConstructorInput(number, initialSpeed, initialDirection);

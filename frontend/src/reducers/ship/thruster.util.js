@@ -3,8 +3,8 @@ import { wrapTo0To360 } from '../../util/kinematics.util';
 
 /**
 * Get the thruster force.
-* @param {object} thruster   - The thruster object.
-* @returns {number}          - The force delivered by the thruster.
+* @param {Object} thruster   - The thruster object.
+* @returns {number} The force delivered by the thruster.
 */
 export function getForces(thruster) {
   let rpmPart;
@@ -41,8 +41,8 @@ export function getForces(thruster) {
 
 /**
 * Get the thruster power.
-* @param {object} thruster   - The thruster object.
-* @returns {number}          - The consumed power of the thruster.
+* @param {Object} thruster   - The thruster object.
+* @returns {number} The consumed power of the thruster.
 */
 export function getPower(thruster) {
   let rpmPart;
@@ -80,7 +80,7 @@ export function getPower(thruster) {
 /**
 * Return true if the thruster can change azimuth.
 * @param {string} thrusterType   - Type of thruster.
-* @returns {boolean}             - true if azimuth can be changed, false otherwise.
+* @returns {boolean} true if azimuth can be changed, false otherwise.
 */
 export function isAzi(thrusterType) {
   return thrusterType === 'propeller' || thrusterType === 'azimuth';
@@ -89,8 +89,8 @@ export function isAzi(thrusterType) {
 /**
 * Get the state of the thruster feedback.
 * @param {number} difference   - Difference between demand and feedback.
-* @param {object} risetimes    - Object of risetimes.
-* @returns {enum}              - Demand/feedback state of the thruster.
+* @param {Object} risetimes    - Object of risetimes.
+* @returns {enum} Demand/feedback state of the thruster.
 */
 function getFeedbackState(difference, risetimes) {
   const { positive: rtPos, negative: rtNeg } = risetimes;
@@ -108,7 +108,7 @@ function getFeedbackState(difference, risetimes) {
   } else if (difference < 0 && difference >= rtNeg) {
     state = thrusterFeedbackState.DECREASING_LT_RT;
   } else {
-    throw new Error('Illegal state');
+    throw new Error(`Illegal state: ${difference}, ${rtPos}, ${rtNeg}.`);
   }
 
   return state;
@@ -116,9 +116,9 @@ function getFeedbackState(difference, risetimes) {
 
 /**
 * Set the thruster demands.
-* @param {object} thruster   - The thruster object.
-* @param {object} demand     - The demand object with demands in rpm, pitch and azimuth.
-* @returns {object}          - Object with thruster demands in rpm, pitch and azimuth.
+* @param {Object} thruster   - The thruster object.
+* @param {Object} demand     - The demand object with demands in rpm, pitch and azimuth.
+* @returns {Object} Object with thruster demands in rpm, pitch and azimuth.
 */
 export function setDemand(thruster, demand) {
   return {
@@ -129,8 +129,8 @@ export function setDemand(thruster, demand) {
 
 /**
 * Get the thruster feedbacks.
-* @param {object} thruster   - The thruster object.
-* @returns {object}          - Object with thruster feedback in rpm, pitch and azimuth.
+* @param {Object} thruster   - The thruster object.
+* @returns {Object} Object with thruster feedback in rpm, pitch and azimuth.
 */
 export function getFeedback(thruster) {
   const newFeedback = { rpm: 0.0, pitch: 0.0 };
@@ -157,7 +157,7 @@ export function getFeedback(thruster) {
       newFeedback[type] = thruster.demand[type];
       break;
     default:
-      throw new Error('Illegal feedback state for the thruster.');
+      throw new Error(`Illegal feedback state for the thruster: ${feedbackState}.`);
   }
 
   if (isAzi(thruster.thrusterType)) {
@@ -189,7 +189,7 @@ export function getFeedback(thruster) {
         newFeedback.azimuth = thruster.demand.azimuth;
         break;
       default:
-        throw new Error('Illegal feedback state for the thruster.');
+        throw new Error(`Illegal feedback state for the thruster: ${aziFeedbackState}.`);
     }
   } else {
     newFeedback.azimuth = thruster.feedback.azimuth;

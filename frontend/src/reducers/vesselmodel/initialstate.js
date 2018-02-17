@@ -64,6 +64,12 @@ const vesselModelInitialState = {
   },
 };
 
+/**
+* Get the initial state for the redux store for the vesselmodel section.
+* Merges hardcoded values with the values from the settings files.
+* @param {Object}      initialVessel       The initial vessel values from the settings file.
+* @returns {Object} The initial state for the vesselmodel section.
+*/
 function getInitialState(InitialVessel) {
   return VesselModel(vesselModelInitialState, InitialVessel);
 }

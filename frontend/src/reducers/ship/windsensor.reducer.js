@@ -16,7 +16,7 @@ import { getRandomBetween, truncToDecimal } from '../../util/general.util';
   };
 } */
 
-function getSpeed(modelSpeed, modelDirection, vesselSpeed, vesselHeading) {
+function getSpeed(modelSpeed) {
   const minSpeed = 0.0;
   const maxSpeed = 50.0;
   const minNoiseAmplitude = -0.5;
@@ -41,7 +41,7 @@ function getSpeed(modelSpeed, modelDirection, vesselSpeed, vesselHeading) {
   return newSpeed;
 }
 
-function getDirection(modelSpeed, modelDirection, vesselSpeed, vesselHeading) {
+function getDirection(modelSpeed, modelDirection) {
   const minDirection = 0.0;
   const maxDirection = 360.0;
   const minNoiseAmplitude = -0.5;
@@ -66,6 +66,14 @@ function getDirection(modelSpeed, modelDirection, vesselSpeed, vesselHeading) {
   return newDirection;
 }
 
+/**
+* The reducer for a single wind sensor.
+* @param {Object}    state       The state object (rootstate.ship.windsensors[i]).
+* @param {Object}    action      The action object.
+* @param {Object}    model       The vessel model object.
+* @param {Object}    envWind     The wind environment object.
+* @returns {Object} The wind sensor updated.
+*/
 export default function windsensorReducer(state, action, model, envWind) {
   switch (action.type) {
     case 'SIMULATE':

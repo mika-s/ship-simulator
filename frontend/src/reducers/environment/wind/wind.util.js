@@ -4,11 +4,11 @@ import blendermann from './blendermann';
 * Calculate the wind forces acting on a vessel.
 * @param {number} windSpeed     - Wind speed in m/s.
 * @param {number} windDirection - Wind direction in degrees.
-* @param {object} vesselSpeed   - Vessel speed object with u, v, and r in m/s.
+* @param {Object} vesselSpeed   - Vessel speed object with u, v, and r in m/s.
 * @param {number} vesselHeading - Heading of the vessel in radians.
-* @param {object} dimensions    - Dimension object.
-* @param {object} windParams    - Wind parameter object.
-* @returns {object}             - Wind forces in surge, sway and yaw.
+* @param {Object} dimensions    - Dimension object.
+* @param {Object} windParams    - Wind parameter object.
+* @returns {Object} Wind forces in surge, sway and yaw.
 */
 export function calculateForces(
   windSpeed, windDirection,
@@ -82,8 +82,7 @@ export function calculateForces(
 * Norwegian Petroleum Directorate (NPD) wind spectrum, for a
 * given wind speed at 10 m.
 * @param {number} U10    - Mean wind speed in m/s at 10 m altitude.
-* @returns {object}      - An object containing two arrays:
-*                          frequencies and spectrum.
+* @returns {Object} An object containing two arrays: frequencies and spectrum.
 */
 export function generateNPD(U10) {
   const stepSize = 0.001;
@@ -111,7 +110,7 @@ export function generateNPD(U10) {
 * @param {number} U10    - Mean wind speed in m/s at 10 m altitude.
 * @param {number} C10    - Surface drag coefficient at 10 m altitude.
 * @param {number} z      - The altitude in m to calculate the mean wind speed for.
-* @returns {number}      - Mean wind speed in m/s at altitude z.
+* @returns {number} Mean wind speed in m/s at altitude z.
 */
 export function U10toUz(U10, C10, z) {
   const uStar = Math.sqrt(C10 * U10);

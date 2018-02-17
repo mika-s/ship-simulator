@@ -1,59 +1,83 @@
-import { wrapTo0To360, unwrapAngle } from '../../util/kinematics.util';
+import { meanOfArray, circularMeanOfArray } from '../../util/general.util';
+import { wrapToPipi, wrapTo0To360 } from '../../util/kinematics.util';
+import { estimateForHeading, estimateForLatitudeAndLongitude } from './alphabeta';
 
-function getHeadingFromGyrocompasses(gyrocompasses) {
-  let sum = 0;
+/**
+* Get the filtered heading from the Gyrocompasses.
+* @param {Object[]} gyrocompasses   - An array of Gyrocompass objects.
+* @returns {number} The filtered heading.
+*/
+export function getHeadingFromGyrocompasses(gyrocompasses) {
+  const headings = [];
+
   for (let gyroIdx = 0; gyroIdx < gyrocompasses.length; gyroIdx += 1) {
-    sum += gyrocompasses[gyroIdx].heading;
+    const headingInRad = gyrocompasses[gyroIdx].heading * (Math.PI / 180.0);
+    const wrappedInRad = wrapToPipi(headingInRad).angle;
+    headings.push(wrappedInRad);
   }
 
-  return sum / gyrocompasses.length;
+  const average = circularMeanOfArray(headings) * (180.0 / Math.PI);
+  const averageIn0To360 = wrapTo0To360(average);
+
+  return averageIn0To360;
 }
 
-function alphabetaFilter(frequency, alphabeta, filteredGyroHeading) {
-  const secInMin = 60;
-  const dt = 1 / frequency;
-  const { alpha, beta } = alphabeta;
+/**
+* Get the filtered position from the GPSes.
+* @param {Object[]} gpses          - An array of GPS objects.
+* @returns {Object} Object with the filtered position.
+*/
+export function getPositionFromGpses(gpses) {
+  const latitudes = [];
+  const longitudes = [];
 
-  // Unwrap filtered gyro to -∞,∞
-  const unwrappedFilteredGyroHeading = unwrapAngle(
-    alphabeta.position.heading * (Math.PI / 180.0),
-    filteredGyroHeading * (Math.PI / 180.0),
-  ) * (180.0 / Math.PI);
+  for (let gpsIdx = 0; gpsIdx < gpses.length; gpsIdx += 1) {
+    latitudes.push(gpses[gpsIdx].position.latitude);
+    longitudes.push(gpses[gpsIdx].position.longitude);
+  }
 
-  const prevEstimatedHeading = alphabeta.position.heading;
-  const prevEstimatedRot = alphabeta.velocity.r / secInMin;
-
-  // prediction step
-  const predictedHeading = prevEstimatedHeading + (prevEstimatedRot * dt);
-  const predictedRot = prevEstimatedRot;
-
-  // update step
-  const residual = unwrappedFilteredGyroHeading - predictedHeading;
-  let estimatedRot = predictedRot + ((beta * residual) / dt);
-  let estimatedHeading = predictedHeading + (alpha * residual);
-
-  estimatedHeading = wrapTo0To360(estimatedHeading);
-  estimatedRot *= secInMin;
-
-  return { estimatedHeading, estimatedRot };
+  return {
+    latitude: meanOfArray(latitudes),
+    longitude: meanOfArray(longitudes),
+  };
 }
 
+/**
+* Estimate the position and velocity of the vessel.
+* @param {number} frequency        - The working frequency of the system.
+* @param {Object} estimator        - The estimator object.
+* @param {Object[]} gpses          - An array of GPS objects.
+* @param {Object[]} gyrocompasses  - An array of Gyrocompass objects.
+* @returns {Object} Object with the estimated position, velocity and acceleration.
+*/
 export function estimatePositionAndVelocity(frequency, estimator, gpses, gyrocompasses) {
   const filteredGyroHeading = getHeadingFromGyrocompasses(gyrocompasses);
-  const { estimatedHeading, estimatedRot }
-    = alphabetaFilter(frequency, estimator.alphabeta, filteredGyroHeading);
+  const filteredGpsPosition = getPositionFromGpses(gpses, estimator.alphabeta.heading);
+  let heading;
+  let latitudeAndLongitude;
 
-  const position = {
-    latitude: 0.0,
-    longitude: 0.0,
-    heading: estimatedHeading,
-  };
+  switch (estimator.estimatorChoice.heading) {
+    case 'alphabeta':
+      heading = estimateForHeading(frequency, estimator, filteredGyroHeading);
+      break;
+    default:
+      throw new Error('Invalid estimator choice for heading.');
+  }
 
-  const velocity = {
-    u: 0.0,
-    v: 0.0,
-    r: estimatedRot,
-  };
+  switch (estimator.estimatorChoice.latitudeAndLongitude) {
+    case 'alphabeta':
+      latitudeAndLongitude = estimateForLatitudeAndLongitude(
+        frequency, estimator, filteredGpsPosition,
+        heading.position.heading,
+      );
+      break;
+    default:
+      throw new Error('Invalid estimator choice for heading.');
+  }
 
-  return { position, velocity };
+  const position = Object.assign({}, latitudeAndLongitude.position, heading.position);
+  const velocity = Object.assign({}, latitudeAndLongitude.velocity, heading.velocity);
+  const acceleration = Object.assign({}, latitudeAndLongitude.acceleration, heading.acceleration);
+
+  return { position, velocity, acceleration };
 }

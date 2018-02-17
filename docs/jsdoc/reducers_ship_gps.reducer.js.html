@@ -1,0 +1,156 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="utf-8">
+    <title>JSDoc: Source: reducers/ship/gps.reducer.js</title>
+
+    <script src="scripts/prettify/prettify.js"> </script>
+    <script src="scripts/prettify/lang-css.js"> </script>
+    <!--[if lt IE 9]>
+      <script src="//html5shiv.googlecode.com/svn/trunk/html5.js"></script>
+    <![endif]-->
+    <link type="text/css" rel="stylesheet" href="styles/prettify-tomorrow.css">
+    <link type="text/css" rel="stylesheet" href="styles/jsdoc-default.css">
+</head>
+
+<body>
+
+<div id="main">
+
+    <h1 class="page-title">Source: reducers/ship/gps.reducer.js</h1>
+
+    
+
+
+
+    
+    <section>
+        <article>
+            <pre class="prettyprint source linenums"><code>import { getRandomBetween, truncToDecimal } from '../../util/general.util';
+
+function getPosition(position) {
+  const minLatitude = -90.0;
+  const maxLatitude = 90.0;
+  const minLongitude = -180.0;
+  const maxLongitude = 180.0;
+  const minNoiseAmplitude = -0.4 * 10e-8;
+  const maxNoiseAmplitude = 0.4 * 10e-8;
+
+  // Add measurement noise.
+  let newLatitude = position.latitude +
+    getRandomBetween(minNoiseAmplitude, maxNoiseAmplitude);
+
+  let newLongitude = position.longitude +
+    getRandomBetween(minNoiseAmplitude, maxNoiseAmplitude);
+
+  // Apply clip limits.
+  newLatitude = Math.min(newLatitude, maxLatitude);
+  newLatitude = Math.max(newLatitude, minLatitude);
+
+  newLongitude = Math.min(newLongitude, maxLongitude);
+  newLongitude = Math.max(newLongitude, minLongitude);
+
+  // Remove unnecessary decimals. Keep 8.
+  newLatitude = truncToDecimal(newLatitude, 8);
+  newLongitude = truncToDecimal(newLongitude, 8);
+
+  return {
+    latitude: newLatitude,
+    longitude: newLongitude,
+  };
+}
+
+function getSpeed(velocity) {
+  const minSpeed = 0.0;
+  const maxSpeed = 25.0;
+  const minNoiseAmplitude = -1.0 * 10e-2;
+  const maxNoiseAmplitude = 1.0 * 10e-2;
+
+  // Add measurement noise.
+  let newSpeed = velocity.u +
+    getRandomBetween(minNoiseAmplitude, maxNoiseAmplitude);
+
+  // Apply clip limits.
+  newSpeed = Math.min(newSpeed, maxSpeed);
+  newSpeed = Math.max(newSpeed, minSpeed);
+
+  // Remove unnecessary decimals. Keep 2.
+  newSpeed = truncToDecimal(newSpeed, 2);
+
+  return newSpeed;
+}
+
+function getDirection(position, velocity) {
+  const forwardSpeed = velocity.u !== 0 ? velocity.u : 0.001;
+  const minDirection = 0.0;
+  const maxDirection = 360.0;
+  const minNoiseAmplitude = (-0.5 * 10e-0) / forwardSpeed;
+  const maxNoiseAmplitude = (0.5 * 10e-0) / forwardSpeed;
+
+  // Add measurement noise.
+  let newDirection = (position.heading * (180.0 / Math.PI)) +
+    getRandomBetween(minNoiseAmplitude, maxNoiseAmplitude);
+
+  // Apply clip limits.
+  newDirection = Math.min(newDirection, maxDirection);
+  newDirection = Math.max(newDirection, minDirection);
+
+  // Remove unnecessary decimals. Keep 2.
+  newDirection = truncToDecimal(newDirection, 2);
+
+  return newDirection;
+}
+
+/**
+* The reducer for a single gps.
+* @param {Object}    state        The state object (rootstate.ship.gpses[i]).
+* @param {Object}    action       The action object.
+* @param {Object}    model        The vessel model object.
+* @returns {Object} The gps updated.
+*/
+export default function gpsReducer(state, action, model) {
+  switch (action.type) {
+    case 'SIMULATE':
+      return {
+        ...state,
+        position: getPosition(model.position),
+        speed: getSpeed(model.velocity),
+        direction: getDirection(model.position, model.velocity),
+      };
+    case 'STOP_SIMULATION':
+      return {
+        ...state,
+        position: {
+          latitude: 0.0,
+          longitude: 0.0,
+        },
+        speed: 0.0,
+        direction: 0.0,
+      };
+    default:
+      return state;
+  }
+}
+</code></pre>
+        </article>
+    </section>
+
+
+
+
+</div>
+
+<nav>
+    <h2><a href="index.html">Home</a></h2><h3>Classes</h3><ul><li><a href="AlphabetaHeadingPane.html">AlphabetaHeadingPane</a></li><li><a href="Dashboard.html">Dashboard</a></li><li><a href="GpsSpeedPane.html">GpsSpeedPane</a></li><li><a href="HeadingPane.html">HeadingPane</a></li><li><a href="Paneselector.html">Paneselector</a></li><li><a href="PidPane.html">PidPane</a></li><li><a href="PositionPane.html">PositionPane</a></li><li><a href="SensorPane.html">SensorPane</a></li><li><a href="ThrustersPane.html">ThrustersPane</a></li></ul><h3>Global</h3><ul><li><a href="global.html#alphabetaFilter">alphabetaFilter</a></li><li><a href="global.html#assertGpsConstructorInput">assertGpsConstructorInput</a></li><li><a href="global.html#assertGyrocompassConstructorInput">assertGyrocompassConstructorInput</a></li><li><a href="global.html#assertMruConstructorInput">assertMruConstructorInput</a></li><li><a href="global.html#assertThrusterConstructorInput">assertThrusterConstructorInput</a></li><li><a href="global.html#assertUiThrusterConstructorInput">assertUiThrusterConstructorInput</a></li><li><a href="global.html#assertWindsensorConstructorInput">assertWindsensorConstructorInput</a></li><li><a href="global.html#autopilotAlloc">autopilotAlloc</a></li><li><a href="global.html#calculateControllerDemands">calculateControllerDemands</a></li><li><a href="global.html#calculateDisplacement">calculateDisplacement</a></li><li><a href="global.html#calculateDrag">calculateDrag</a></li><li><a href="global.html#calculateForces">calculateForces</a></li><li><a href="global.html#calculateFrontalWindArea">calculateFrontalWindArea</a></li><li><a href="global.html#calculateLateralWindArea">calculateLateralWindArea</a></li><li><a href="global.html#calculateMass">calculateMass</a></li><li><a href="global.html#calculateMaxForce">calculateMaxForce</a></li><li><a href="global.html#calculateThrusterDemands">calculateThrusterDemands</a></li><li><a href="global.html#circularMeanOfArray">circularMeanOfArray</a></li><li><a href="global.html#dragBasedTrigonometric">dragBasedTrigonometric</a></li><li><a href="global.html#estimateForHeading">estimateForHeading</a></li><li><a href="global.html#estimateForLatitudeAndLongitude">estimateForLatitudeAndLongitude</a></li><li><a href="global.html#estimatePositionAndVelocity">estimatePositionAndVelocity</a></li><li><a href="global.html#Estimator">Estimator</a></li><li><a href="global.html#generateNPD">generateNPD</a></li><li><a href="global.html#getFeedback">getFeedback</a></li><li><a href="global.html#getFeedbackState">getFeedbackState</a></li><li><a href="global.html#getForces">getForces</a></li><li><a href="global.html#getHeadingFromGyrocompasses">getHeadingFromGyrocompasses</a></li><li><a href="global.html#getInitialState">getInitialState</a></li><li><a href="global.html#getPositionFromGpses">getPositionFromGpses</a></li><li><a href="global.html#getPositionInDegrees">getPositionInDegrees</a></li><li><a href="global.html#getPositionInLatLon">getPositionInLatLon</a></li><li><a href="global.html#getPositionInMeters">getPositionInMeters</a></li><li><a href="global.html#getPower">getPower</a></li><li><a href="global.html#getRandomBetween">getRandomBetween</a></li><li><a href="global.html#GPS">GPS</a></li><li><a href="global.html#Gyrocompass">Gyrocompass</a></li><li><a href="global.html#headingController">headingController</a></li><li><a href="global.html#isAzi">isAzi</a></li><li><a href="global.html#knotsInMps">knotsInMps</a></li><li><a href="global.html#maxBasedTrigonometric">maxBasedTrigonometric</a></li><li><a href="global.html#meanOfArray">meanOfArray</a></li><li><a href="global.html#motion">motion</a></li><li><a href="global.html#mpsInKnots">mpsInKnots</a></li><li><a href="global.html#MRU">MRU</a></li><li><a href="global.html#normalizeRisetimes">normalizeRisetimes</a></li><li><a href="global.html#setDemand">setDemand</a></li><li><a href="global.html#simulationState">simulationState</a></li><li><a href="global.html#speedController">speedController</a></li><li><a href="global.html#Thruster">Thruster</a></li><li><a href="global.html#thrusterFeedbackState">thrusterFeedbackState</a></li><li><a href="global.html#transformBODYToNED">transformBODYToNED</a></li><li><a href="global.html#transformNEDToBODY">transformNEDToBODY</a></li><li><a href="global.html#truncToDecimal">truncToDecimal</a></li><li><a href="global.html#U10toUz">U10toUz</a></li><li><a href="global.html#UiThruster">UiThruster</a></li><li><a href="global.html#unwrapAngle">unwrapAngle</a></li><li><a href="global.html#vesselControlMode">vesselControlMode</a></li><li><a href="global.html#VesselModel">VesselModel</a></li><li><a href="global.html#Windsensor">Windsensor</a></li><li><a href="global.html#wrapTo0To2pi">wrapTo0To2pi</a></li><li><a href="global.html#wrapTo0To360">wrapTo0To360</a></li><li><a href="global.html#wrapToPipi">wrapToPipi</a></li></ul>
+</nav>
+
+<br class="clear">
+
+<footer>
+    Documentation generated by <a href="https://github.com/jsdoc3/jsdoc">JSDoc 3.5.5</a> on Sat Feb 17 2018 14:14:53 GMT+0100 (W. Europe Standard Time)
+</footer>
+
+<script> prettyPrint(); </script>
+<script src="scripts/linenumber.js"> </script>
+</body>
+</html>

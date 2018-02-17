@@ -1,0 +1,151 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="utf-8">
+    <title>JSDoc: Source: reducers/control/control.util.js</title>
+
+    <script src="scripts/prettify/prettify.js"> </script>
+    <script src="scripts/prettify/lang-css.js"> </script>
+    <!--[if lt IE 9]>
+      <script src="//html5shiv.googlecode.com/svn/trunk/html5.js"></script>
+    <![endif]-->
+    <link type="text/css" rel="stylesheet" href="styles/prettify-tomorrow.css">
+    <link type="text/css" rel="stylesheet" href="styles/jsdoc-default.css">
+</head>
+
+<body>
+
+<div id="main">
+
+    <h1 class="page-title">Source: reducers/control/control.util.js</h1>
+
+    
+
+
+
+    
+    <section>
+        <article>
+            <pre class="prettyprint source linenums"><code>import { vesselControlMode } from '../../util/enums';
+import { headingController, speedController, autopilotAlloc } from '../control/autopilot';
+
+/**
+* Calculate the controller demands.
+* @param {Object}      control    The control object.
+* @param {Object}      estimated  The estimator object.
+* @returns {Object} The controller demands in surge, sway and heading.
+*/
+export function calculateControllerDemands(control, estimated) {
+  let forces = { surge: 0.0, sway: 0.0, yaw: 0.0 };
+  let controllerOutputSurge;
+  let controllerOutputYaw;
+  const data = {};
+
+  switch (control.mode) {
+    case vesselControlMode.AUTOPILOT:
+      controllerOutputYaw = headingController(
+        control.autopilot,
+        estimated.position.heading,
+        estimated.velocity.r,
+      );
+      ({ yawForce: forces.yaw } = controllerOutputYaw);
+      data.summedHeadingError = controllerOutputYaw.summedHeadingError;
+      data.headingPid = controllerOutputYaw.pid;
+
+      controllerOutputSurge = speedController(
+        control.autopilot,
+        estimated.velocity.u,
+        estimated.acceleration.ud,
+      );
+      ({ surgeForce: forces.surge } = controllerOutputSurge);
+      data.summedSpeedError = controllerOutputSurge.summedSpeedError;
+      data.speedPid = controllerOutputSurge.pid;
+      break;
+    default:
+      forces = { surge: 0.0, sway: 0.0, yaw: 0.0 };
+      data.summedHeadingError = 0.0;
+      data.summedSpeedError = 0.0;
+      data.headingPid = { p: 0.0, i: 0.0, d: 0.0 };
+      data.speedPid = { p: 0.0, i: 0.0, d: 0.0 };
+      break;
+  }
+
+  return { forces, data };
+}
+
+/**
+* Calculate thruster demands from control forces.
+* @param {number}      controllerData    Data from the controller.
+* @param {number}      control           The controller object.
+* @param {Object[]}    thrusters         An array of thruster objects.
+* @param {Object[]}    uiThrusters       An array of UI thruster objects.
+* @returns {Object} The demands for all the thrusters.
+*/
+export function calculateThrusterDemands(controllerData, control, thrusters, uiThrusters) {
+  let demands = [];
+
+  switch (control.mode) {
+    case vesselControlMode.STANDBY:
+      for (let thrIdx = 0; thrIdx &lt; uiThrusters.length; thrIdx += 1) {
+        demands.push({
+          pitch: 0.0,
+          rpm: 0.0,
+          azimuth: 0.0,
+        });
+      }
+      break;
+    case vesselControlMode.TEST:
+      for (let thrIdx = 0; thrIdx &lt; uiThrusters.length; thrIdx += 1) {
+        demands.push({
+          pitch: uiThrusters[thrIdx].demand.pitch,
+          rpm: uiThrusters[thrIdx].demand.rpm,
+          azimuth: uiThrusters[thrIdx].demand.azimuth,
+        });
+      }
+      break;
+    case vesselControlMode.LEVER:
+      for (let thrIdx = 0; thrIdx &lt; uiThrusters.length; thrIdx += 1) {
+        demands.push({
+          pitch: uiThrusters[thrIdx].demand.pitch,
+          rpm: uiThrusters[thrIdx].demand.rpm,
+          azimuth: uiThrusters[thrIdx].demand.azimuth,
+        });
+      }
+      break;
+    case vesselControlMode.AUTOPILOT:
+      demands = autopilotAlloc(
+        controllerData.forces.surge,
+        controllerData.forces.yaw,
+        control.autopilot.maxRudderAngle,
+        thrusters,
+      );
+      break;
+    default:
+      throw new Error(`Invalid control mode ${control.mode}`);
+  }
+
+  return demands;
+}
+</code></pre>
+        </article>
+    </section>
+
+
+
+
+</div>
+
+<nav>
+    <h2><a href="index.html">Home</a></h2><h3>Classes</h3><ul><li><a href="AlphabetaHeadingPane.html">AlphabetaHeadingPane</a></li><li><a href="Dashboard.html">Dashboard</a></li><li><a href="GpsSpeedPane.html">GpsSpeedPane</a></li><li><a href="HeadingPane.html">HeadingPane</a></li><li><a href="Paneselector.html">Paneselector</a></li><li><a href="PidPane.html">PidPane</a></li><li><a href="PositionPane.html">PositionPane</a></li><li><a href="SensorPane.html">SensorPane</a></li><li><a href="ThrustersPane.html">ThrustersPane</a></li></ul><h3>Global</h3><ul><li><a href="global.html#alphabetaFilter">alphabetaFilter</a></li><li><a href="global.html#assertGpsConstructorInput">assertGpsConstructorInput</a></li><li><a href="global.html#assertGyrocompassConstructorInput">assertGyrocompassConstructorInput</a></li><li><a href="global.html#assertMruConstructorInput">assertMruConstructorInput</a></li><li><a href="global.html#assertThrusterConstructorInput">assertThrusterConstructorInput</a></li><li><a href="global.html#assertUiThrusterConstructorInput">assertUiThrusterConstructorInput</a></li><li><a href="global.html#assertWindsensorConstructorInput">assertWindsensorConstructorInput</a></li><li><a href="global.html#autopilotAlloc">autopilotAlloc</a></li><li><a href="global.html#calculateControllerDemands">calculateControllerDemands</a></li><li><a href="global.html#calculateDisplacement">calculateDisplacement</a></li><li><a href="global.html#calculateDrag">calculateDrag</a></li><li><a href="global.html#calculateForces">calculateForces</a></li><li><a href="global.html#calculateFrontalWindArea">calculateFrontalWindArea</a></li><li><a href="global.html#calculateLateralWindArea">calculateLateralWindArea</a></li><li><a href="global.html#calculateMass">calculateMass</a></li><li><a href="global.html#calculateMaxForce">calculateMaxForce</a></li><li><a href="global.html#calculateThrusterDemands">calculateThrusterDemands</a></li><li><a href="global.html#circularMeanOfArray">circularMeanOfArray</a></li><li><a href="global.html#dragBasedTrigonometric">dragBasedTrigonometric</a></li><li><a href="global.html#estimateForHeading">estimateForHeading</a></li><li><a href="global.html#estimateForLatitudeAndLongitude">estimateForLatitudeAndLongitude</a></li><li><a href="global.html#estimatePositionAndVelocity">estimatePositionAndVelocity</a></li><li><a href="global.html#Estimator">Estimator</a></li><li><a href="global.html#generateNPD">generateNPD</a></li><li><a href="global.html#getFeedback">getFeedback</a></li><li><a href="global.html#getFeedbackState">getFeedbackState</a></li><li><a href="global.html#getForces">getForces</a></li><li><a href="global.html#getHeadingFromGyrocompasses">getHeadingFromGyrocompasses</a></li><li><a href="global.html#getInitialState">getInitialState</a></li><li><a href="global.html#getPositionFromGpses">getPositionFromGpses</a></li><li><a href="global.html#getPositionInDegrees">getPositionInDegrees</a></li><li><a href="global.html#getPositionInLatLon">getPositionInLatLon</a></li><li><a href="global.html#getPositionInMeters">getPositionInMeters</a></li><li><a href="global.html#getPower">getPower</a></li><li><a href="global.html#getRandomBetween">getRandomBetween</a></li><li><a href="global.html#GPS">GPS</a></li><li><a href="global.html#Gyrocompass">Gyrocompass</a></li><li><a href="global.html#headingController">headingController</a></li><li><a href="global.html#isAzi">isAzi</a></li><li><a href="global.html#knotsInMps">knotsInMps</a></li><li><a href="global.html#maxBasedTrigonometric">maxBasedTrigonometric</a></li><li><a href="global.html#meanOfArray">meanOfArray</a></li><li><a href="global.html#motion">motion</a></li><li><a href="global.html#mpsInKnots">mpsInKnots</a></li><li><a href="global.html#MRU">MRU</a></li><li><a href="global.html#normalizeRisetimes">normalizeRisetimes</a></li><li><a href="global.html#setDemand">setDemand</a></li><li><a href="global.html#simulationState">simulationState</a></li><li><a href="global.html#speedController">speedController</a></li><li><a href="global.html#Thruster">Thruster</a></li><li><a href="global.html#thrusterFeedbackState">thrusterFeedbackState</a></li><li><a href="global.html#transformBODYToNED">transformBODYToNED</a></li><li><a href="global.html#transformNEDToBODY">transformNEDToBODY</a></li><li><a href="global.html#truncToDecimal">truncToDecimal</a></li><li><a href="global.html#U10toUz">U10toUz</a></li><li><a href="global.html#UiThruster">UiThruster</a></li><li><a href="global.html#unwrapAngle">unwrapAngle</a></li><li><a href="global.html#vesselControlMode">vesselControlMode</a></li><li><a href="global.html#VesselModel">VesselModel</a></li><li><a href="global.html#Windsensor">Windsensor</a></li><li><a href="global.html#wrapTo0To2pi">wrapTo0To2pi</a></li><li><a href="global.html#wrapTo0To360">wrapTo0To360</a></li><li><a href="global.html#wrapToPipi">wrapToPipi</a></li></ul>
+</nav>
+
+<br class="clear">
+
+<footer>
+    Documentation generated by <a href="https://github.com/jsdoc3/jsdoc">JSDoc 3.5.5</a> on Sat Feb 17 2018 14:14:53 GMT+0100 (W. Europe Standard Time)
+</footer>
+
+<script> prettyPrint(); </script>
+<script src="scripts/linenumber.js"> </script>
+</body>
+</html>

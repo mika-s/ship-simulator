@@ -2,7 +2,7 @@ import { truncToDecimal } from '../../util/general.util';
 
 /**
 * Calculate the displacement of a vessel.
-* @param {object} dimensions       - Object containing:
+* @param {Object} dimensions       - Object containing:
 * @param {number} lpp              - Length between perpendiculars.
 * @param {number} breadth          - Breadth.
 * @param {number} draft            - Draft.
@@ -25,7 +25,7 @@ export function calculateDisplacement(dimensions) {
 * Calculate the mass (displacement + added mass) of a vessel in surge, sway and yaw.
 * @param {number} displacement     - The vessel's displacement.
 * @param {number} lpp              - Length between perpendiculars.
-* @returns {object}                - An object containing the vessel's mass.
+* @returns {Object}                - An object containing the vessel's mass.
 *                                  - fields: surge, sway, yaw.
 */
 export function calculateMass(displacement, lpp) {
@@ -46,8 +46,8 @@ export function calculateMass(displacement, lpp) {
 * @param {number} lpp       - Length between perpendiculars.
 * @param {number} breadth   - Breadth.
 * @param {number} draft     - Draft.
-* @returns {object}         - An object containing the vessel's drag.
-*                           - fields: surge, sway, yaw.
+* @returns {Object} An object containing the vessel's drag.
+*                   fields: surge, sway, yaw.
 */
 export function calculateDrag(lpp, breadth, draft) {
   const dragSurge = 0.05 * breadth * draft;
@@ -74,7 +74,7 @@ export function calculateDrag(lpp, breadth, draft) {
 * breadth and superstructure height, multiplied by an experience coefficient.
 * @param {number} breadth               - The vessel's breadth.
 * @param {number} superstructureHeight  - The height of the vessel's superstructure.
-* @returns {number}                     - The projected frontal area.
+* @returns {number} The projected frontal area.
 */
 export function calculateFrontalWindArea(breadth, superstructureHeight) {
   const areaCoefficient = 0.8;
@@ -88,7 +88,7 @@ export function calculateFrontalWindArea(breadth, superstructureHeight) {
 * loa and superstructure height, multiplied by an experience coefficient.
 * @param {number} loa                   - The vessel's length over all.
 * @param {number} superstructureHeight  - The height of the vessel's superstructure.
-* @returns {number}                     - The projected lateral area.
+* @returns {number} The projected lateral area.
 */
 export function calculateLateralWindArea(loa, superstructureHeight) {
   const areaCoefficient = 0.4;

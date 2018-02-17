@@ -1,3 +1,10 @@
+/**
+* Assert that the constructor input for MRU is correct.
+* Throws error if assertion fails.
+* @param {number} number     MRU number.
+* @param {number} roll       Initial roll in degrees.
+* @param {number} pitch      Initial pitch in degrees.
+*/
 function assertMruConstructorInput(number, roll, pitch) {
   const minNumber = 1;
   const maxNumber = 20;
@@ -19,6 +26,10 @@ function assertMruConstructorInput(number, roll, pitch) {
   }
 }
 
+/**
+* Constructor function for an MRU.
+* @param {Object} data    Object with initial data.
+*/
 function MRU(data) {
   const { number, initialRoll, initialPitch } = data;
   assertMruConstructorInput(number, initialRoll, initialPitch);

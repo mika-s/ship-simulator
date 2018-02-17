@@ -5,7 +5,10 @@ export default function estimatorReducer(state, action) {
         ...state,
         alphabeta: {
           ...state.alphabeta,
-          alpha: action.payload.alpha,
+          alpha: {
+            ...state.alphabeta.alpha,
+            heading: action.payload.alpha,
+          },
         },
       };
     case 'SET_BETA_FOR_HEADING':
@@ -13,7 +16,10 @@ export default function estimatorReducer(state, action) {
         ...state,
         alphabeta: {
           ...state.alphabeta,
-          beta: action.payload.beta,
+          beta: {
+            ...state.alphabeta.beta,
+            heading: action.payload.beta,
+          },
         },
       };
     default:

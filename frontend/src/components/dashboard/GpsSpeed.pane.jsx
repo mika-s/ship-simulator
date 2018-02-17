@@ -4,6 +4,11 @@ import update from 'immutability-helper';
 import { Line } from 'react-chartjs-2';
 import './Dashboard.css';
 
+/**
+ * Class representing a GPS speed pane for use on the dashboard.
+ * This is a dumb component receiving data as props.
+ * @extends Component
+*/
 class GpsSpeedPane extends Component {
   constructor() {
     super();

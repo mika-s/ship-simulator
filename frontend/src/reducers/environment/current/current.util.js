@@ -7,9 +7,9 @@ import { maxBasedTrigonometric } from './trigonometric';
 * @param {number} currentDirection - Current direction in degrees.
 * @param {number} vesselHeading    - Heading of the vessel in radians.
 * @param {number} rotationSpeed    - Rotation speed of the vessel, in rad/s.
-* @param {object} dimensions       - Dimension object.
-* @param {object} drag             - The drag coefficients object.
-* @returns {object}                - Current forces in surge, sway and yaw.
+* @param {Object} dimensions       - Dimension object.
+* @param {Object} drag             - The drag coefficients object.
+* @returns {Object} Current forces in surge, sway and yaw.
 */
 export function calculateForces(
   currentSpeed, currentDirection, vesselHeading, rotationSpeed,

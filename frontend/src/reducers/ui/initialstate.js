@@ -1,6 +1,40 @@
 import { motion, vesselControlMode } from '../../util/enums';
 import UiThruster from '../constructors/uithruster';
 
+const min = {
+  heading: 0,
+  gpsspeed: 0,
+  position: 49.9,
+  position2: 3.9,
+  thrusters: 0,
+  rollpitch: -5.0,
+  alphabetaHeading: -10.0,
+  alphabetaHeading2: -30.0,
+  autopilotHeadingPid: -50.0,
+  autopilotHeadingPid2: -3.0,
+  autopilotHeadingPid3: -50.0,
+  autopilotSpeedPid: -50.0,
+  autopilotSpeedPid2: -100.0,
+  autopilotSpeedPid3: -50.0,
+};
+
+const max = {
+  heading: 360,
+  gpsspeed: 10,
+  position: 50.1,
+  position2: 4.1,
+  thrusters: 0,
+  rollpitch: 5.0,
+  alphabetaHeading: 370.0,
+  alphabetaHeading2: 30.0,
+  autopilotHeadingPid: 50.0,
+  autopilotHeadingPid2: 3.0,
+  autopilotHeadingPid3: 50.0,
+  autopilotSpeedPid: 50.0,
+  autopilotSpeedPid2: 100.0,
+  autopilotSpeedPid3: 50.0,
+};
+
 const uiInitialState = {
   thrusters: [],
   current: {
@@ -21,122 +55,26 @@ const uiInitialState = {
       1: {
         type: 'heading',
         isAutoAxis: true,
-        min: {
-          heading: 0,
-          gpsspeed: 0,
-          position: 49.9,
-          position2: 3.9,
-          thrusters: 0,
-          rollpitch: -5.0,
-          alphabetaHeading: 0.0,
-          alphabetaHeading2: 0.0,
-          autopilotPid: -50.0,
-          autopilotPid2: -3.0,
-          autopilotPid3: -50.0,
-        },
-        max: {
-          heading: 360,
-          gpsspeed: 10,
-          position: 50.1,
-          position2: 4.1,
-          thrusters: 0,
-          rollpitch: 5.0,
-          alphabetaHeading: 360.0,
-          alphabetaHeading2: 100.0,
-          autopilotPid: 50.0,
-          autopilotPid2: 3.0,
-          autopilotPid3: 50.0,
-        },
+        min,
+        max,
       },
       2: {
         type: 'gpsspeed',
         isAutoAxis: true,
-        min: {
-          heading: 0,
-          gpsspeed: 0,
-          position: 49.9,
-          position2: 3.9,
-          thrusters: 0,
-          rollpitch: -5.0,
-          alphabetaHeading: 0.0,
-          alphabetaHeading2: 0.0,
-          autopilotPid: -50.0,
-          autopilotPid2: -3.0,
-          autopilotPid3: -50.0,
-        },
-        max: {
-          heading: 360,
-          gpsspeed: 10,
-          position: 50.1,
-          position2: 4.1,
-          thrusters: 0,
-          rollpitch: 5.0,
-          alphabetaHeading: 360.0,
-          alphabetaHeading2: 100.0,
-          autopilotPid: 50.0,
-          autopilotPid2: 3.0,
-          autopilotPid3: 50.0,
-        },
+        min,
+        max,
       },
       3: {
         type: 'position',
         isAutoAxis: true,
-        min: {
-          heading: 0,
-          gpsspeed: 0,
-          position: 49.9,
-          position2: 3.9,
-          thrusters: 0,
-          rollpitch: -5.0,
-          alphabetaHeading: 0.0,
-          alphabetaHeading2: 0.0,
-          autopilotPid: -50.0,
-          autopilotPid2: -3.0,
-          autopilotPid3: -50.0,
-        },
-        max: {
-          heading: 360,
-          gpsspeed: 10,
-          position: 50.1,
-          position2: 4.1,
-          thrusters: 0,
-          rollpitch: 5.0,
-          alphabetaHeading: 360.0,
-          alphabetaHeading2: 100.0,
-          autopilotPid: 50.0,
-          autopilotPid2: 3.0,
-          autopilotPid3: 50.0,
-        },
+        min,
+        max,
       },
       4: {
         type: 'thrusters',
         isAutoAxis: true,
-        min: {
-          heading: 0,
-          gpsspeed: 0,
-          position: 49.9,
-          position2: 3.9,
-          thrusters: 0,
-          rollpitch: -5.0,
-          alphabetaHeading: 0.0,
-          alphabetaHeading2: 0.0,
-          autopilotPid: -50.0,
-          autopilotPid2: -3.0,
-          autopilotPid3: -50.0,
-        },
-        max: {
-          heading: 360,
-          gpsspeed: 10,
-          position: 50.1,
-          position2: 4.1,
-          thrusters: 0,
-          rollpitch: 5.0,
-          alphabetaHeading: 360.0,
-          alphabetaHeading2: 100.0,
-          autopilotPid: 50.0,
-          autopilotPid2: 3.0,
-          autopilotPid3: 50.0,
-        },
+        min,
+        max,
       },
     },
   },
@@ -162,12 +100,28 @@ const uiInitialState = {
   },
   estimator: {
     alphabeta: {
-      alpha: 0.0,
-      beta: 0.0,
+      alpha: {
+        latitude: 0.0,
+        longitude: 0.0,
+        heading: 0.0,
+      },
+      beta: {
+        latitude: 0.0,
+        longitude: 0.0,
+        heading: 0.0,
+      },
     },
   },
 };
 
+/**
+* Get the initial state for the redux store for the ui section.
+* Merges hardcoded values with the values from the settings files.
+* @param {Object}      initialVessel       The initial vessel values from the settings file.
+* @param {Object}      initialController   The initial controller values from the settings file.
+* @param {Object}      initialEstimator    The initial estimator values from the settings file.
+* @returns {Object} The initial state for the ui section.
+*/
 function getInitialState(initialVessel, initialController, initialEstimator) {
   uiInitialState.position = initialVessel.model.position;
 

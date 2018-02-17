@@ -1,8 +1,20 @@
 import { truncToDecimal } from '../../util/general.util';
 import { updateArray } from './timeseries.util';
 
+/**
+* The reducer for the timeseries section.
+* @param {Object}    state               The state object (rootstate.estimator).
+* @param {Object}    action              The action object.
+* @param {number}    time                Simulation time.
+* @param {Object}    estimated           Estimated values from the estimator.
+* @param {Object}    autopilot           Autopilot object.
+* @param {Object}    model               Vessel model object.
+* @param {Object}    sensors             Sensors object.
+* @param {Object}    referencesystems    Reference systems object.
+* @returns {Object} The timeseries section updated.
+*/
 export default function timeseriesReducer(
-  state, action, time, estimator, autopilot,
+  state, action, time, estimated, autopilot,
   model, sensors, referencesystems,
 ) {
   switch (action.type) {
@@ -15,29 +27,29 @@ export default function timeseriesReducer(
             position: {
               longitude: updateArray(
                 state.estimator.alphabeta.position.longitude,
-                truncToDecimal(estimator.position.longitude, 7),
+                truncToDecimal(estimated.position.longitude, 7),
               ),
               latitude: updateArray(
                 state.estimator.alphabeta.position.latitude,
-                truncToDecimal(estimator.position.latitude, 7),
+                truncToDecimal(estimated.position.latitude, 7),
               ),
               heading: updateArray(
                 state.estimator.alphabeta.position.heading,
-                truncToDecimal(estimator.position.heading, 2),
+                truncToDecimal(estimated.position.heading, 2),
               ),
             },
             velocity: {
               u: updateArray(
                 state.estimator.alphabeta.velocity.u,
-                truncToDecimal(estimator.velocity.u, 1),
+                truncToDecimal(estimated.velocity.u, 1),
               ),
               v: updateArray(
                 state.estimator.alphabeta.velocity.v,
-                truncToDecimal(estimator.velocity.v, 1),
+                truncToDecimal(estimated.velocity.v, 1),
               ),
               r: updateArray(
                 state.estimator.alphabeta.velocity.r,
-                truncToDecimal(estimator.velocity.r, 1),
+                truncToDecimal(estimated.velocity.r, 1),
               ),
             },
           },
@@ -50,15 +62,30 @@ export default function timeseriesReducer(
               ...state.autopilot.controllers.headingPid,
               p: updateArray(
                 state.autopilot.controllers.headingPid.p,
-                truncToDecimal(autopilot.pid.p, 3),
+                truncToDecimal(autopilot.headingPid.p, 3),
               ),
               i: updateArray(
                 state.autopilot.controllers.headingPid.i,
-                truncToDecimal(autopilot.pid.i, 3),
+                truncToDecimal(autopilot.headingPid.i, 3),
               ),
               d: updateArray(
                 state.autopilot.controllers.headingPid.d,
-                truncToDecimal(autopilot.pid.d, 3),
+                truncToDecimal(autopilot.headingPid.d, 3),
+              ),
+            },
+            speedPid: {
+              ...state.autopilot.controllers.speedPid,
+              p: updateArray(
+                state.autopilot.controllers.speedPid.p,
+                truncToDecimal(autopilot.speedPid.p, 3),
+              ),
+              i: updateArray(
+                state.autopilot.controllers.speedPid.i,
+                truncToDecimal(autopilot.speedPid.i, 3),
+              ),
+              d: updateArray(
+                state.autopilot.controllers.speedPid.d,
+                truncToDecimal(autopilot.speedPid.d, 3),
               ),
             },
           },
@@ -95,34 +122,21 @@ export default function timeseriesReducer(
 
         estimator: {
           alphabeta: {
-            position: {
-              longitude: [],
-              latitude: [],
-              heading: [],
-            },
-            velocity: {
-              u: [],
-              v: [],
-              r: [],
-            },
+            position: { longitude: [], latitude: [], heading: [] },
+            velocity: { u: [], v: [], r: [] },
           },
         },
 
-        model: {
-          position: {
-            latitude: [],
-            longitude: [],
-            heading: [],
+        autopilot: {
+          controllers: {
+            headingPid: { p: [], i: [], d: [] },
+            speedPid: { p: [], i: [], d: [] },
           },
         },
-        sensors: {
-          roll: [],
-          pitch: [],
-        },
 
-        referencesystems: {
-          speed: [],
-        },
+        model: { position: { latitude: [], longitude: [], heading: [] } },
+        sensors: { roll: [], pitch: [] },
+        referencesystems: { speed: [] },
       };
     default:
       return state;

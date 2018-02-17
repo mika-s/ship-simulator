@@ -16,6 +16,12 @@ const shipInitialState = {
   },
 };
 
+/**
+* Get the initial state for the redux store for the ship section.
+* Merges hardcoded values with the values from the settings files.
+* @param {Object}      initialVessel       The initial vessel values from the settings file.
+* @returns {Object} The initial state for the ship section.
+*/
 function getInitialState(InitialVessel) {
   for (let gcIdx = 0; gcIdx < InitialVessel.sensors.gyrocompasses.length; gcIdx += 1) {
     shipInitialState.sensors.gyrocompasses

@@ -1,3 +1,9 @@
+/**
+* Assert that the constructor input for Gyrocompass is correct.
+* Throws error if assertion fails.
+* @param {number} number     Gyrocompass number.
+* @param {number} heading    Initial heading in degrees.
+*/
 function assertGyrocompassConstructorInput(number, heading) {
   const minNumber = 1;
   const maxNumber = 20;
@@ -13,7 +19,10 @@ function assertGyrocompassConstructorInput(number, heading) {
   }
 }
 
-
+/**
+* Constructor function for a Gyrocompass.
+* @param {Object} data    Object with initial data.
+*/
 function Gyrocompass(data) {
   const { number, initialHeading } = data;
   assertGyrocompassConstructorInput(number, initialHeading);

@@ -1,0 +1,252 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="utf-8">
+    <title>JSDoc: Source: reducers/ship/thruster.util.js</title>
+
+    <script src="scripts/prettify/prettify.js"> </script>
+    <script src="scripts/prettify/lang-css.js"> </script>
+    <!--[if lt IE 9]>
+      <script src="//html5shiv.googlecode.com/svn/trunk/html5.js"></script>
+    <![endif]-->
+    <link type="text/css" rel="stylesheet" href="styles/prettify-tomorrow.css">
+    <link type="text/css" rel="stylesheet" href="styles/jsdoc-default.css">
+</head>
+
+<body>
+
+<div id="main">
+
+    <h1 class="page-title">Source: reducers/ship/thruster.util.js</h1>
+
+    
+
+
+
+    
+    <section>
+        <article>
+            <pre class="prettyprint source linenums"><code>import { thrusterFeedbackState } from '../../util/enums';
+import { wrapTo0To360 } from '../../util/kinematics.util';
+
+/**
+* Get the thruster force.
+* @param {Object} thruster   - The thruster object.
+* @returns {number} The force delivered by the thruster.
+*/
+export function getForces(thruster) {
+  let rpmPart;
+  let pitchPart;
+
+  if (thruster.feedback.rpm >= 0.0) {
+    rpmPart = thruster.feedback.rpm ** thruster.rpmExponent.positive;
+  } else {
+    rpmPart = Math.abs(thruster.feedback.rpm) ** thruster.rpmExponent.negative;
+  }
+
+  if (thruster.feedback.pitch >= 0.0) {
+    pitchPart = thruster.feedback.pitch ** thruster.pitchExponent.positive;
+  } else {
+    pitchPart = Math.abs(thruster.feedback.pitch) ** thruster.pitchExponent.negative;
+  }
+
+  let newForce;
+
+  if (thruster.controlType === 'rpm' &amp;&amp; thruster.feedback.rpm >= 0.0) {
+    newForce = thruster.maxForce.positive * pitchPart * rpmPart;
+  } else if (thruster.controlType === 'rpm' &amp;&amp; thruster.feedback.rpm &lt; 0.0) {
+    newForce = thruster.maxForce.negative * pitchPart * rpmPart;
+  } else if (thruster.controlType === 'pitch' &amp;&amp; thruster.feedback.pitch >= 0.0) {
+    newForce = thruster.maxForce.positive * pitchPart * rpmPart;
+  } else if (thruster.controlType === 'pitch' &amp;&amp; thruster.feedback.pitch &lt; 0.0) {
+    newForce = thruster.maxForce.negative * pitchPart * rpmPart;
+  } else {
+    throw new Error('Error in force state.');
+  }
+
+  return newForce;
+}
+
+/**
+* Get the thruster power.
+* @param {Object} thruster   - The thruster object.
+* @returns {number} The consumed power of the thruster.
+*/
+export function getPower(thruster) {
+  let rpmPart;
+  let pitchPart;
+
+  if (thruster.feedback.rpm >= 0.0) {
+    rpmPart = thruster.feedback.rpm ** thruster.rpmPowerExponent.positive;
+  } else {
+    rpmPart = Math.abs(thruster.feedback.rpm) ** thruster.rpmPowerExponent.negative;
+  }
+
+  if (thruster.feedback.pitch >= 0.0) {
+    pitchPart = thruster.feedback.pitch ** thruster.pitchPowerExponent.positive;
+  } else {
+    pitchPart = Math.abs(thruster.feedback.pitch) ** thruster.pitchPowerExponent.negative;
+  }
+
+  let newPower;
+
+  if (thruster.controlType === 'rpm' &amp;&amp; thruster.feedback.rpm >= 0.0) {
+    newPower = thruster.maxPower.positive * pitchPart * rpmPart;
+  } else if (thruster.controlType === 'rpm' &amp;&amp; thruster.feedback.rpm &lt; 0.0) {
+    newPower = thruster.maxPower.negative * pitchPart * rpmPart;
+  } else if (thruster.controlType === 'pitch' &amp;&amp; thruster.feedback.pitch >= 0.0) {
+    newPower = thruster.maxPower.positive * pitchPart * rpmPart;
+  } else if (thruster.controlType === 'pitch' &amp;&amp; thruster.feedback.pitch &lt; 0.0) {
+    newPower = thruster.maxPower.negative * pitchPart * rpmPart;
+  } else {
+    throw new Error('Error in power state.');
+  }
+
+  return newPower;
+}
+
+/**
+* Return true if the thruster can change azimuth.
+* @param {string} thrusterType   - Type of thruster.
+* @returns {boolean} true if azimuth can be changed, false otherwise.
+*/
+export function isAzi(thrusterType) {
+  return thrusterType === 'propeller' || thrusterType === 'azimuth';
+}
+
+/**
+* Get the state of the thruster feedback.
+* @param {number} difference   - Difference between demand and feedback.
+* @param {Object} risetimes    - Object of risetimes.
+* @returns {enum} Demand/feedback state of the thruster.
+*/
+function getFeedbackState(difference, risetimes) {
+  const { positive: rtPos, negative: rtNeg } = risetimes;
+
+  let state;
+
+  if (difference === 0) {
+    state = thrusterFeedbackState.AT_POSITION;
+  } else if (difference > 0 &amp;&amp; difference > rtPos) {
+    state = thrusterFeedbackState.INCREASING_BY_RT;
+  } else if (difference > 0 &amp;&amp; difference &lt;= rtPos) {
+    state = thrusterFeedbackState.INCREASING_LT_RT;
+  } else if (difference &lt; 0 &amp;&amp; difference &lt; rtNeg) {
+    state = thrusterFeedbackState.DECREASING_BY_RT;
+  } else if (difference &lt; 0 &amp;&amp; difference >= rtNeg) {
+    state = thrusterFeedbackState.DECREASING_LT_RT;
+  } else {
+    throw new Error(`Illegal state: ${difference}, ${rtPos}, ${rtNeg}.`);
+  }
+
+  return state;
+}
+
+/**
+* Set the thruster demands.
+* @param {Object} thruster   - The thruster object.
+* @param {Object} demand     - The demand object with demands in rpm, pitch and azimuth.
+* @returns {Object} Object with thruster demands in rpm, pitch and azimuth.
+*/
+export function setDemand(thruster, demand) {
+  return {
+    ...demand,
+    azimuth: isAzi(thruster.thrusterType) ? demand.azimuth : 90.0,
+  };
+}
+
+/**
+* Get the thruster feedbacks.
+* @param {Object} thruster   - The thruster object.
+* @returns {Object} Object with thruster feedback in rpm, pitch and azimuth.
+*/
+export function getFeedback(thruster) {
+  const newFeedback = { rpm: 0.0, pitch: 0.0 };
+  const { controlType: type } = thruster;
+  const { positive: rtPos, negative: rtNeg } = thruster.risetimes[type];
+
+  const difference = thruster.demand[type] - thruster.feedback[type];
+  const feedbackState = getFeedbackState(difference, thruster.risetimes[type]);
+
+  switch (feedbackState) {
+    case thrusterFeedbackState.AT_POSITION:
+      newFeedback[type] = thruster.feedback[type];
+      break;
+    case thrusterFeedbackState.INCREASING_BY_RT:
+      newFeedback[type] = thruster.feedback[type] + rtPos;
+      break;
+    case thrusterFeedbackState.INCREASING_LT_RT:
+      newFeedback[type] = thruster.demand[type];
+      break;
+    case thrusterFeedbackState.DECREASING_BY_RT:
+      newFeedback[type] = thruster.feedback[type] + rtNeg;
+      break;
+    case thrusterFeedbackState.DECREASING_LT_RT:
+      newFeedback[type] = thruster.demand[type];
+      break;
+    default:
+      throw new Error(`Illegal feedback state for the thruster: ${feedbackState}.`);
+  }
+
+  if (isAzi(thruster.thrusterType)) {
+    const aziDifference = thruster.demand.azimuth - thruster.feedback.azimuth;
+
+    // Find shortest distance.
+    const ccw = aziDifference > 0 ? aziDifference - 360.0 : aziDifference;
+    const cw = aziDifference > 0 ? aziDifference : 360 + aziDifference;
+    const chosenAziDiff = Math.abs(ccw) &lt; Math.abs(cw) ? ccw : cw;
+
+    const aziFeedbackState =
+      getFeedbackState(chosenAziDiff, thruster.risetimes.azimuth);
+    const { positive: rtPosAzi, negative: rtNegAzi } = thruster.risetimes.azimuth;
+
+    switch (aziFeedbackState) {
+      case thrusterFeedbackState.AT_POSITION:
+        newFeedback.azimuth = thruster.feedback.azimuth;
+        break;
+      case thrusterFeedbackState.INCREASING_BY_RT:
+        newFeedback.azimuth = thruster.feedback.azimuth + rtPosAzi;
+        break;
+      case thrusterFeedbackState.INCREASING_LT_RT:
+        newFeedback.azimuth = thruster.demand.azimuth;
+        break;
+      case thrusterFeedbackState.DECREASING_BY_RT:
+        newFeedback.azimuth = thruster.feedback.azimuth + rtNegAzi;
+        break;
+      case thrusterFeedbackState.DECREASING_LT_RT:
+        newFeedback.azimuth = thruster.demand.azimuth;
+        break;
+      default:
+        throw new Error(`Illegal feedback state for the thruster: ${aziFeedbackState}.`);
+    }
+  } else {
+    newFeedback.azimuth = thruster.feedback.azimuth;
+  }
+
+  newFeedback.azimuth = wrapTo0To360(newFeedback.azimuth);
+
+  return newFeedback;
+}
+</code></pre>
+        </article>
+    </section>
+
+
+
+
+</div>
+
+<nav>
+    <h2><a href="index.html">Home</a></h2><h3>Classes</h3><ul><li><a href="AlphabetaHeadingPane.html">AlphabetaHeadingPane</a></li><li><a href="Dashboard.html">Dashboard</a></li><li><a href="GpsSpeedPane.html">GpsSpeedPane</a></li><li><a href="HeadingPane.html">HeadingPane</a></li><li><a href="Paneselector.html">Paneselector</a></li><li><a href="PidPane.html">PidPane</a></li><li><a href="PositionPane.html">PositionPane</a></li><li><a href="SensorPane.html">SensorPane</a></li><li><a href="ThrustersPane.html">ThrustersPane</a></li></ul><h3>Global</h3><ul><li><a href="global.html#alphabetaFilter">alphabetaFilter</a></li><li><a href="global.html#assertGpsConstructorInput">assertGpsConstructorInput</a></li><li><a href="global.html#assertGyrocompassConstructorInput">assertGyrocompassConstructorInput</a></li><li><a href="global.html#assertMruConstructorInput">assertMruConstructorInput</a></li><li><a href="global.html#assertThrusterConstructorInput">assertThrusterConstructorInput</a></li><li><a href="global.html#assertUiThrusterConstructorInput">assertUiThrusterConstructorInput</a></li><li><a href="global.html#assertWindsensorConstructorInput">assertWindsensorConstructorInput</a></li><li><a href="global.html#autopilotAlloc">autopilotAlloc</a></li><li><a href="global.html#calculateControllerDemands">calculateControllerDemands</a></li><li><a href="global.html#calculateDisplacement">calculateDisplacement</a></li><li><a href="global.html#calculateDrag">calculateDrag</a></li><li><a href="global.html#calculateForces">calculateForces</a></li><li><a href="global.html#calculateFrontalWindArea">calculateFrontalWindArea</a></li><li><a href="global.html#calculateLateralWindArea">calculateLateralWindArea</a></li><li><a href="global.html#calculateMass">calculateMass</a></li><li><a href="global.html#calculateMaxForce">calculateMaxForce</a></li><li><a href="global.html#calculateThrusterDemands">calculateThrusterDemands</a></li><li><a href="global.html#circularMeanOfArray">circularMeanOfArray</a></li><li><a href="global.html#dragBasedTrigonometric">dragBasedTrigonometric</a></li><li><a href="global.html#estimateForHeading">estimateForHeading</a></li><li><a href="global.html#estimateForLatitudeAndLongitude">estimateForLatitudeAndLongitude</a></li><li><a href="global.html#estimatePositionAndVelocity">estimatePositionAndVelocity</a></li><li><a href="global.html#Estimator">Estimator</a></li><li><a href="global.html#generateNPD">generateNPD</a></li><li><a href="global.html#getFeedback">getFeedback</a></li><li><a href="global.html#getFeedbackState">getFeedbackState</a></li><li><a href="global.html#getForces">getForces</a></li><li><a href="global.html#getHeadingFromGyrocompasses">getHeadingFromGyrocompasses</a></li><li><a href="global.html#getInitialState">getInitialState</a></li><li><a href="global.html#getPositionFromGpses">getPositionFromGpses</a></li><li><a href="global.html#getPositionInDegrees">getPositionInDegrees</a></li><li><a href="global.html#getPositionInLatLon">getPositionInLatLon</a></li><li><a href="global.html#getPositionInMeters">getPositionInMeters</a></li><li><a href="global.html#getPower">getPower</a></li><li><a href="global.html#getRandomBetween">getRandomBetween</a></li><li><a href="global.html#GPS">GPS</a></li><li><a href="global.html#Gyrocompass">Gyrocompass</a></li><li><a href="global.html#headingController">headingController</a></li><li><a href="global.html#isAzi">isAzi</a></li><li><a href="global.html#knotsInMps">knotsInMps</a></li><li><a href="global.html#maxBasedTrigonometric">maxBasedTrigonometric</a></li><li><a href="global.html#meanOfArray">meanOfArray</a></li><li><a href="global.html#motion">motion</a></li><li><a href="global.html#mpsInKnots">mpsInKnots</a></li><li><a href="global.html#MRU">MRU</a></li><li><a href="global.html#normalizeRisetimes">normalizeRisetimes</a></li><li><a href="global.html#setDemand">setDemand</a></li><li><a href="global.html#simulationState">simulationState</a></li><li><a href="global.html#speedController">speedController</a></li><li><a href="global.html#Thruster">Thruster</a></li><li><a href="global.html#thrusterFeedbackState">thrusterFeedbackState</a></li><li><a href="global.html#transformBODYToNED">transformBODYToNED</a></li><li><a href="global.html#transformNEDToBODY">transformNEDToBODY</a></li><li><a href="global.html#truncToDecimal">truncToDecimal</a></li><li><a href="global.html#U10toUz">U10toUz</a></li><li><a href="global.html#UiThruster">UiThruster</a></li><li><a href="global.html#unwrapAngle">unwrapAngle</a></li><li><a href="global.html#vesselControlMode">vesselControlMode</a></li><li><a href="global.html#VesselModel">VesselModel</a></li><li><a href="global.html#Windsensor">Windsensor</a></li><li><a href="global.html#wrapTo0To2pi">wrapTo0To2pi</a></li><li><a href="global.html#wrapTo0To360">wrapTo0To360</a></li><li><a href="global.html#wrapToPipi">wrapToPipi</a></li></ul>
+</nav>
+
+<br class="clear">
+
+<footer>
+    Documentation generated by <a href="https://github.com/jsdoc3/jsdoc">JSDoc 3.5.5</a> on Sat Feb 17 2018 14:14:53 GMT+0100 (W. Europe Standard Time)
+</footer>
+
+<script> prettyPrint(); </script>
+<script src="scripts/linenumber.js"> </script>
+</body>
+</html>

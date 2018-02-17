@@ -7,6 +7,11 @@ import {
 import Paneselector from './Paneselector';
 import './Dashboard.css';
 
+/**
+ * Class representing a dashboard, containing 4 pane selectors.
+ * This is a smart component connected to the Redux store.
+ * @extends Component
+*/
 class Dashboard extends Component {
   constructor(props) {
     super(props);
@@ -116,6 +121,37 @@ class Dashboard extends Component {
   }
 }
 
+const minMaxShape = PropTypes.shape({
+  heading: PropTypes.number.isRequired,
+  gpsspeed: PropTypes.number.isRequired,
+  position: PropTypes.number.isRequired,
+  position2: PropTypes.number.isRequired,
+  thrusters: PropTypes.number.isRequired,
+  rollpitch: PropTypes.number.isRequired,
+  alphabetaHeading: PropTypes.number.isRequired,
+  alphabetaHeading2: PropTypes.number.isRequired,
+  autopilotHeadingPid: PropTypes.number.isRequired,
+  autopilotHeadingPid2: PropTypes.number.isRequired,
+  autopilotHeadingPid3: PropTypes.number.isRequired,
+  autopilotSpeedPid: PropTypes.number.isRequired,
+  autopilotSpeedPid2: PropTypes.number.isRequired,
+  autopilotSpeedPid3: PropTypes.number.isRequired,
+}).isRequired;
+
+Dashboard.propTypes = {
+  panes: PropTypes.objectOf(PropTypes.shape({
+    type: PropTypes.string.isRequired,
+    isAutoAxis: PropTypes.bool.isRequired,
+    min: minMaxShape,
+    max: minMaxShape,
+  })).isRequired,
+  setDashboardPane: PropTypes.func.isRequired,
+  toggleAutoAxis: PropTypes.func.isRequired,
+  setMinMax: PropTypes.func.isRequired,
+  setMinMax2: PropTypes.func.isRequired,
+  setMinMax3: PropTypes.func.isRequired,
+};
+
 const mapStateToProps = state => ({
   panes: state.ui.dashboard.panes,
 });
@@ -129,43 +165,5 @@ const mapDispatchToProps = dispatch => ({
 });
 
 const ConnectedDashboard = connect(mapStateToProps, mapDispatchToProps)(Dashboard);
-
-Dashboard.propTypes = {
-  panes: PropTypes.objectOf(PropTypes.shape({
-    type: PropTypes.string.isRequired,
-    isAutoAxis: PropTypes.bool.isRequired,
-    min: PropTypes.shape({
-      heading: PropTypes.number.isRequired,
-      gpsspeed: PropTypes.number.isRequired,
-      position: PropTypes.number.isRequired,
-      position2: PropTypes.number.isRequired,
-      thrusters: PropTypes.number.isRequired,
-      rollpitch: PropTypes.number.isRequired,
-      alphabetaHeading: PropTypes.number.isRequired,
-      alphabetaHeading2: PropTypes.number.isRequired,
-      autopilotPid: PropTypes.number.isRequired,
-      autopilotPid2: PropTypes.number.isRequired,
-      autopilotPid3: PropTypes.number.isRequired,
-    }).isRequired,
-    max: PropTypes.shape({
-      heading: PropTypes.number.isRequired,
-      gpsspeed: PropTypes.number.isRequired,
-      position: PropTypes.number.isRequired,
-      position2: PropTypes.number.isRequired,
-      thrusters: PropTypes.number.isRequired,
-      rollpitch: PropTypes.number.isRequired,
-      alphabetaHeading: PropTypes.number.isRequired,
-      alphabetaHeading2: PropTypes.number.isRequired,
-      autopilotPid: PropTypes.number.isRequired,
-      autopilotPid2: PropTypes.number.isRequired,
-      autopilotPid3: PropTypes.number.isRequired,
-    }).isRequired,
-  })).isRequired,
-  setDashboardPane: PropTypes.func.isRequired,
-  toggleAutoAxis: PropTypes.func.isRequired,
-  setMinMax: PropTypes.func.isRequired,
-  setMinMax2: PropTypes.func.isRequired,
-  setMinMax3: PropTypes.func.isRequired,
-};
 
 export default ConnectedDashboard;

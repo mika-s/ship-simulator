@@ -3,7 +3,7 @@ import PropTypes from 'prop-types';
 import update from 'immutability-helper';
 import { connect } from 'react-redux';
 import AlphabetaHeading from './Alphabeta.heading.pane';
-import AutopilotPidPane from './Autopilot.PID.pane';
+import PidPane from './PID.pane';
 import HeadingPane from './Heading.pane';
 import SensorPane from './Sensor.pane';
 import ThrustersPane from './Thrusters.pane';
@@ -11,6 +11,13 @@ import PositionPane from './Position.pane';
 import GpsSpeedPane from './GpsSpeed.pane';
 import './Dashboard.css';
 
+/**
+ * Class representing a pane selector that contains several panes.
+ * The panes can be chosen with a dropdown menu.
+ * This is a hybrid of a smart component, communicating with the
+ * Redux store, and a ordinary component receiving data as props.
+ * @extends Component
+*/
 class Paneselector extends Component {
   constructor(props) {
     super(props);
@@ -130,7 +137,8 @@ class Paneselector extends Component {
     const {
       simulationTimeSeries, modelPositionSeries, rollSeries, pitchSeries,
       speedSeries, alphabetaHeadingSeries, alphabetaRotSeries, thrusters,
-      pSeries, iSeries, dSeries,
+      headingPSeries, headingISeries, headingDSeries,
+      speedPSeries, speedISeries, speedDSeries,
     } = this.props;
 
     return (
@@ -147,7 +155,8 @@ class Paneselector extends Component {
             <option value="thrusters">Thrusters</option>
             <option value="gpsspeed">GPS speed</option>
             <option value="alphabetaHeading">αβ - Heading and ROT</option>
-            <option value="autopilotPid">Autopilot - PID</option>
+            <option value="autopilotHeadingPid">Autopilot - Heading PID</option>
+            <option value="autopilotSpeedPid">Autopilot - Speed PID</option>
           </select>
 
           {this.state.pane !== 'thrusters' &&
@@ -210,19 +219,34 @@ class Paneselector extends Component {
                 rotSeries={alphabetaRotSeries}
               />}
 
-            {this.state.pane === 'autopilotPid' &&
-              <AutopilotPidPane
-                min={this.props.initialSettings.min.autopilotPid}
-                max={this.props.initialSettings.max.autopilotPid}
-                min2={this.props.initialSettings.min.autopilotPid2}
-                max2={this.props.initialSettings.max.autopilotPid2}
-                min3={this.props.initialSettings.min.autopilotPid3}
-                max3={this.props.initialSettings.max.autopilotPid3}
+            {this.state.pane === 'autopilotHeadingPid' &&
+              <PidPane
+                min={this.props.initialSettings.min.autopilotHeadingPid}
+                max={this.props.initialSettings.max.autopilotHeadingPid}
+                min2={this.props.initialSettings.min.autopilotHeadingPid2}
+                max2={this.props.initialSettings.max.autopilotHeadingPid2}
+                min3={this.props.initialSettings.min.autopilotHeadingPid3}
+                max3={this.props.initialSettings.max.autopilotHeadingPid3}
                 isAutoAxis={this.state.isAutoAxis}
                 simulationTimeSeries={simulationTimeSeries}
-                pSeries={pSeries}
-                iSeries={iSeries}
-                dSeries={dSeries}
+                pSeries={headingPSeries}
+                iSeries={headingISeries}
+                dSeries={headingDSeries}
+              />}
+
+            {this.state.pane === 'autopilotSpeedPid' &&
+              <PidPane
+                min={this.props.initialSettings.min.autopilotSpeedPid}
+                max={this.props.initialSettings.max.autopilotSpeedPid}
+                min2={this.props.initialSettings.min.autopilotSpeedPid2}
+                max2={this.props.initialSettings.max.autopilotSpeedPid2}
+                min3={this.props.initialSettings.min.autopilotSpeedPid3}
+                max3={this.props.initialSettings.max.autopilotSpeedPid3}
+                isAutoAxis={this.state.isAutoAxis}
+                simulationTimeSeries={simulationTimeSeries}
+                pSeries={speedPSeries}
+                iSeries={speedISeries}
+                dSeries={speedDSeries}
               />}
           </div>
           {this.state.isSettingsOpen &&
@@ -274,8 +298,11 @@ class Paneselector extends Component {
                         </div>
                       </form>}
                     {/* Special case for position which has two axes. */}
-                    {!this.state.isAutoAxis && (this.state.pane === 'position'
-                      || this.state.pane === 'alphabetaHeading' || this.state.pane === 'autopilotPid') &&
+                    {!this.state.isAutoAxis &&
+                    (this.state.pane === 'position' ||
+                    this.state.pane === 'alphabetaHeading' ||
+                    this.state.pane === 'autopilotHeadingPid' ||
+                    this.state.pane === 'autopilotSpeedPid') &&
                       <form className="form-inline" style={{ marginTop: 10 }} onSubmit={this.setMinMax2}>
                         <div className="form-check">
                           Min:
@@ -306,7 +333,9 @@ class Paneselector extends Component {
                         </div>
                       </form>}
                     {/* Special case for position which has three axes. */}
-                    {!this.state.isAutoAxis && this.state.pane === 'autopilotPid' &&
+                    {!this.state.isAutoAxis &&
+                    (this.state.pane === 'autopilotHeadingPid' ||
+                    this.state.pane === 'autopilotSpeedPid') &&
                       <form className="form-inline" style={{ marginTop: 10 }} onSubmit={this.setMinMax3}>
                         <div className="form-check">
                           Min:
@@ -357,9 +386,12 @@ const mapStateToProps = state => ({
   speedSeries: state.timeseries.referencesystems.speed,
   alphabetaHeadingSeries: state.timeseries.estimator.alphabeta.position.heading,
   alphabetaRotSeries: state.timeseries.estimator.alphabeta.velocity.r,
-  pSeries: state.timeseries.autopilot.controllers.headingPid.p,
-  iSeries: state.timeseries.autopilot.controllers.headingPid.i,
-  dSeries: state.timeseries.autopilot.controllers.headingPid.d,
+  headingPSeries: state.timeseries.autopilot.controllers.headingPid.p,
+  headingISeries: state.timeseries.autopilot.controllers.headingPid.i,
+  headingDSeries: state.timeseries.autopilot.controllers.headingPid.d,
+  speedPSeries: state.timeseries.autopilot.controllers.speedPid.p,
+  speedISeries: state.timeseries.autopilot.controllers.speedPid.i,
+  speedDSeries: state.timeseries.autopilot.controllers.speedPid.d,
   thrusters: state.ship.thrusters,
 });
 
@@ -387,9 +419,12 @@ Paneselector.propTypes = {
   speedSeries: PropTypes.arrayOf(PropTypes.number).isRequired,
   alphabetaHeadingSeries: PropTypes.arrayOf(PropTypes.number).isRequired,
   alphabetaRotSeries: PropTypes.arrayOf(PropTypes.number).isRequired,
-  pSeries: PropTypes.arrayOf(PropTypes.number).isRequired,
-  iSeries: PropTypes.arrayOf(PropTypes.number).isRequired,
-  dSeries: PropTypes.arrayOf(PropTypes.number).isRequired,
+  headingPSeries: PropTypes.arrayOf(PropTypes.number).isRequired,
+  headingISeries: PropTypes.arrayOf(PropTypes.number).isRequired,
+  headingDSeries: PropTypes.arrayOf(PropTypes.number).isRequired,
+  speedPSeries: PropTypes.arrayOf(PropTypes.number).isRequired,
+  speedISeries: PropTypes.arrayOf(PropTypes.number).isRequired,
+  speedDSeries: PropTypes.arrayOf(PropTypes.number).isRequired,
   thrusters: PropTypes.arrayOf(PropTypes.object).isRequired,
 };
 

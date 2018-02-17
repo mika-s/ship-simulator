@@ -1,0 +1,240 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="utf-8">
+    <title>JSDoc: Source: reducers/estimator/alphabeta.js</title>
+
+    <script src="scripts/prettify/prettify.js"> </script>
+    <script src="scripts/prettify/lang-css.js"> </script>
+    <!--[if lt IE 9]>
+      <script src="//html5shiv.googlecode.com/svn/trunk/html5.js"></script>
+    <![endif]-->
+    <link type="text/css" rel="stylesheet" href="styles/prettify-tomorrow.css">
+    <link type="text/css" rel="stylesheet" href="styles/jsdoc-default.css">
+</head>
+
+<body>
+
+<div id="main">
+
+    <h1 class="page-title">Source: reducers/estimator/alphabeta.js</h1>
+
+    
+
+
+
+    
+    <section>
+        <article>
+            <pre class="prettyprint source linenums"><code>import { LatLonSpherical } from 'geodesy';
+import {
+  transformBODYToNED, transformNEDToBODY, wrapTo0To360, unwrapAngle,
+} from '../../util/kinematics.util';
+
+const {
+  sin, cos, sqrt, atan2, PI,
+} = Math;
+
+/**
+* Get the position of the vessel in meters, given degrees.
+* @param {Object} positionInDegrees   - The position in degrees.
+* @returns {Object} The position of the vessel in meters.
+*/
+function getPositionInMeters(positionInDegrees) {
+  const geoCenter = new LatLonSpherical(0.0, 0.0);
+  const geoPosition =
+    new LatLonSpherical(positionInDegrees.latitude, positionInDegrees.longitude);
+
+  const distance = geoPosition.distanceTo(geoCenter);
+  const bearing = geoCenter.bearingTo(geoPosition) * (PI / 180.0);
+
+  const positionInMeters = {
+    latitude: distance * cos(bearing),
+    longitude: distance * sin(bearing),
+  };
+
+  return positionInMeters;
+}
+
+/**
+* Get the position of the vessel in degrees, given meters.
+* @param {Object} positionInMeters   - The position in meters.
+* @returns {Object} The position of the vessel in degrees.
+*/
+function getPositionInDegrees(positionInMeters) {
+  const geoCenter = new LatLonSpherical(0.0, 0.0);
+
+  const distance = sqrt((positionInMeters.latitude ** 2) + (positionInMeters.longitude ** 2));
+  const bearing = atan2(positionInMeters.longitude, positionInMeters.latitude) * (180.0 / PI);
+
+  const positionInDegrees = geoCenter.destinationPoint(distance, bearing);
+
+  return {
+    latitude: positionInDegrees.lat,
+    longitude: positionInDegrees.lon,
+  };
+}
+
+/**
+* Estimate x and xdot using an alphabeta filter.
+* @param {number} frequency   - The working frequency of the system.
+* @param {number} alpha       - Alpha parameter of the filter.
+* @param {number} beta        - Beta parameter of the filter.
+* @param {number} x           - The previous x value.
+* @param {number} xdot        - The previous xdot value.
+* @param {number} measuredX   - The measured x value.
+* @param {boolean} isHeading  - Whether the estimated x is a heading or not.
+* @returns {Object} An object containing estimated x and xdot.
+*/
+function alphabetaFilter(frequency, alpha, beta, x, xdot, measuredX, isHeading) {
+  const secInMin = isHeading ? 60 : 1;
+  const dt = 1 / frequency;
+
+  const unwrappedMeasuredX = isHeading ? unwrapAngle(
+    x * (PI / 180.0),
+    measuredX * (PI / 180.0),
+  ) * (180.0 / PI) : measuredX;
+
+  const prevEstimatedX = x;
+  const prevEstimatedXdot = xdot / secInMin;
+
+  // prediction step
+  const predictedX = prevEstimatedX + (prevEstimatedXdot * dt);
+  const predictedXdot = prevEstimatedXdot;
+
+  // update step
+  const residual = unwrappedMeasuredX - predictedX;
+  let estimatedXdot = predictedXdot + ((beta * residual) / dt);
+  let estimatedX = predictedX + (alpha * residual);
+
+  if (isHeading) {
+    estimatedX = wrapTo0To360(estimatedX);
+    estimatedXdot *= secInMin;
+  }
+
+  return { estimatedX, estimatedXdot };
+}
+
+/**
+* Estimate position, velocity and acceleration for heading using an alphabeta filter.
+* @param {number} frequency            - The working frequency of the system.
+* @param {Object} estimator            - The estimator object.
+* @param {number} filteredGyroHeading  - The filtered heading from gyrocompasses.
+* @returns {Object} An object containing estimated position, velocity and acceleration.
+*/
+export function estimateForHeading(frequency, estimator, filteredGyroHeading) {
+  const { estimatedX: estimatedHeading, estimatedXdot: estimatedRot } = alphabetaFilter(
+    frequency,
+    estimator.alphabeta.alpha.heading,
+    estimator.alphabeta.beta.heading,
+    estimator.alphabeta.position.heading,
+    estimator.alphabeta.velocity.r,
+    filteredGyroHeading,
+    true,
+  );
+
+  const position = { heading: estimatedHeading };
+  const velocity = { r: estimatedRot };
+  const acceleration = { rd: 0.0 };
+
+  return { position, velocity, acceleration };
+}
+
+/**
+* Estimate position, velocity and acceleration for latitude and longitude using an alphabeta filter.
+* @param {number} frequency            - The working frequency of the system.
+* @param {Object} estimator            - The estimator object.
+* @param {Object} filteredGpsPosition  - An filtered position from GPSes.
+* @param {number} heading              - The vessel's heading.
+* @returns {Object} An object containing estimated position, velocity and acceleration.
+*/
+export function estimateForLatitudeAndLongitude(
+  frequency, estimator,
+  filteredGpsPosition, heading,
+) {
+  const filteredGpsPositionInMeters = getPositionInMeters(filteredGpsPosition);
+
+  const filteredGpsPositionInMetersInBody = transformNEDToBODY({
+    latitude: filteredGpsPositionInMeters.latitude,
+    longitude: filteredGpsPositionInMeters.longitude,
+    heading: heading * (PI / 180.0),
+  });
+
+  const positionInMeters = getPositionInMeters(estimator.alphabeta.position);
+
+  const positionInMetersInBody = transformNEDToBODY({
+    latitude: positionInMeters.latitude,
+    longitude: positionInMeters.longitude,
+    heading: heading * (PI / 180.0),
+  });
+
+  // Run latitude and longitude alphabeta filter in meters in BODY.
+  const {
+    estimatedX: estimatedSurge, estimatedXdot: estimatedLatitudeVelocity,
+  } = alphabetaFilter(
+    frequency,
+    estimator.alphabeta.alpha.latitude,
+    estimator.alphabeta.beta.latitude,
+    positionInMetersInBody.surge,
+    estimator.alphabeta.velocity.u,
+    filteredGpsPositionInMetersInBody.surge,
+    false,
+  );
+
+  const {
+    estimatedX: estimatedSway, estimatedXdot: estimatedLongitudeVelocity,
+  } = alphabetaFilter(
+    frequency,
+    estimator.alphabeta.alpha.longitude,
+    estimator.alphabeta.beta.longitude,
+    positionInMetersInBody.sway,
+    estimator.alphabeta.velocity.v,
+    filteredGpsPositionInMetersInBody.sway,
+    false,
+  );
+
+  const positionInMetersInNed = transformBODYToNED({
+    surge: estimatedSurge,
+    sway: estimatedSway,
+    heading: heading * (PI / 180.0),
+  });
+
+  const positionInNed = getPositionInDegrees(positionInMetersInNed);
+
+  const position = {
+    latitude: positionInNed.latitude,
+    longitude: positionInNed.longitude,
+  };
+
+  const velocity = {
+    u: estimatedLatitudeVelocity,
+    v: estimatedLongitudeVelocity,
+  };
+
+  const acceleration = { ud: 0.0, vd: 0.0 };
+
+  return { position, velocity, acceleration };
+}
+</code></pre>
+        </article>
+    </section>
+
+
+
+
+</div>
+
+<nav>
+    <h2><a href="index.html">Home</a></h2><h3>Classes</h3><ul><li><a href="AlphabetaHeadingPane.html">AlphabetaHeadingPane</a></li><li><a href="Dashboard.html">Dashboard</a></li><li><a href="GpsSpeedPane.html">GpsSpeedPane</a></li><li><a href="HeadingPane.html">HeadingPane</a></li><li><a href="Paneselector.html">Paneselector</a></li><li><a href="PidPane.html">PidPane</a></li><li><a href="PositionPane.html">PositionPane</a></li><li><a href="SensorPane.html">SensorPane</a></li><li><a href="ThrustersPane.html">ThrustersPane</a></li></ul><h3>Global</h3><ul><li><a href="global.html#alphabetaFilter">alphabetaFilter</a></li><li><a href="global.html#assertGpsConstructorInput">assertGpsConstructorInput</a></li><li><a href="global.html#assertGyrocompassConstructorInput">assertGyrocompassConstructorInput</a></li><li><a href="global.html#assertMruConstructorInput">assertMruConstructorInput</a></li><li><a href="global.html#assertThrusterConstructorInput">assertThrusterConstructorInput</a></li><li><a href="global.html#assertUiThrusterConstructorInput">assertUiThrusterConstructorInput</a></li><li><a href="global.html#assertWindsensorConstructorInput">assertWindsensorConstructorInput</a></li><li><a href="global.html#autopilotAlloc">autopilotAlloc</a></li><li><a href="global.html#calculateControllerDemands">calculateControllerDemands</a></li><li><a href="global.html#calculateDisplacement">calculateDisplacement</a></li><li><a href="global.html#calculateDrag">calculateDrag</a></li><li><a href="global.html#calculateForces">calculateForces</a></li><li><a href="global.html#calculateFrontalWindArea">calculateFrontalWindArea</a></li><li><a href="global.html#calculateLateralWindArea">calculateLateralWindArea</a></li><li><a href="global.html#calculateMass">calculateMass</a></li><li><a href="global.html#calculateMaxForce">calculateMaxForce</a></li><li><a href="global.html#calculateThrusterDemands">calculateThrusterDemands</a></li><li><a href="global.html#circularMeanOfArray">circularMeanOfArray</a></li><li><a href="global.html#dragBasedTrigonometric">dragBasedTrigonometric</a></li><li><a href="global.html#estimateForHeading">estimateForHeading</a></li><li><a href="global.html#estimateForLatitudeAndLongitude">estimateForLatitudeAndLongitude</a></li><li><a href="global.html#estimatePositionAndVelocity">estimatePositionAndVelocity</a></li><li><a href="global.html#Estimator">Estimator</a></li><li><a href="global.html#generateNPD">generateNPD</a></li><li><a href="global.html#getFeedback">getFeedback</a></li><li><a href="global.html#getFeedbackState">getFeedbackState</a></li><li><a href="global.html#getForces">getForces</a></li><li><a href="global.html#getHeadingFromGyrocompasses">getHeadingFromGyrocompasses</a></li><li><a href="global.html#getInitialState">getInitialState</a></li><li><a href="global.html#getPositionFromGpses">getPositionFromGpses</a></li><li><a href="global.html#getPositionInDegrees">getPositionInDegrees</a></li><li><a href="global.html#getPositionInLatLon">getPositionInLatLon</a></li><li><a href="global.html#getPositionInMeters">getPositionInMeters</a></li><li><a href="global.html#getPower">getPower</a></li><li><a href="global.html#getRandomBetween">getRandomBetween</a></li><li><a href="global.html#GPS">GPS</a></li><li><a href="global.html#Gyrocompass">Gyrocompass</a></li><li><a href="global.html#headingController">headingController</a></li><li><a href="global.html#isAzi">isAzi</a></li><li><a href="global.html#knotsInMps">knotsInMps</a></li><li><a href="global.html#maxBasedTrigonometric">maxBasedTrigonometric</a></li><li><a href="global.html#meanOfArray">meanOfArray</a></li><li><a href="global.html#motion">motion</a></li><li><a href="global.html#mpsInKnots">mpsInKnots</a></li><li><a href="global.html#MRU">MRU</a></li><li><a href="global.html#normalizeRisetimes">normalizeRisetimes</a></li><li><a href="global.html#setDemand">setDemand</a></li><li><a href="global.html#simulationState">simulationState</a></li><li><a href="global.html#speedController">speedController</a></li><li><a href="global.html#Thruster">Thruster</a></li><li><a href="global.html#thrusterFeedbackState">thrusterFeedbackState</a></li><li><a href="global.html#transformBODYToNED">transformBODYToNED</a></li><li><a href="global.html#transformNEDToBODY">transformNEDToBODY</a></li><li><a href="global.html#truncToDecimal">truncToDecimal</a></li><li><a href="global.html#U10toUz">U10toUz</a></li><li><a href="global.html#UiThruster">UiThruster</a></li><li><a href="global.html#unwrapAngle">unwrapAngle</a></li><li><a href="global.html#vesselControlMode">vesselControlMode</a></li><li><a href="global.html#VesselModel">VesselModel</a></li><li><a href="global.html#Windsensor">Windsensor</a></li><li><a href="global.html#wrapTo0To2pi">wrapTo0To2pi</a></li><li><a href="global.html#wrapTo0To360">wrapTo0To360</a></li><li><a href="global.html#wrapToPipi">wrapToPipi</a></li></ul>
+</nav>
+
+<br class="clear">
+
+<footer>
+    Documentation generated by <a href="https://github.com/jsdoc3/jsdoc">JSDoc 3.5.5</a> on Sat Feb 17 2018 14:14:53 GMT+0100 (W. Europe Standard Time)
+</footer>
+
+<script> prettyPrint(); </script>
+<script src="scripts/linenumber.js"> </script>
+</body>
+</html>

@@ -1,0 +1,482 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="utf-8">
+    <title>JSDoc: Source: components/dashboard/Paneselector.jsx</title>
+
+    <script src="scripts/prettify/prettify.js"> </script>
+    <script src="scripts/prettify/lang-css.js"> </script>
+    <!--[if lt IE 9]>
+      <script src="//html5shiv.googlecode.com/svn/trunk/html5.js"></script>
+    <![endif]-->
+    <link type="text/css" rel="stylesheet" href="styles/prettify-tomorrow.css">
+    <link type="text/css" rel="stylesheet" href="styles/jsdoc-default.css">
+</head>
+
+<body>
+
+<div id="main">
+
+    <h1 class="page-title">Source: components/dashboard/Paneselector.jsx</h1>
+
+    
+
+
+
+    
+    <section>
+        <article>
+            <pre class="prettyprint source linenums"><code>import React, { Component } from 'react';
+import PropTypes from 'prop-types';
+import update from 'immutability-helper';
+import { connect } from 'react-redux';
+import AlphabetaHeading from './Alphabeta.heading.pane';
+import PidPane from './PID.pane';
+import HeadingPane from './Heading.pane';
+import SensorPane from './Sensor.pane';
+import ThrustersPane from './Thrusters.pane';
+import PositionPane from './Position.pane';
+import GpsSpeedPane from './GpsSpeed.pane';
+import './Dashboard.css';
+
+/**
+ * Class representing a pane selector that contains several panes.
+ * The panes can be chosen with a dropdown menu.
+ * This is a hybrid of a smart component, communicating with the
+ * Redux store, and a ordinary component receiving data as props.
+ * @extends Component
+*/
+class Paneselector extends Component {
+  constructor(props) {
+    super(props);
+    this.state = {
+      pane: props.initialPane,
+      isAutoAxis: props.initialSettings.isAutoAxis,
+      min: props.initialSettings.min,
+      max: props.initialSettings.max,
+      isSettingsOpen: false,
+    };
+
+    this.handleMinChange = this.handleMinChange.bind(this);
+    this.handleMinChange2 = this.handleMinChange2.bind(this);
+    this.handleMinChange3 = this.handleMinChange3.bind(this);
+    this.handleMaxChange = this.handleMaxChange.bind(this);
+    this.handleMaxChange2 = this.handleMaxChange2.bind(this);
+    this.handleMaxChange3 = this.handleMaxChange3.bind(this);
+    this.onToggleAutoAxis = this.onToggleAutoAxis.bind(this);
+    this.toggleSettings = this.toggleSettings.bind(this);
+    this.changePane = this.changePane.bind(this);
+    this.setMinMax = this.setMinMax.bind(this);
+    this.setMinMax2 = this.setMinMax2.bind(this);
+    this.setMinMax3 = this.setMinMax3.bind(this);
+  }
+
+  onToggleAutoAxis() {
+    this.setState({ isAutoAxis: !this.state.isAutoAxis });
+    this.props.toggleAutoAxis(this.props.number);
+  }
+
+  setMinMax(event) {
+    event.preventDefault();
+    this.props.setMinMax(
+      this.props.number,
+      Number.parseFloat(this.state.min[this.state.pane]),
+      Number.parseFloat(this.state.max[this.state.pane]),
+    );
+  }
+
+  setMinMax2(event) {
+    event.preventDefault();
+    this.props.setMinMax2(
+      this.props.number,
+      Number.parseFloat(this.state.min[`${this.state.pane}2`]),
+      Number.parseFloat(this.state.max[`${this.state.pane}2`]),
+    );
+  }
+
+  setMinMax3(event) {
+    event.preventDefault();
+    this.props.setMinMax3(
+      this.props.number,
+      Number.parseFloat(this.state.min[`${this.state.pane}3`]),
+      Number.parseFloat(this.state.max[`${this.state.pane}3`]),
+    );
+  }
+
+  changePane(event) {
+    const newPane = event.target.value;
+    this.setState({ pane: newPane });
+    this.props.changePane(event, this.props.number);
+  }
+
+  toggleSettings() {
+    this.setState({ isSettingsOpen: !this.state.isSettingsOpen });
+  }
+
+  handleMinChange(event) {
+    this.setState({
+      min: update(this.state.min, {
+        [this.state.pane]: { $set: event.target.value },
+      }),
+    });
+  }
+
+  handleMinChange2(event) {
+    this.setState({
+      min: update(this.state.min, {
+        [`${this.state.pane}2`]: { $set: event.target.value },
+      }),
+    });
+  }
+
+  handleMinChange3(event) {
+    this.setState({
+      min: update(this.state.min, {
+        [`${this.state.pane}3`]: { $set: event.target.value },
+      }),
+    });
+  }
+
+  handleMaxChange(event) {
+    this.setState({
+      max: update(this.state.max, {
+        [this.state.pane]: { $set: event.target.value },
+      }),
+    });
+  }
+
+  handleMaxChange2(event) {
+    this.setState({
+      max: update(this.state.max, {
+        [`${this.state.pane}2`]: { $set: event.target.value },
+      }),
+    });
+  }
+
+  handleMaxChange3(event) {
+    this.setState({
+      max: update(this.state.max, {
+        [`${this.state.pane}3`]: { $set: event.target.value },
+      }),
+    });
+  }
+
+  render() {
+    const {
+      simulationTimeSeries, modelPositionSeries, rollSeries, pitchSeries,
+      speedSeries, alphabetaHeadingSeries, alphabetaRotSeries, thrusters,
+      headingPSeries, headingISeries, headingDSeries,
+      speedPSeries, speedISeries, speedDSeries,
+    } = this.props;
+
+    return (
+      &lt;div>
+        &lt;form className="form-inline">
+          &lt;select
+            className="form-control mb-2 mr-sm-2 mb-sm-0"
+            defaultValue={this.props.initialPane}
+            onChange={this.changePane}
+          >
+            &lt;option value="heading">Heading&lt;/option>
+            &lt;option value="position">Position&lt;/option>
+            &lt;option value="rollpitch">Roll and pitch&lt;/option>
+            &lt;option value="thrusters">Thrusters&lt;/option>
+            &lt;option value="gpsspeed">GPS speed&lt;/option>
+            &lt;option value="alphabetaHeading">αβ - Heading and ROT&lt;/option>
+            &lt;option value="autopilotHeadingPid">Autopilot - Heading PID&lt;/option>
+            &lt;option value="autopilotSpeedPid">Autopilot - Speed PID&lt;/option>
+          &lt;/select>
+
+          {this.state.pane !== 'thrusters' &amp;&amp;
+            &lt;button className="btn btn-outline-secondary btn-sm" type="button" onClick={this.toggleSettings}>
+              &lt;span className="fa fa-cog" />
+            &lt;/button>}
+        &lt;/form>
+
+        &lt;div className="row">
+          &lt;div className={this.state.isSettingsOpen === true ? 'col-lg-6' : 'col-lg-12'}>
+            {this.state.pane === 'heading' &amp;&amp;
+              &lt;HeadingPane
+                min={this.props.initialSettings.min.heading}
+                max={this.props.initialSettings.max.heading}
+                isAutoAxis={this.state.isAutoAxis}
+                simulationTimeSeries={simulationTimeSeries}
+                headingSeries={modelPositionSeries.heading}
+              />}
+
+            {this.state.pane === 'rollpitch' &amp;&amp;
+              &lt;SensorPane
+                min={this.props.initialSettings.min.rollpitch}
+                max={this.props.initialSettings.max.rollpitch}
+                isAutoAxis={this.state.isAutoAxis}
+                simulationTimeSeries={simulationTimeSeries}
+                rollSeries={rollSeries}
+                pitchSeries={pitchSeries}
+              />}
+
+            {this.state.pane === 'position' &amp;&amp;
+              &lt;PositionPane
+                min={this.props.initialSettings.min.position}
+                max={this.props.initialSettings.max.position}
+                min2={this.props.initialSettings.min.position2}
+                max2={this.props.initialSettings.max.position2}
+                isAutoAxis={this.state.isAutoAxis}
+                simulationTimeSeries={simulationTimeSeries}
+                latitudeSeries={modelPositionSeries.latitude}
+                longitudeSeries={modelPositionSeries.longitude}
+              />}
+
+            {this.state.pane === 'gpsspeed' &amp;&amp;
+              &lt;GpsSpeedPane
+                min={this.props.initialSettings.min.gpsspeed}
+                max={this.props.initialSettings.max.gpsspeed}
+                isAutoAxis={this.state.isAutoAxis}
+                simulationTimeSeries={simulationTimeSeries}
+                speedSeries={speedSeries}
+              />}
+
+            {this.state.pane === 'alphabetaHeading' &amp;&amp;
+              &lt;AlphabetaHeading
+                min={this.props.initialSettings.min.alphabetaHeading}
+                max={this.props.initialSettings.max.alphabetaHeading}
+                min2={this.props.initialSettings.min.alphabetaHeading2}
+                max2={this.props.initialSettings.max.alphabetaHeading2}
+                isAutoAxis={this.state.isAutoAxis}
+                simulationTimeSeries={simulationTimeSeries}
+                headingSeries={alphabetaHeadingSeries}
+                rotSeries={alphabetaRotSeries}
+              />}
+
+            {this.state.pane === 'autopilotHeadingPid' &amp;&amp;
+              &lt;PidPane
+                min={this.props.initialSettings.min.autopilotHeadingPid}
+                max={this.props.initialSettings.max.autopilotHeadingPid}
+                min2={this.props.initialSettings.min.autopilotHeadingPid2}
+                max2={this.props.initialSettings.max.autopilotHeadingPid2}
+                min3={this.props.initialSettings.min.autopilotHeadingPid3}
+                max3={this.props.initialSettings.max.autopilotHeadingPid3}
+                isAutoAxis={this.state.isAutoAxis}
+                simulationTimeSeries={simulationTimeSeries}
+                pSeries={headingPSeries}
+                iSeries={headingISeries}
+                dSeries={headingDSeries}
+              />}
+
+            {this.state.pane === 'autopilotSpeedPid' &amp;&amp;
+              &lt;PidPane
+                min={this.props.initialSettings.min.autopilotSpeedPid}
+                max={this.props.initialSettings.max.autopilotSpeedPid}
+                min2={this.props.initialSettings.min.autopilotSpeedPid2}
+                max2={this.props.initialSettings.max.autopilotSpeedPid2}
+                min3={this.props.initialSettings.min.autopilotSpeedPid3}
+                max3={this.props.initialSettings.max.autopilotSpeedPid3}
+                isAutoAxis={this.state.isAutoAxis}
+                simulationTimeSeries={simulationTimeSeries}
+                pSeries={speedPSeries}
+                iSeries={speedISeries}
+                dSeries={speedDSeries}
+              />}
+          &lt;/div>
+          {this.state.isSettingsOpen &amp;&amp;
+            &lt;div className="col-lg-6">
+              &lt;div className="card" style={{ marginTop: 30, marginBottom: 20 }}>
+                &lt;div className="card-body">
+                  &lt;h6 className="card-subtitle mb-2 text-muted">Graph settings&lt;/h6>
+                  &lt;div className="card-text">
+                    &lt;form className="form-inline">
+                      &lt;div className="form-check">
+                        &lt;input
+                          type="checkbox"
+                          className="form-check-input"
+                          id="autoCheckbox"
+                          checked={this.state.isAutoAxis}
+                          onChange={this.onToggleAutoAxis}
+                        />
+                        &lt;label className="form-check-label" htmlFor="autoCheckbox">Auto axis&lt;/label>
+                      &lt;/div>
+                    &lt;/form>
+                    {!this.state.isAutoAxis &amp;&amp;
+                      &lt;form className="form-inline" style={{ marginTop: 10 }} onSubmit={this.setMinMax}>
+                        &lt;div className="form-check">
+                          Min:
+                          &lt;input
+                            type="number"
+                            min="-2000"
+                            max="2000"
+                            step="0.1"
+                            value={this.state.min[this.state.pane]}
+                            onChange={this.handleMinChange}
+                            style={{ width: 80, marginLeft: 5 }}
+                            className="form-control mb-2 mr-sm-2 mb-sm-0"
+                            required
+                          />
+                          Max:
+                          &lt;input
+                            type="number"
+                            min="-2000"
+                            max="2000"
+                            step="0.1"
+                            value={this.state.max[this.state.pane]}
+                            onChange={this.handleMaxChange}
+                            style={{ width: 80, marginLeft: 5 }}
+                            className="form-control mb-2 mr-sm-2 mb-sm-0"
+                            required
+                          />
+                          &lt;button className="btn btn-secondary btn-sm" type="submit">Set&lt;/button>
+                        &lt;/div>
+                      &lt;/form>}
+                    {/* Special case for position which has two axes. */}
+                    {!this.state.isAutoAxis &amp;&amp;
+                    (this.state.pane === 'position' ||
+                    this.state.pane === 'alphabetaHeading' ||
+                    this.state.pane === 'autopilotHeadingPid' ||
+                    this.state.pane === 'autopilotSpeedPid') &amp;&amp;
+                      &lt;form className="form-inline" style={{ marginTop: 10 }} onSubmit={this.setMinMax2}>
+                        &lt;div className="form-check">
+                          Min:
+                          &lt;input
+                            type="number"
+                            min="-2000"
+                            max="2000"
+                            step="0.1"
+                            value={this.state.min[`${this.state.pane}2`]}
+                            onChange={this.handleMinChange2}
+                            style={{ width: 80, marginLeft: 5 }}
+                            className="form-control mb-2 mr-sm-2 mb-sm-0"
+                            required
+                          />
+                          Max:
+                          &lt;input
+                            type="number"
+                            min="-2000"
+                            max="2000"
+                            step="0.1"
+                            value={this.state.max[`${this.state.pane}2`]}
+                            onChange={this.handleMaxChange2}
+                            style={{ width: 80, marginLeft: 5 }}
+                            className="form-control mb-2 mr-sm-2 mb-sm-0"
+                            required
+                          />
+                          &lt;button className="btn btn-secondary btn-sm" type="submit">Set&lt;/button>
+                        &lt;/div>
+                      &lt;/form>}
+                    {/* Special case for position which has three axes. */}
+                    {!this.state.isAutoAxis &amp;&amp;
+                    (this.state.pane === 'autopilotHeadingPid' ||
+                    this.state.pane === 'autopilotSpeedPid') &amp;&amp;
+                      &lt;form className="form-inline" style={{ marginTop: 10 }} onSubmit={this.setMinMax3}>
+                        &lt;div className="form-check">
+                          Min:
+                          &lt;input
+                            type="number"
+                            min="-2000"
+                            max="2000"
+                            step="0.1"
+                            value={this.state.min[`${this.state.pane}3`]}
+                            onChange={this.handleMinChange3}
+                            style={{ width: 80, marginLeft: 5 }}
+                            className="form-control mb-2 mr-sm-2 mb-sm-0"
+                            required
+                          />
+                          Max:
+                          &lt;input
+                            type="number"
+                            min="-2000"
+                            max="2000"
+                            step="0.1"
+                            value={this.state.max[`${this.state.pane}3`]}
+                            onChange={this.handleMaxChange3}
+                            style={{ width: 80, marginLeft: 5 }}
+                            className="form-control mb-2 mr-sm-2 mb-sm-0"
+                            required
+                          />
+                          &lt;button className="btn btn-secondary btn-sm" type="submit">Set&lt;/button>
+                        &lt;/div>
+                      &lt;/form>}
+                  &lt;/div>
+                &lt;/div>
+              &lt;/div>
+            &lt;/div>}
+        &lt;/div>
+
+        {this.state.pane === 'thrusters' &amp;&amp;
+          &lt;ThrustersPane thrusters={thrusters} />}
+      &lt;/div>
+    );
+  }
+}
+
+const mapStateToProps = state => ({
+  simulationTimeSeries: state.timeseries.time,
+  modelPositionSeries: state.timeseries.model.position,
+  rollSeries: state.timeseries.sensors.roll,
+  pitchSeries: state.timeseries.sensors.pitch,
+  speedSeries: state.timeseries.referencesystems.speed,
+  alphabetaHeadingSeries: state.timeseries.estimator.alphabeta.position.heading,
+  alphabetaRotSeries: state.timeseries.estimator.alphabeta.velocity.r,
+  headingPSeries: state.timeseries.autopilot.controllers.headingPid.p,
+  headingISeries: state.timeseries.autopilot.controllers.headingPid.i,
+  headingDSeries: state.timeseries.autopilot.controllers.headingPid.d,
+  speedPSeries: state.timeseries.autopilot.controllers.speedPid.p,
+  speedISeries: state.timeseries.autopilot.controllers.speedPid.i,
+  speedDSeries: state.timeseries.autopilot.controllers.speedPid.d,
+  thrusters: state.ship.thrusters,
+});
+
+const mapDispatchToProps = () => ({});
+
+const ConnectedPaneselector = connect(mapStateToProps, mapDispatchToProps)(Paneselector);
+
+Paneselector.propTypes = {
+  initialPane: PropTypes.string.isRequired,
+  initialSettings: PropTypes.shape({
+    isAutoAxis: PropTypes.bool.isRequired,
+    min: PropTypes.objectOf(PropTypes.number).isRequired,
+    max: PropTypes.objectOf(PropTypes.number).isRequired,
+  }).isRequired,
+  number: PropTypes.number.isRequired,
+  changePane: PropTypes.func.isRequired,
+  toggleAutoAxis: PropTypes.func.isRequired,
+  setMinMax: PropTypes.func.isRequired,
+  setMinMax2: PropTypes.func.isRequired,
+  setMinMax3: PropTypes.func.isRequired,
+  simulationTimeSeries: PropTypes.arrayOf(PropTypes.number).isRequired,
+  modelPositionSeries: PropTypes.objectOf(PropTypes.arrayOf(PropTypes.number)).isRequired,
+  rollSeries: PropTypes.arrayOf(PropTypes.number).isRequired,
+  pitchSeries: PropTypes.arrayOf(PropTypes.number).isRequired,
+  speedSeries: PropTypes.arrayOf(PropTypes.number).isRequired,
+  alphabetaHeadingSeries: PropTypes.arrayOf(PropTypes.number).isRequired,
+  alphabetaRotSeries: PropTypes.arrayOf(PropTypes.number).isRequired,
+  headingPSeries: PropTypes.arrayOf(PropTypes.number).isRequired,
+  headingISeries: PropTypes.arrayOf(PropTypes.number).isRequired,
+  headingDSeries: PropTypes.arrayOf(PropTypes.number).isRequired,
+  speedPSeries: PropTypes.arrayOf(PropTypes.number).isRequired,
+  speedISeries: PropTypes.arrayOf(PropTypes.number).isRequired,
+  speedDSeries: PropTypes.arrayOf(PropTypes.number).isRequired,
+  thrusters: PropTypes.arrayOf(PropTypes.object).isRequired,
+};
+
+export default ConnectedPaneselector;
+</code></pre>
+        </article>
+    </section>
+
+
+
+
+</div>
+
+<nav>
+    <h2><a href="index.html">Home</a></h2><h3>Classes</h3><ul><li><a href="AlphabetaHeadingPane.html">AlphabetaHeadingPane</a></li><li><a href="Dashboard.html">Dashboard</a></li><li><a href="GpsSpeedPane.html">GpsSpeedPane</a></li><li><a href="HeadingPane.html">HeadingPane</a></li><li><a href="Paneselector.html">Paneselector</a></li><li><a href="PidPane.html">PidPane</a></li><li><a href="PositionPane.html">PositionPane</a></li><li><a href="SensorPane.html">SensorPane</a></li><li><a href="ThrustersPane.html">ThrustersPane</a></li></ul><h3>Global</h3><ul><li><a href="global.html#alphabetaFilter">alphabetaFilter</a></li><li><a href="global.html#assertGpsConstructorInput">assertGpsConstructorInput</a></li><li><a href="global.html#assertGyrocompassConstructorInput">assertGyrocompassConstructorInput</a></li><li><a href="global.html#assertMruConstructorInput">assertMruConstructorInput</a></li><li><a href="global.html#assertThrusterConstructorInput">assertThrusterConstructorInput</a></li><li><a href="global.html#assertUiThrusterConstructorInput">assertUiThrusterConstructorInput</a></li><li><a href="global.html#assertWindsensorConstructorInput">assertWindsensorConstructorInput</a></li><li><a href="global.html#autopilotAlloc">autopilotAlloc</a></li><li><a href="global.html#calculateControllerDemands">calculateControllerDemands</a></li><li><a href="global.html#calculateDisplacement">calculateDisplacement</a></li><li><a href="global.html#calculateDrag">calculateDrag</a></li><li><a href="global.html#calculateForces">calculateForces</a></li><li><a href="global.html#calculateFrontalWindArea">calculateFrontalWindArea</a></li><li><a href="global.html#calculateLateralWindArea">calculateLateralWindArea</a></li><li><a href="global.html#calculateMass">calculateMass</a></li><li><a href="global.html#calculateMaxForce">calculateMaxForce</a></li><li><a href="global.html#calculateThrusterDemands">calculateThrusterDemands</a></li><li><a href="global.html#circularMeanOfArray">circularMeanOfArray</a></li><li><a href="global.html#dragBasedTrigonometric">dragBasedTrigonometric</a></li><li><a href="global.html#estimateForHeading">estimateForHeading</a></li><li><a href="global.html#estimateForLatitudeAndLongitude">estimateForLatitudeAndLongitude</a></li><li><a href="global.html#estimatePositionAndVelocity">estimatePositionAndVelocity</a></li><li><a href="global.html#Estimator">Estimator</a></li><li><a href="global.html#generateNPD">generateNPD</a></li><li><a href="global.html#getFeedback">getFeedback</a></li><li><a href="global.html#getFeedbackState">getFeedbackState</a></li><li><a href="global.html#getForces">getForces</a></li><li><a href="global.html#getHeadingFromGyrocompasses">getHeadingFromGyrocompasses</a></li><li><a href="global.html#getInitialState">getInitialState</a></li><li><a href="global.html#getPositionFromGpses">getPositionFromGpses</a></li><li><a href="global.html#getPositionInDegrees">getPositionInDegrees</a></li><li><a href="global.html#getPositionInLatLon">getPositionInLatLon</a></li><li><a href="global.html#getPositionInMeters">getPositionInMeters</a></li><li><a href="global.html#getPower">getPower</a></li><li><a href="global.html#getRandomBetween">getRandomBetween</a></li><li><a href="global.html#GPS">GPS</a></li><li><a href="global.html#Gyrocompass">Gyrocompass</a></li><li><a href="global.html#headingController">headingController</a></li><li><a href="global.html#isAzi">isAzi</a></li><li><a href="global.html#knotsInMps">knotsInMps</a></li><li><a href="global.html#maxBasedTrigonometric">maxBasedTrigonometric</a></li><li><a href="global.html#meanOfArray">meanOfArray</a></li><li><a href="global.html#motion">motion</a></li><li><a href="global.html#mpsInKnots">mpsInKnots</a></li><li><a href="global.html#MRU">MRU</a></li><li><a href="global.html#normalizeRisetimes">normalizeRisetimes</a></li><li><a href="global.html#setDemand">setDemand</a></li><li><a href="global.html#simulationState">simulationState</a></li><li><a href="global.html#speedController">speedController</a></li><li><a href="global.html#Thruster">Thruster</a></li><li><a href="global.html#thrusterFeedbackState">thrusterFeedbackState</a></li><li><a href="global.html#transformBODYToNED">transformBODYToNED</a></li><li><a href="global.html#transformNEDToBODY">transformNEDToBODY</a></li><li><a href="global.html#truncToDecimal">truncToDecimal</a></li><li><a href="global.html#U10toUz">U10toUz</a></li><li><a href="global.html#UiThruster">UiThruster</a></li><li><a href="global.html#unwrapAngle">unwrapAngle</a></li><li><a href="global.html#vesselControlMode">vesselControlMode</a></li><li><a href="global.html#VesselModel">VesselModel</a></li><li><a href="global.html#Windsensor">Windsensor</a></li><li><a href="global.html#wrapTo0To2pi">wrapTo0To2pi</a></li><li><a href="global.html#wrapTo0To360">wrapTo0To360</a></li><li><a href="global.html#wrapToPipi">wrapToPipi</a></li></ul>
+</nav>
+
+<br class="clear">
+
+<footer>
+    Documentation generated by <a href="https://github.com/jsdoc3/jsdoc">JSDoc 3.5.5</a> on Sat Feb 17 2018 14:14:53 GMT+0100 (W. Europe Standard Time)
+</footer>
+
+<script> prettyPrint(); </script>
+<script src="scripts/linenumber.js"> </script>
+</body>
+</html>
