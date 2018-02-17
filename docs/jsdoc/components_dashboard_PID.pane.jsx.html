@@ -1,0 +1,301 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="utf-8">
+    <title>JSDoc: Source: components/dashboard/PID.pane.jsx</title>
+
+    <script src="scripts/prettify/prettify.js"> </script>
+    <script src="scripts/prettify/lang-css.js"> </script>
+    <!--[if lt IE 9]>
+      <script src="//html5shiv.googlecode.com/svn/trunk/html5.js"></script>
+    <![endif]-->
+    <link type="text/css" rel="stylesheet" href="styles/prettify-tomorrow.css">
+    <link type="text/css" rel="stylesheet" href="styles/jsdoc-default.css">
+</head>
+
+<body>
+
+<div id="main">
+
+    <h1 class="page-title">Source: components/dashboard/PID.pane.jsx</h1>
+
+    
+
+
+
+    
+    <section>
+        <article>
+            <pre class="prettyprint source linenums"><code>import React, { Component } from 'react';
+import PropTypes from 'prop-types';
+import update from 'immutability-helper';
+import { Line } from 'react-chartjs-2';
+import './Dashboard.css';
+
+/**
+ * Class representing a PID pane for use on the dashboard.
+ * This is a dumb component receiving data as props.
+ * @extends Component
+*/
+class PidPane extends Component {
+  constructor() {
+    super();
+    this.state = {
+      graphData: {
+        labels: [],
+        datasets: [
+          {
+            label: 'P',
+            yAxisID: 'p-axis',
+            fill: false,
+            lineTension: 0.1,
+            backgroundColor: 'rgba(69,32,117,0.4)',
+            borderColor: 'rgba(69,32,117,1)',
+            borderCapStyle: 'butt',
+            borderDash: [],
+            borderDashOffset: 0.0,
+            borderJoinStyle: 'miter',
+            pointBorderColor: 'rgba(69,32,117,1)',
+            pointBackgroundColor: '#fff',
+            pointBorderWidth: 1,
+            pointHoverRadius: 5,
+            pointHoverBackgroundColor: 'rgba(69,32,117,1)',
+            pointHoverBorderColor: 'rgba(220,220,220,1)',
+            pointHoverBorderWidth: 2,
+            pointRadius: 1,
+            pointHitRadius: 10,
+            data: [],
+          },
+          {
+            label: 'I',
+            yAxisID: 'i-axis',
+            fill: false,
+            lineTension: 0.1,
+            backgroundColor: 'rgba(32,117,85,0.4)',
+            borderColor: 'rgba(32,117,85,1)',
+            borderCapStyle: 'butt',
+            borderDash: [],
+            borderDashOffset: 0.0,
+            borderJoinStyle: 'miter',
+            pointBorderColor: 'rgba(32,117,85,1)',
+            pointBackgroundColor: '#fff',
+            pointBorderWidth: 1,
+            pointHoverRadius: 5,
+            pointHoverBackgroundColor: 'rgba(32,117,85,1)',
+            pointHoverBorderColor: 'rgba(220,220,220,1)',
+            pointHoverBorderWidth: 2,
+            pointRadius: 1,
+            pointHitRadius: 10,
+            data: [],
+          },
+          {
+            label: 'D',
+            yAxisID: 'd-axis',
+            fill: false,
+            lineTension: 0.1,
+            backgroundColor: 'rgba(255,117,85,0.4)',
+            borderColor: 'rgba(255,117,85,1)',
+            borderCapStyle: 'butt',
+            borderDash: [],
+            borderDashOffset: 0.0,
+            borderJoinStyle: 'miter',
+            pointBorderColor: 'rgba(255,117,85,1)',
+            pointBackgroundColor: '#fff',
+            pointBorderWidth: 1,
+            pointHoverRadius: 5,
+            pointHoverBackgroundColor: 'rgba(255,117,85,1)',
+            pointHoverBorderColor: 'rgba(220,220,220,1)',
+            pointHoverBorderWidth: 2,
+            pointRadius: 1,
+            pointHitRadius: 10,
+            data: [],
+          },
+        ],
+      },
+      options: {
+        maintainAspectRatio: false,
+        animation: {
+          duration: 0,
+        },
+        hover: {
+          animationDuration: 0,
+        },
+        responsiveAnimationDuration: 0,
+        elements: {
+          line: {
+            tension: 0,
+          },
+        },
+        scales: {
+          yAxes: [],
+        },
+      },
+    };
+  }
+
+  componentWillMount() {
+    this.setState({
+      graphData: update(this.state.graphData, {
+        labels: { $set: this.props.simulationTimeSeries },
+        datasets: {
+          0: { data: { $set: this.props.pSeries } },
+          1: { data: { $set: this.props.iSeries } },
+          2: { data: { $set: this.props.dSeries } },
+        },
+      }),
+      options: update(this.state.options, {
+        scales: {
+          yAxes: !this.props.isAutoAxis ? {
+            $set: [{
+              id: 'i-axis',
+              type: 'linear',
+              position: 'left',
+              ticks: { min: this.props.min2, max: this.props.max2 },
+            }, {
+              id: 'p-axis',
+              type: 'linear',
+              position: 'left',
+              ticks: { min: this.props.min, max: this.props.max },
+            }, {
+              id: 'd-axis',
+              type: 'linear',
+              position: 'right',
+              ticks: { min: this.props.min3, max: this.props.max3 },
+            }],
+          } : {
+            $set: [{
+              id: 'i-axis',
+              type: 'linear',
+              position: 'left',
+            }, {
+              id: 'p-axis',
+              type: 'linear',
+              position: 'left',
+            }, {
+              id: 'd-axis',
+              type: 'linear',
+              position: 'right',
+            }],
+          },
+        },
+      }),
+    });
+  }
+
+  componentWillReceiveProps(nextProps) {
+    this.setState({
+      graphData: update(this.state.graphData, {
+        labels: { $set: nextProps.simulationTimeSeries },
+        datasets: {
+          0: { data: { $set: nextProps.pSeries } },
+          1: { data: { $set: nextProps.iSeries } },
+          2: { data: { $set: nextProps.dSeries } },
+        },
+      }),
+      options: update(this.state.options, {
+        scales: {
+          yAxes: !nextProps.isAutoAxis ? {
+            $set: [{
+              id: 'i-axis',
+              type: 'linear',
+              position: 'left',
+              ticks: { min: nextProps.min2, max: nextProps.max2 },
+            }, {
+              id: 'p-axis',
+              type: 'linear',
+              position: 'left',
+              ticks: { min: nextProps.min, max: nextProps.max },
+            }, {
+              id: 'd-axis',
+              type: 'linear',
+              position: 'right',
+              ticks: { min: nextProps.min3, max: nextProps.max3 },
+            }],
+          } : {
+            $set: [{
+              id: 'i-axis',
+              type: 'linear',
+              position: 'left',
+              ticks: {
+                min: nextProps.iSeries.length > 0 ?
+                  Math.min(...nextProps.iSeries) : -1,
+                max: nextProps.iSeries.length > 0 ?
+                  Math.max(...nextProps.iSeries) : 1,
+              },
+            }, {
+              id: 'p-axis',
+              type: 'linear',
+              position: 'left',
+              ticks: {
+                min: nextProps.pSeries.length > 0 ?
+                  Math.min(...nextProps.pSeries) : -1,
+                max: nextProps.pSeries.length > 0 ?
+                  Math.max(...nextProps.pSeries) : 1,
+              },
+            }, {
+              id: 'd-axis',
+              type: 'linear',
+              position: 'right',
+              ticks: {
+                min: nextProps.dSeries.length > 0 ?
+                  Math.min(...nextProps.dSeries) : -1,
+                max: nextProps.dSeries.length > 0 ?
+                  Math.max(...nextProps.dSeries) : 1,
+              },
+            }],
+          },
+        },
+      }),
+    });
+  }
+
+  render() {
+    return (
+      &lt;Line
+        width={400}
+        height={277}
+        options={this.state.options}
+        data={this.state.graphData}
+      />
+    );
+  }
+}
+
+PidPane.propTypes = {
+  isAutoAxis: PropTypes.bool.isRequired,
+  min: PropTypes.number.isRequired,
+  max: PropTypes.number.isRequired,
+  min2: PropTypes.number.isRequired,
+  max2: PropTypes.number.isRequired,
+  min3: PropTypes.number.isRequired,
+  max3: PropTypes.number.isRequired,
+  simulationTimeSeries: PropTypes.arrayOf(PropTypes.number).isRequired,
+  pSeries: PropTypes.arrayOf(PropTypes.number).isRequired,
+  iSeries: PropTypes.arrayOf(PropTypes.number).isRequired,
+  dSeries: PropTypes.arrayOf(PropTypes.number).isRequired,
+};
+
+export default PidPane;
+</code></pre>
+        </article>
+    </section>
+
+
+
+
+</div>
+
+<nav>
+    <h2><a href="index.html">Home</a></h2><h3>Classes</h3><ul><li><a href="AlphabetaHeadingPane.html">AlphabetaHeadingPane</a></li><li><a href="Dashboard.html">Dashboard</a></li><li><a href="GpsSpeedPane.html">GpsSpeedPane</a></li><li><a href="HeadingPane.html">HeadingPane</a></li><li><a href="Paneselector.html">Paneselector</a></li><li><a href="PidPane.html">PidPane</a></li><li><a href="PositionPane.html">PositionPane</a></li><li><a href="SensorPane.html">SensorPane</a></li><li><a href="ThrustersPane.html">ThrustersPane</a></li></ul><h3>Global</h3><ul><li><a href="global.html#alphabetaFilter">alphabetaFilter</a></li><li><a href="global.html#assertGpsConstructorInput">assertGpsConstructorInput</a></li><li><a href="global.html#assertGyrocompassConstructorInput">assertGyrocompassConstructorInput</a></li><li><a href="global.html#assertMruConstructorInput">assertMruConstructorInput</a></li><li><a href="global.html#assertThrusterConstructorInput">assertThrusterConstructorInput</a></li><li><a href="global.html#assertUiThrusterConstructorInput">assertUiThrusterConstructorInput</a></li><li><a href="global.html#assertWindsensorConstructorInput">assertWindsensorConstructorInput</a></li><li><a href="global.html#autopilotAlloc">autopilotAlloc</a></li><li><a href="global.html#calculateControllerDemands">calculateControllerDemands</a></li><li><a href="global.html#calculateDisplacement">calculateDisplacement</a></li><li><a href="global.html#calculateDrag">calculateDrag</a></li><li><a href="global.html#calculateForces">calculateForces</a></li><li><a href="global.html#calculateFrontalWindArea">calculateFrontalWindArea</a></li><li><a href="global.html#calculateLateralWindArea">calculateLateralWindArea</a></li><li><a href="global.html#calculateMass">calculateMass</a></li><li><a href="global.html#calculateMaxForce">calculateMaxForce</a></li><li><a href="global.html#calculateThrusterDemands">calculateThrusterDemands</a></li><li><a href="global.html#circularMeanOfArray">circularMeanOfArray</a></li><li><a href="global.html#dragBasedTrigonometric">dragBasedTrigonometric</a></li><li><a href="global.html#estimateForHeading">estimateForHeading</a></li><li><a href="global.html#estimateForLatitudeAndLongitude">estimateForLatitudeAndLongitude</a></li><li><a href="global.html#estimatePositionAndVelocity">estimatePositionAndVelocity</a></li><li><a href="global.html#Estimator">Estimator</a></li><li><a href="global.html#generateNPD">generateNPD</a></li><li><a href="global.html#getFeedback">getFeedback</a></li><li><a href="global.html#getFeedbackState">getFeedbackState</a></li><li><a href="global.html#getForces">getForces</a></li><li><a href="global.html#getHeadingFromGyrocompasses">getHeadingFromGyrocompasses</a></li><li><a href="global.html#getInitialState">getInitialState</a></li><li><a href="global.html#getPositionFromGpses">getPositionFromGpses</a></li><li><a href="global.html#getPositionInDegrees">getPositionInDegrees</a></li><li><a href="global.html#getPositionInLatLon">getPositionInLatLon</a></li><li><a href="global.html#getPositionInMeters">getPositionInMeters</a></li><li><a href="global.html#getPower">getPower</a></li><li><a href="global.html#getRandomBetween">getRandomBetween</a></li><li><a href="global.html#GPS">GPS</a></li><li><a href="global.html#Gyrocompass">Gyrocompass</a></li><li><a href="global.html#headingController">headingController</a></li><li><a href="global.html#isAzi">isAzi</a></li><li><a href="global.html#knotsInMps">knotsInMps</a></li><li><a href="global.html#maxBasedTrigonometric">maxBasedTrigonometric</a></li><li><a href="global.html#meanOfArray">meanOfArray</a></li><li><a href="global.html#motion">motion</a></li><li><a href="global.html#mpsInKnots">mpsInKnots</a></li><li><a href="global.html#MRU">MRU</a></li><li><a href="global.html#normalizeRisetimes">normalizeRisetimes</a></li><li><a href="global.html#setDemand">setDemand</a></li><li><a href="global.html#simulationState">simulationState</a></li><li><a href="global.html#speedController">speedController</a></li><li><a href="global.html#Thruster">Thruster</a></li><li><a href="global.html#thrusterFeedbackState">thrusterFeedbackState</a></li><li><a href="global.html#transformBODYToNED">transformBODYToNED</a></li><li><a href="global.html#transformNEDToBODY">transformNEDToBODY</a></li><li><a href="global.html#truncToDecimal">truncToDecimal</a></li><li><a href="global.html#U10toUz">U10toUz</a></li><li><a href="global.html#UiThruster">UiThruster</a></li><li><a href="global.html#unwrapAngle">unwrapAngle</a></li><li><a href="global.html#vesselControlMode">vesselControlMode</a></li><li><a href="global.html#VesselModel">VesselModel</a></li><li><a href="global.html#Windsensor">Windsensor</a></li><li><a href="global.html#wrapTo0To2pi">wrapTo0To2pi</a></li><li><a href="global.html#wrapTo0To360">wrapTo0To360</a></li><li><a href="global.html#wrapToPipi">wrapToPipi</a></li></ul>
+</nav>
+
+<br class="clear">
+
+<footer>
+    Documentation generated by <a href="https://github.com/jsdoc3/jsdoc">JSDoc 3.5.5</a> on Sat Feb 17 2018 14:14:53 GMT+0100 (W. Europe Standard Time)
+</footer>
+
+<script> prettyPrint(); </script>
+<script src="scripts/linenumber.js"> </script>
+</body>
+</html>

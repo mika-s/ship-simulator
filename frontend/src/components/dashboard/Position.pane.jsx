@@ -4,6 +4,11 @@ import update from 'immutability-helper';
 import { Line } from 'react-chartjs-2';
 import './Dashboard.css';
 
+/**
+ * Class representing a Position pane for use on the dashboard.
+ * This is a dumb component receiving data as props.
+ * @extends Component
+*/
 class PositionPane extends Component {
   constructor() {
     super();

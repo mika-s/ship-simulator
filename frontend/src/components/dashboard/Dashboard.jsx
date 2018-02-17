@@ -7,6 +7,11 @@ import {
 import Paneselector from './Paneselector';
 import './Dashboard.css';
 
+/**
+ * Class representing a dashboard, containing 4 pane selectors.
+ * This is a smart component connected to the Redux store.
+ * @extends Component
+*/
 class Dashboard extends Component {
   constructor(props) {
     super(props);

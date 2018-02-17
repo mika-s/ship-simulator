@@ -11,6 +11,13 @@ import PositionPane from './Position.pane';
 import GpsSpeedPane from './GpsSpeed.pane';
 import './Dashboard.css';
 
+/**
+ * Class representing a pane selector that contains several panes.
+ * The panes can be chosen with a dropdown menu.
+ * This is a hybrid of a smart component, communicating with the
+ * Redux store, and a ordinary component receiving data as props.
+ * @extends Component
+*/
 class Paneselector extends Component {
   constructor(props) {
     super(props);

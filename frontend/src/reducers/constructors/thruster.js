@@ -58,6 +58,20 @@ function normalizeRisetimes(risetimes) {
   return convertedRisetimes;
 }
 
+/**
+* Assert that the constructor input for Thruster is correct.
+* Throws error if assertion fails.
+* @param {number} number              Thruster number.
+* @param {string} name                Name.
+* @param {string} thrusterType        Thruster type.
+* @param {string} controlType         Control type.
+* @param {Object} maxPower            Max power, positive and negative, in kW.
+* @param {Object} location            Location, x and y, in meters.
+* @param {Object} risetimes           Rise times, positive and negative, in %/s and deg/s.
+* @param {Object} misc                Misc. parameters.
+* @param {Object} pitchExponent       Pitch exponent, positive and negative.
+* @param {Object} pitchPowerExponent  Pitch power exponent, positive and negative.
+*/
 function assertThrusterConstructorInput(
   number, name, thrusterType, controlType,
   maxPower, location, risetimes, misc,

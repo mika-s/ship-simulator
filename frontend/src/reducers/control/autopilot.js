@@ -83,7 +83,7 @@ export function speedController(autopilot, speed, acceleration) {
   const { sector, maxI } = autopilot.controllers.speedPid.antiWindup;
   const desiredAcceleration = 0.0;
   const iDieConstant = 5;
-  const iDieSector = 0.1;
+  const iDieSector = 0.2;
   const maxIadjusted = maxI / autopilot.controllers.speedPid.gain.i;
 
   let speedError;

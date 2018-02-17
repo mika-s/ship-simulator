@@ -31,6 +31,10 @@ the axes from not being shown.
 
 Fix lever values when changing mode or stopping the simulator.
 
+Refactor panes into more generalized types?
+
+Store and show total PID values.
+
 ## Structure
 
 VesselModel calculations in middleware?

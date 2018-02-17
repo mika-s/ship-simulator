@@ -4,6 +4,12 @@ import update from 'immutability-helper';
 import { Line } from 'react-chartjs-2';
 import './Dashboard.css';
 
+/**
+ * Class representing a Alphabeta heading pane for use on the dashboard.
+ * It shows a graph with heading and ROT from the alphabeta filter.
+ * This is a dumb component receiving data as props.
+ * @extends Component
+*/
 class AlphabetaHeadingPane extends Component {
   constructor() {
     super();

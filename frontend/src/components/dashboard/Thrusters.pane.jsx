@@ -2,6 +2,11 @@ import React, { Component } from 'react';
 import PropTypes from 'prop-types';
 import './Dashboard.css';
 
+/**
+ * Class representing a Thruster pane for use on the dashboard.
+ * This is a dumb component receiving data as props.
+ * @extends Component
+*/
 class ThrustersPane extends Component {
   constructor() {
     super();

@@ -3,8 +3,8 @@ import { calculateDisplacement, calculateMass, calculateDrag, calculateFrontalWi
 /**
 * Modify the vessel model given it's initial state and the initial vessel
 * parameters from Vessel.json.
-* @param {Object} vesselModelInitialState  - The initial state object for the vessel.
-* @param {Object} initialVessel            - The initial vessel parameters from Vessel.json.
+* @param {Object} vesselModelInitialState    The initial state object for the vessel.
+* @param {Object} initialVessel              The initial vessel parameters from Vessel.json.
 * @returns {Object} The modified vessel initial state object.
 */
 function VesselModel(vesselModelInitialState, initialVessel) {

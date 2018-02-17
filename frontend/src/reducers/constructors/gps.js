@@ -1,3 +1,10 @@
+/**
+* Assert that the constructor input for Gps is correct.
+* Throws error if assertion fails.
+* @param {number} number     Gps number.
+* @param {Object} position   Initial position.
+*                            latitude and logitude in degrees.
+*/
 function assertGpsConstructorInput(number, position) {
   const minNumber = 1;
   const maxNumber = 20;

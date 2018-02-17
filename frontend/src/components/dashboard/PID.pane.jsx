@@ -4,7 +4,12 @@ import update from 'immutability-helper';
 import { Line } from 'react-chartjs-2';
 import './Dashboard.css';
 
-class AutopilotPidPane extends Component {
+/**
+ * Class representing a PID pane for use on the dashboard.
+ * This is a dumb component receiving data as props.
+ * @extends Component
+*/
+class PidPane extends Component {
   constructor() {
     super();
     this.state = {
@@ -228,7 +233,7 @@ class AutopilotPidPane extends Component {
   }
 }
 
-AutopilotPidPane.propTypes = {
+PidPane.propTypes = {
   isAutoAxis: PropTypes.bool.isRequired,
   min: PropTypes.number.isRequired,
   max: PropTypes.number.isRequired,
@@ -242,4 +247,4 @@ AutopilotPidPane.propTypes = {
   dSeries: PropTypes.arrayOf(PropTypes.number).isRequired,
 };
 
-export default AutopilotPidPane;
+export default PidPane;
