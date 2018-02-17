@@ -66,7 +66,7 @@ export function wrapToPipi(angle) {
 }
 
 /**
-* Unwrap the angle
+* Unwrap the angle.
 * @param {number} previousAngle   The previous angle.
 * @param {number} newAngle        The new angle.
 * @returns {Object} The angle unwrapped.

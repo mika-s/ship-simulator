@@ -1,4 +1,5 @@
-import { meanOfArray } from '../../util/general.util';
+import { meanOfArray, circularMeanOfArray } from '../../util/general.util';
+import { wrapToPipi, wrapTo0To360 } from '../../util/kinematics.util';
 import { estimateForHeading, estimateForLatitudeAndLongitude } from './alphabeta';
 
 /**
@@ -6,14 +7,19 @@ import { estimateForHeading, estimateForLatitudeAndLongitude } from './alphabeta
 * @param {Object[]} gyrocompasses   - An array of Gyrocompass objects.
 * @returns {number} The filtered heading.
 */
-function getHeadingFromGyrocompasses(gyrocompasses) {
+export function getHeadingFromGyrocompasses(gyrocompasses) {
   const headings = [];
 
   for (let gyroIdx = 0; gyroIdx < gyrocompasses.length; gyroIdx += 1) {
-    headings.push(gyrocompasses[gyroIdx].heading);
+    const headingInRad = gyrocompasses[gyroIdx].heading * (Math.PI / 180.0);
+    const wrappedInRad = wrapToPipi(headingInRad).angle;
+    headings.push(wrappedInRad);
   }
 
-  return meanOfArray(headings);
+  const average = circularMeanOfArray(headings) * (180.0 / Math.PI);
+  const averageIn0To360 = wrapTo0To360(average);
+
+  return averageIn0To360;
 }
 
 /**
@@ -21,7 +27,7 @@ function getHeadingFromGyrocompasses(gyrocompasses) {
 * @param {Object[]} gpses          - An array of GPS objects.
 * @returns {Object} Object with the filtered position.
 */
-function getPositionFromGpses(gpses) {
+export function getPositionFromGpses(gpses) {
   const latitudes = [];
   const longitudes = [];
 

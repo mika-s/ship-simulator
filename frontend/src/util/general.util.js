@@ -21,7 +21,7 @@ export function getRandomBetween(min, max) {
 
 /**
 * Find the mean value of an array of numbers.
-* @param {number[]} array    Minimum value.
+* @param {number[]} array    Array of numbers to find the mean of.
 * @returns {number} The mean value of the array.
 */
 export function meanOfArray(array) {
@@ -33,6 +33,27 @@ export function meanOfArray(array) {
   const mean = sum / array.length;
 
   return mean;
+}
+
+/**
+* Find the circular mean of an array of numbers.
+* https://en.wikipedia.org/wiki/Mean_of_circular_quantities
+* @param {number[]} array    Array of numbers to find the mean of.
+*                            Angles should be in rad from -π to π.
+* @returns {number} The circular mean value of the array.
+*/
+export function circularMeanOfArray(angles) {
+  let x = 0;
+  let y = 0;
+
+  for (let aIdx = 0; aIdx < angles.length; aIdx += 1) {
+    x += Math.cos(angles[aIdx]);
+    y += Math.sin(angles[aIdx]);
+  }
+
+  const angle = Math.atan2(y, x);
+
+  return angle;
 }
 
 /**

@@ -1,5 +1,11 @@
 import { simulationState } from '../../util/enums';
 
+/**
+* The reducer for the simulation section.
+* @param {Object}    state               The state object (rootstate.simulation).
+* @param {Object}    action              The action object.
+* @returns {Object} The simulation section updated.
+*/
 export default function simulationReducer(state, action) {
   switch (action.type) {
     case 'SIMULATE':

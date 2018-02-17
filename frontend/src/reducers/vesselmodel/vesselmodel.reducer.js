@@ -1,3 +1,12 @@
+/**
+* The reducer for the vesselmodel section.
+* @param {Object}    state               The state object (rootstate.vesselmodel).
+* @param {Object}    action              The action object.
+* @param {Object}    model               Vessel model object.
+* @param {Object}    forces              Forces acting the vessel.
+* @param {Object}    uiPosition          The position object for the UI (rootstate.ui.position)
+* @returns {Object} The vesselmodel section updated.
+*/
 export default function vesselmodelReducer(state, action, model, forces, uiPosition) {
   switch (action.type) {
     case 'SIMULATE':

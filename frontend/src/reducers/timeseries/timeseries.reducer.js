@@ -1,6 +1,18 @@
 import { truncToDecimal } from '../../util/general.util';
 import { updateArray } from './timeseries.util';
 
+/**
+* The reducer for the timeseries section.
+* @param {Object}    state               The state object (rootstate.estimator).
+* @param {Object}    action              The action object.
+* @param {number}    time                Simulation time.
+* @param {Object}    estimated           Estimated values from the estimator.
+* @param {Object}    autopilot           Autopilot object.
+* @param {Object}    model               Vessel model object.
+* @param {Object}    sensors             Sensors object.
+* @param {Object}    referencesystems    Reference systems object.
+* @returns {Object} The timeseries section updated.
+*/
 export default function timeseriesReducer(
   state, action, time, estimated, autopilot,
   model, sensors, referencesystems,

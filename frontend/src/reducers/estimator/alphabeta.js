@@ -1,5 +1,7 @@
 import { LatLonSpherical } from 'geodesy';
-import { transformBODYToNED, transformNEDToBODY, wrapTo0To360, unwrapAngle } from '../../util/kinematics.util';
+import {
+  transformBODYToNED, transformNEDToBODY, wrapTo0To360, unwrapAngle,
+} from '../../util/kinematics.util';
 
 const {
   sin, cos, sqrt, atan2, PI,
