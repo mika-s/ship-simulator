@@ -6,6 +6,7 @@ import SensorPane from './Sensor.pane';
 import ThrustersPane from './Thrusters.pane';
 import OneGraphPane from './1Graph.pane';
 import TwoGraphPane from './2Graph.pane';
+import ThreeGraphPane from './3Graph.pane';
 import FourGraphPane from './4Graph.pane';
 import './Dashboard.css';
 
@@ -161,7 +162,7 @@ class Paneselector extends Component {
 
   render() {
     const {
-      simulationTimeSeries, modelPositionSeries, rollSeries, pitchSeries,
+      simulationTimeSeries, modelPositionSeries, sensorsSeries,
       speedSeries, alphabetaHeadingSeries, alphabetaRotSeries, thrusters,
       headingPSeries, headingISeries, headingDSeries, headingTotalSeries,
       speedPSeries, speedISeries, speedDSeries, speedTotalSeries,
@@ -194,14 +195,24 @@ class Paneselector extends Component {
         <div className="row">
           <div className={this.state.isSettingsOpen === true ? 'col-lg-6' : 'col-lg-12'}>
             {this.state.pane === 'heading' &&
-              <OneGraphPane
+              <ThreeGraphPane
                 min={this.props.initialSettings.min.heading}
                 max={this.props.initialSettings.max.heading}
-                firstLabel="Heading"
+                min2={this.props.initialSettings.min.heading2}
+                max2={this.props.initialSettings.max.heading2}
+                min3={this.props.initialSettings.min.heading3}
+                max3={this.props.initialSettings.max.heading3}
+                firstLabel="Model heading"
+                secondLabel="Gyro heading"
+                thirdLabel="Filtered gyro heading"
                 color1={{ r: 255, g: 0, b: 0 }}
+                color2={{ r: 0, g: 255, b: 0 }}
+                color3={{ r: 0, g: 0, b: 255 }}
                 isAutoAxis={this.state.isAutoAxis}
                 timeSeries={simulationTimeSeries}
                 firstSeries={modelPositionSeries.heading}
+                secondSeries={sensorsSeries.gyroHeading}
+                thirdSeries={sensorsSeries.filteredGyroHeading}
               />}
 
             {this.state.pane === 'rollpitch' &&
@@ -209,9 +220,9 @@ class Paneselector extends Component {
                 min={this.props.initialSettings.min.rollpitch}
                 max={this.props.initialSettings.max.rollpitch}
                 isAutoAxis={this.state.isAutoAxis}
-                simulationTimeSeries={simulationTimeSeries}
-                rollSeries={rollSeries}
-                pitchSeries={pitchSeries}
+                timeSeries={simulationTimeSeries}
+                rollSeries={sensorsSeries.roll}
+                pitchSeries={sensorsSeries.pitch}
               />}
 
             {this.state.pane === 'position' &&
@@ -360,6 +371,7 @@ class Paneselector extends Component {
                     {/* Special case for position which has two or more axes. */}
                     {!this.state.isAutoAxis &&
                     (this.state.pane === 'position' ||
+                    this.state.pane === 'heading' ||
                     this.state.pane === 'alphabetaHeading' ||
                     this.state.pane === 'autopilotHeadingPid' ||
                     this.state.pane === 'autopilotSpeedPid') &&
@@ -394,7 +406,8 @@ class Paneselector extends Component {
                       </form>}
                     {/* Special case for position which has three or more axes. */}
                     {!this.state.isAutoAxis &&
-                    (this.state.pane === 'autopilotHeadingPid' ||
+                    (this.state.pane === 'heading' ||
+                    this.state.pane === 'autopilotHeadingPid' ||
                     this.state.pane === 'autopilotSpeedPid') &&
                       <form className="form-inline min-max-form" onSubmit={this.setMinMax3}>
                         <div className="form-check">
@@ -474,8 +487,7 @@ class Paneselector extends Component {
 const mapStateToProps = state => ({
   simulationTimeSeries: state.timeseries.time,
   modelPositionSeries: state.timeseries.model.position,
-  rollSeries: state.timeseries.sensors.roll,
-  pitchSeries: state.timeseries.sensors.pitch,
+  sensorsSeries: state.timeseries.sensors,
   speedSeries: state.timeseries.referencesystems.speed,
   alphabetaHeadingSeries: state.timeseries.estimator.alphabeta.position.heading,
   alphabetaRotSeries: state.timeseries.estimator.alphabeta.velocity.r,
@@ -510,8 +522,7 @@ Paneselector.propTypes = {
   setMinMax4: PropTypes.func.isRequired,
   simulationTimeSeries: PropTypes.arrayOf(PropTypes.number).isRequired,
   modelPositionSeries: PropTypes.objectOf(PropTypes.arrayOf(PropTypes.number)).isRequired,
-  rollSeries: PropTypes.arrayOf(PropTypes.number).isRequired,
-  pitchSeries: PropTypes.arrayOf(PropTypes.number).isRequired,
+  sensorsSeries: PropTypes.objectOf(PropTypes.arrayOf(PropTypes.number)).isRequired,
   speedSeries: PropTypes.arrayOf(PropTypes.number).isRequired,
   alphabetaHeadingSeries: PropTypes.arrayOf(PropTypes.number).isRequired,
   alphabetaRotSeries: PropTypes.arrayOf(PropTypes.number).isRequired,

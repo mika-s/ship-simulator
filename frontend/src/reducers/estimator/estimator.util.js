@@ -48,7 +48,8 @@ export function getPositionFromGpses(gpses) {
 * @param {Object} estimator        The estimator object.
 * @param {Object[]} gpses          An array of GPS objects.
 * @param {Object[]} gyrocompasses  An array of Gyrocompass objects.
-* @returns {Object} Object with the estimated position, velocity and acceleration.
+* @returns {Object} Object with the estimated position, velocity, acceleration and
+*                   filtered gyro heading.
 */
 export function estimatePositionAndVelocity(frequency, estimator, gpses, gyrocompasses) {
   const filteredGyroHeading = getHeadingFromGyrocompasses(gyrocompasses);
@@ -79,5 +80,7 @@ export function estimatePositionAndVelocity(frequency, estimator, gpses, gyrocom
   const velocity = Object.assign({}, latitudeAndLongitude.velocity, heading.velocity);
   const acceleration = Object.assign({}, latitudeAndLongitude.acceleration, heading.acceleration);
 
-  return { position, velocity, acceleration };
+  return {
+    position, velocity, acceleration, filteredGyroHeading,
+  };
 }

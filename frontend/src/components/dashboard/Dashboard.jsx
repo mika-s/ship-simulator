@@ -132,6 +132,8 @@ class Dashboard extends Component {
 
 const minMaxShape = PropTypes.shape({
   heading: PropTypes.number.isRequired,
+  heading2: PropTypes.number.isRequired,
+  heading3: PropTypes.number.isRequired,
   gpsspeed: PropTypes.number.isRequired,
   position: PropTypes.number.isRequired,
   position2: PropTypes.number.isRequired,

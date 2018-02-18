@@ -119,6 +119,11 @@ export default function timeseriesReducer(
         sensors: {
           roll: updateArray(state.sensors.roll, sensors.mrus[0].roll),
           pitch: updateArray(state.sensors.pitch, sensors.mrus[0].pitch),
+          gyroHeading: updateArray(state.sensors.gyroHeading, sensors.gyrocompasses[0].heading),
+          filteredGyroHeading: updateArray(
+            state.sensors.filteredGyroHeading,
+            estimated.filteredGyroHeading,
+          ),
         },
         referencesystems: {
           speed: updateArray(state.referencesystems.speed, referencesystems.gpses[0].speed),
@@ -149,7 +154,11 @@ export default function timeseriesReducer(
         },
 
         model: { position: { latitude: [], longitude: [], heading: [] } },
-        sensors: { roll: [], pitch: [] },
+
+        sensors: {
+          roll: [], pitch: [], gyroHeading: [], filteredGyroHeading: [],
+        },
+
         referencesystems: { speed: [] },
       };
     default:

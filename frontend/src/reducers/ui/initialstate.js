@@ -3,6 +3,8 @@ import UiThruster from '../constructors/uithruster';
 
 const min = {
   heading: 0,
+  heading2: 0.0,
+  heading3: 0.0,
   gpsspeed: 0,
   position: 49.9,
   position2: 3.9,
@@ -22,6 +24,8 @@ const min = {
 
 const max = {
   heading: 360,
+  heading2: 360.0,
+  heading3: 360.0,
   gpsspeed: 10,
   position: 50.1,
   position2: 4.1,

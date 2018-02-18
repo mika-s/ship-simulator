@@ -12,8 +12,6 @@ Improve high-speed model.
 
 Fix thruster pane wrt. Settings.
 
-Create speed controller for autopilot.
-
 For graphs with two axes: specify which min and max belongs to what graph.
 
 Auto axis per graph, instead of per pane.
@@ -31,9 +29,7 @@ the axes from not being shown.
 
 Fix lever values when changing mode or stopping the simulator.
 
-Refactor panes into more generalized types?
-
-Store and show total PID values.
+Acceleration has to be used in the speed controller for autopilot.
 
 ## Structure
 

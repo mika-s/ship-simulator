@@ -40,6 +40,8 @@ const timeseriesInitialState = {
   sensors: {
     roll: [],
     pitch: [],
+    gyroHeading: [],
+    filteredGyroHeading: [],
   },
   referencesystems: {
     speed: [],

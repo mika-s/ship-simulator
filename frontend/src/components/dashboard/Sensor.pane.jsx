@@ -84,7 +84,7 @@ class SensorPane extends Component {
   componentWillMount() {
     this.setState({
       graphData: update(this.state.graphData, {
-        labels: { $set: this.props.simulationTimeSeries },
+        labels: { $set: this.props.timeSeries },
         datasets: {
           0: { data: { $set: this.props.rollSeries } },
           1: { data: { $set: this.props.pitchSeries } },
@@ -112,7 +112,7 @@ class SensorPane extends Component {
 
     this.setState({
       graphData: update(this.state.graphData, {
-        labels: { $set: nextProps.simulationTimeSeries },
+        labels: { $set: nextProps.timeSeries },
         datasets: {
           0: { data: { $set: nextProps.rollSeries } },
           1: { data: { $set: nextProps.pitchSeries } },
@@ -151,7 +151,7 @@ SensorPane.propTypes = {
   isAutoAxis: PropTypes.bool.isRequired,
   min: PropTypes.number.isRequired,
   max: PropTypes.number.isRequired,
-  simulationTimeSeries: PropTypes.arrayOf(PropTypes.number).isRequired,
+  timeSeries: PropTypes.arrayOf(PropTypes.number).isRequired,
   rollSeries: PropTypes.arrayOf(PropTypes.number).isRequired,
   pitchSeries: PropTypes.arrayOf(PropTypes.number).isRequired,
 };
