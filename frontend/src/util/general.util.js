@@ -9,6 +9,16 @@ export function truncToDecimal(number, decimals) {
 }
 
 /**
+* Round to a given number of decimals.
+* @param {number} number    The number to round.
+* @param {number} decimals  Number of decimals.
+* @returns {number} The value of the given number, rounded to given number of decimals.
+*/
+export function roundToDecimal(number, decimals) {
+  return Math.round(number * (10 ** decimals)) / (10 ** decimals);
+}
+
+/**
 * Get a random number between min and max.
 * Can be equal min, but not max: [min, max).
 * @param {number} min    Minimum value.

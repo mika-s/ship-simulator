@@ -43,11 +43,13 @@ it('should handle SIMULATE', () => {
       autopilot: {
         controllers: {
           headingPid: {
+            total: [3.2],
             p: [1.1],
             i: [2.0],
             d: [0.1],
           },
           speedPid: {
+            total: [3.2],
             p: [1.1],
             i: [2.0],
             d: [0.1],
@@ -105,11 +107,13 @@ it('should handle SIMULATE', () => {
       autopilot: {
         controllers: {
           headingPid: {
+            total: [3.2, 3.2],
             p: [1.1, 1.2],
             i: [2.0, 2.1],
             d: [0.1, -0.1],
           },
           speedPid: {
+            total: [3.2, 3.2],
             p: [1.1, 1.2],
             i: [2.0, 2.1],
             d: [0.1, -0.1],
@@ -155,11 +159,13 @@ it('should handle STOP_SIMULATION', () => {
       autopilot: {
         controllers: {
           headingPid: {
+            total: [],
             p: [],
             i: [],
             d: [],
           },
           speedPid: {
+            total: [],
             p: [],
             i: [],
             d: [],

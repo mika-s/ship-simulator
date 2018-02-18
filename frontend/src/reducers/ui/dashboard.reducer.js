@@ -76,6 +76,24 @@ export default function dashboardReducer(state, action) {
           },
         },
       };
+    case 'SET_MIN_MAX4_AXIS':
+      return {
+        ...state,
+        panes: {
+          ...state.panes,
+          [action.payload.number]: {
+            ...state.panes[action.payload.number],
+            min: {
+              ...state.panes[action.payload.number].min,
+              [`${state.panes[action.payload.number].type}4`]: action.payload.min,
+            },
+            max: {
+              ...state.panes[action.payload.number].max,
+              [`${state.panes[action.payload.number].type}4`]: action.payload.max,
+            },
+          },
+        },
+      };
     default:
       return state;
   }

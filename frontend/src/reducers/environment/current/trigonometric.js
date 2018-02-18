@@ -3,11 +3,11 @@ const { sin, cos, abs } = Math;
 /**
 * Calculate current coefficients based on drag values.
 * Page 156 in [Fossen2011].
-* @param {number} relativeAngle - Relative angle of the current.
-* @param {Object} drag          - The drag coefficients object.
-* @param {number} frontalArea   - Projected frontal area under water.
-* @param {number} lateralArea   - Projected lateral area under water.
-* @param {number} loa           - The vessel's length over all.
+* @param {number} relativeAngle Relative angle of the current.
+* @param {Object} drag          The drag coefficients object.
+* @param {number} frontalArea   Projected frontal area under water.
+* @param {number} lateralArea   Projected lateral area under water.
+* @param {number} loa           The vessel's length over all.
 * @returns {Object} Current coefficients in surge, sway and yaw.
 */
 export function dragBasedTrigonometric(relativeAngle, drag, frontalArea, lateralArea, loa) {
@@ -32,8 +32,8 @@ export function dragBasedTrigonometric(relativeAngle, drag, frontalArea, lateral
 /**
 * Calculate current coefficients based on maxmimum values.
 * Page 154 in [Fossen2011].
-* @param {number} relativeAngle - Relative angle of the current.
-* @param {Object} max           - The drag coefficients object.
+* @param {number} relativeAngle Relative angle of the current.
+* @param {Object} max           The drag coefficients object.
 * @returns {Object} Current coefficients in surge, sway and yaw.
 */
 export function maxBasedTrigonometric(relativeAngle, max) {

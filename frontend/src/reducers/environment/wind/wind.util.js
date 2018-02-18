@@ -1,13 +1,17 @@
 import blendermann from './blendermann';
 
+const {
+  sin, cos, atan2, sqrt, PI, log,
+} = Math;
+
 /**
 * Calculate the wind forces acting on a vessel.
-* @param {number} windSpeed     - Wind speed in m/s.
-* @param {number} windDirection - Wind direction in degrees.
-* @param {Object} vesselSpeed   - Vessel speed object with u, v, and r in m/s.
-* @param {number} vesselHeading - Heading of the vessel in radians.
-* @param {Object} dimensions    - Dimension object.
-* @param {Object} windParams    - Wind parameter object.
+* @param {number} windSpeed     Wind speed in m/s.
+* @param {number} windDirection Wind direction in degrees.
+* @param {Object} vesselSpeed   Vessel speed object with u, v, and r in m/s.
+* @param {number} vesselHeading Heading of the vessel in radians.
+* @param {Object} dimensions    Dimension object.
+* @param {Object} windParams    Wind parameter object.
 * @returns {Object} Wind forces in surge, sway and yaw.
 */
 export function calculateForces(
@@ -22,13 +26,13 @@ export function calculateForces(
     masts: 'None',
   };
 
-  const windDirectionInRads = windDirection * (Math.PI / 180.0);
+  const windDirectionInRads = windDirection * (PI / 180.0);
 
   const ρ = 1.225; // kg/m^3
 
   const cartWindSpeed = {
-    surge: windSpeed * Math.cos(windDirectionInRads - vesselHeading),
-    sway: windSpeed * Math.sin(windDirectionInRads - vesselHeading),
+    surge: windSpeed * cos(windDirectionInRads - vesselHeading),
+    sway: windSpeed * sin(windDirectionInRads - vesselHeading),
   };
 
   const relativeCartWindSpeed = {
@@ -37,10 +41,10 @@ export function calculateForces(
   };
 
   const relativeWindSpeed =
-    Math.sqrt((relativeCartWindSpeed.surge ** 2) + (relativeCartWindSpeed.sway ** 2));
+    sqrt((relativeCartWindSpeed.surge ** 2) + (relativeCartWindSpeed.sway ** 2));
 
   const angleOfAttack =
-    Math.atan2(relativeCartWindSpeed.sway, relativeCartWindSpeed.surge) - Math.PI;
+    atan2(relativeCartWindSpeed.sway, relativeCartWindSpeed.surge) - PI;
 
   let coefficients;
 
@@ -81,7 +85,7 @@ export function calculateForces(
 * Generate an object, containing two arrays, representing the
 * Norwegian Petroleum Directorate (NPD) wind spectrum, for a
 * given wind speed at 10 m.
-* @param {number} U10    - Mean wind speed in m/s at 10 m altitude.
+* @param {number} U10    Mean wind speed in m/s at 10 m altitude.
 * @returns {Object} An object containing two arrays: frequencies and spectrum.
 */
 export function generateNPD(U10) {
@@ -107,14 +111,14 @@ export function generateNPD(U10) {
 
 /**
 * Returns the mean wind speed at height z given the mean wind speed.
-* @param {number} U10    - Mean wind speed in m/s at 10 m altitude.
-* @param {number} C10    - Surface drag coefficient at 10 m altitude.
-* @param {number} z      - The altitude in m to calculate the mean wind speed for.
+* @param {number} U10    Mean wind speed in m/s at 10 m altitude.
+* @param {number} C10    Surface drag coefficient at 10 m altitude.
+* @param {number} z      The altitude in m to calculate the mean wind speed for.
 * @returns {number} Mean wind speed in m/s at altitude z.
 */
 export function U10toUz(U10, C10, z) {
-  const uStar = Math.sqrt(C10 * U10);
-  const Uz = U10 + (2.5 * uStar * Math.log(z / 10.0));
+  const uStar = sqrt(C10 * U10);
+  const Uz = U10 + (2.5 * uStar * log(z / 10.0));
 
   return Uz;
 }

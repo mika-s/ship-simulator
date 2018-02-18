@@ -1,11 +1,11 @@
-import { truncToDecimal, getRandomBetween, meanOfArray, circularMeanOfArray, mpsInKnots, knotsInMps } from '../general.util';
+import { truncToDecimal, roundToDecimal, getRandomBetween, meanOfArray, circularMeanOfArray, mpsInKnots, knotsInMps } from '../general.util';
 
 it('truncToDecimal(20.12345, 2) = 20.12', () => {
   const truncatedNumber = truncToDecimal(20.12345, 2);
   expect(truncatedNumber).toEqual(20.12);
 });
 
-it('truncToDecimal(-20.12345, 2) = 20.12', () => {
+it('truncToDecimal(-20.12345, 2) = -20.12', () => {
   const truncatedNumber = truncToDecimal(-20.12345, 2);
   expect(truncatedNumber).toEqual(-20.12);
 });
@@ -20,14 +20,54 @@ it('truncToDecimal(20.12345, 1) = 20.1', () => {
   expect(truncatedNumber).toEqual(20.1);
 });
 
-it('truncToDecimal(-1.12345, 3) = 20.1', () => {
+it('truncToDecimal(-1.12345, 3) = -1.123', () => {
   const truncatedNumber = truncToDecimal(-1.12345, 3);
   expect(truncatedNumber).toEqual(-1.123);
 });
 
-it('truncToDecimal(-2.12345, 1) = 20.1', () => {
+it('truncToDecimal(-2.12345, 1) = -2.1', () => {
   const truncatedNumber = truncToDecimal(-2.12345, 1);
   expect(truncatedNumber).toEqual(-2.1);
+});
+
+it('roundToDecimal(20.12345, 2) = 20.12', () => {
+  const roundedNumber = roundToDecimal(20.12345, 2);
+  expect(roundedNumber).toEqual(20.12);
+});
+
+it('roundToDecimal(-20.12345, 2) = -20.12', () => {
+  const roundedNumber = roundToDecimal(-20.12345, 2);
+  expect(roundedNumber).toEqual(-20.12);
+});
+
+it('roundToDecimal(20.12345, 0) = 20', () => {
+  const roundedNumber = roundToDecimal(20.12345, 0);
+  expect(roundedNumber).toEqual(20);
+});
+
+it('roundToDecimal(20.12345, 1) = 20.1', () => {
+  const roundedNumber = roundToDecimal(20.12345, 1);
+  expect(roundedNumber).toEqual(20.1);
+});
+
+it('roundToDecimal(-1.12345, 3) = -1.123', () => {
+  const roundedNumber = roundToDecimal(-1.12345, 3);
+  expect(roundedNumber).toEqual(-1.123);
+});
+
+it('roundToDecimal(-2.12345, 1) = -2.1', () => {
+  const roundedNumber = roundToDecimal(-2.12345, 1);
+  expect(roundedNumber).toEqual(-2.1);
+});
+
+it('roundToDecimal(2.98, 0) = -2.1', () => {
+  const roundedNumber = roundToDecimal(2.98, 0);
+  expect(roundedNumber).toEqual(3);
+});
+
+it('roundToDecimal(2.88, 1) = 2.9', () => {
+  const roundedNumber = roundToDecimal(2.88, 1);
+  expect(roundedNumber).toEqual(2.9);
 });
 
 it('getRandomBetween(-10, 10) returns a number between -10 and 10', () => {

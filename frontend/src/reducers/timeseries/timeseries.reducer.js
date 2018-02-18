@@ -1,4 +1,4 @@
-import { truncToDecimal } from '../../util/general.util';
+import { truncToDecimal, roundToDecimal } from '../../util/general.util';
 import { updateArray } from './timeseries.util';
 
 /**
@@ -60,6 +60,11 @@ export default function timeseriesReducer(
             ...state.autopilot.controllers,
             headingPid: {
               ...state.autopilot.controllers.headingPid,
+              total: updateArray(
+                state.autopilot.controllers.headingPid.total,
+                roundToDecimal(autopilot.headingPid.p +
+                  autopilot.headingPid.i + autopilot.headingPid.d, 3),
+              ),
               p: updateArray(
                 state.autopilot.controllers.headingPid.p,
                 truncToDecimal(autopilot.headingPid.p, 3),
@@ -75,6 +80,11 @@ export default function timeseriesReducer(
             },
             speedPid: {
               ...state.autopilot.controllers.speedPid,
+              total: updateArray(
+                state.autopilot.controllers.speedPid.total,
+                roundToDecimal(autopilot.speedPid.p +
+                  autopilot.speedPid.i + autopilot.speedPid.d, 3),
+              ),
               p: updateArray(
                 state.autopilot.controllers.speedPid.p,
                 truncToDecimal(autopilot.speedPid.p, 3),
@@ -129,8 +139,12 @@ export default function timeseriesReducer(
 
         autopilot: {
           controllers: {
-            headingPid: { p: [], i: [], d: [] },
-            speedPid: { p: [], i: [], d: [] },
+            headingPid: {
+              total: [], p: [], i: [], d: [],
+            },
+            speedPid: {
+              total: [], p: [], i: [], d: [],
+            },
           },
         },
 

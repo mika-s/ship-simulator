@@ -3,12 +3,12 @@ import { maxBasedTrigonometric } from './trigonometric';
 
 /**
 * Calculate the wind forces acting on a vessel.
-* @param {number} currentSpeed     - Current speed in m/s.
-* @param {number} currentDirection - Current direction in degrees.
-* @param {number} vesselHeading    - Heading of the vessel in radians.
-* @param {number} rotationSpeed    - Rotation speed of the vessel, in rad/s.
-* @param {Object} dimensions       - Dimension object.
-* @param {Object} drag             - The drag coefficients object.
+* @param {number} currentSpeed     Current speed in m/s.
+* @param {number} currentDirection Current direction in degrees.
+* @param {number} vesselHeading    Heading of the vessel in radians.
+* @param {number} rotationSpeed    Rotation speed of the vessel, in rad/s.
+* @param {Object} dimensions       Dimension object.
+* @param {Object} drag             The drag coefficients object.
 * @returns {Object} Current forces in surge, sway and yaw.
 */
 export function calculateForces(

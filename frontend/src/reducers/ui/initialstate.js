@@ -13,9 +13,11 @@ const min = {
   autopilotHeadingPid: -50.0,
   autopilotHeadingPid2: -3.0,
   autopilotHeadingPid3: -50.0,
+  autopilotHeadingPid4: -150.0,
   autopilotSpeedPid: -50.0,
   autopilotSpeedPid2: -100.0,
   autopilotSpeedPid3: -50.0,
+  autopilotSpeedPid4: -150.0,
 };
 
 const max = {
@@ -30,9 +32,11 @@ const max = {
   autopilotHeadingPid: 50.0,
   autopilotHeadingPid2: 3.0,
   autopilotHeadingPid3: 50.0,
+  autopilotHeadingPid4: 150.0,
   autopilotSpeedPid: 50.0,
   autopilotSpeedPid2: 100.0,
   autopilotSpeedPid3: 50.0,
+  autopilotSpeedPid4: 150.0,
 };
 
 const uiInitialState = {

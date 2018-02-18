@@ -17,11 +17,13 @@ const timeseriesInitialState = {
   autopilot: {
     controllers: {
       headingPid: {
+        total: [],
         p: [],
         i: [],
         d: [],
       },
       speedPid: {
+        total: [],
         p: [],
         i: [],
         d: [],
