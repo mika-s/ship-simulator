@@ -4,7 +4,7 @@ import { estimateForHeading, estimateForLatitudeAndLongitude } from './alphabeta
 
 /**
 * Get the filtered heading from the Gyrocompasses.
-* @param {Object[]} gyrocompasses   - An array of Gyrocompass objects.
+* @param {Object[]} gyrocompasses   An array of Gyrocompass objects.
 * @returns {number} The filtered heading.
 */
 export function getHeadingFromGyrocompasses(gyrocompasses) {
@@ -24,7 +24,7 @@ export function getHeadingFromGyrocompasses(gyrocompasses) {
 
 /**
 * Get the filtered position from the GPSes.
-* @param {Object[]} gpses          - An array of GPS objects.
+* @param {Object[]} gpses   An array of GPS objects.
 * @returns {Object} Object with the filtered position.
 */
 export function getPositionFromGpses(gpses) {
@@ -44,10 +44,10 @@ export function getPositionFromGpses(gpses) {
 
 /**
 * Estimate the position and velocity of the vessel.
-* @param {number} frequency        - The working frequency of the system.
-* @param {Object} estimator        - The estimator object.
-* @param {Object[]} gpses          - An array of GPS objects.
-* @param {Object[]} gyrocompasses  - An array of Gyrocompass objects.
+* @param {number} frequency        The working frequency of the system.
+* @param {Object} estimator        The estimator object.
+* @param {Object[]} gpses          An array of GPS objects.
+* @param {Object[]} gyrocompasses  An array of Gyrocompass objects.
 * @returns {Object} Object with the estimated position, velocity and acceleration.
 */
 export function estimatePositionAndVelocity(frequency, estimator, gpses, gyrocompasses) {

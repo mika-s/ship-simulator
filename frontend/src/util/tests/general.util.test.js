@@ -1,4 +1,4 @@
-import { truncToDecimal, getRandomBetween, meanOfArray, mpsInKnots, knotsInMps } from '../general.util';
+import { truncToDecimal, getRandomBetween, meanOfArray, circularMeanOfArray, mpsInKnots, knotsInMps } from '../general.util';
 
 it('truncToDecimal(20.12345, 2) = 20.12', () => {
   const truncatedNumber = truncToDecimal(20.12345, 2);
@@ -72,6 +72,41 @@ it('meanOfArray([0, 0, -15]) returns -5', () => {
   expect(mean).toEqual(-5);
 });
 
+it('circularMeanOfArray([0, 0, -0.261799]) returns -0.0872', () => {
+  const array = [0, 0, -0.261799];
+  const mean = circularMeanOfArray(array);
+  expect(typeof mean).toEqual('number');
+  expect(mean).toBeCloseTo(-0.0872);
+});
+
+it('circularMeanOfArray([-0.261799, 0, -0.261799]) returns 0', () => {
+  const array = [-0.261799, 0, 0.261799];
+  const mean = circularMeanOfArray(array);
+  expect(typeof mean).toEqual('number');
+  expect(mean).toEqual(0);
+});
+
+it('circularMeanOfArray([-Math.PI / 2, 0, Math.PI / 2]) returns 0', () => {
+  const array = [-Math.PI / 2, 0, Math.PI / 2];
+  const mean = circularMeanOfArray(array);
+  expect(typeof mean).toEqual('number');
+  expect(mean).toEqual(0);
+});
+
+it('circularMeanOfArray([-2.967, Math.PI, 2.967]) returns Math.PI ', () => {
+  const array = [-2.967, Math.PI, 2.967];
+  const mean = circularMeanOfArray(array);
+  expect(typeof mean).toEqual('number');
+  expect(mean).toEqual(Math.PI);
+});
+
+it('circularMeanOfArray([0.15708, 0.174533, 0.191986]) returns 0.174533', () => {
+  const array = [0.15708, 0.174533, 0.191986];
+  const mean = circularMeanOfArray(array);
+  expect(typeof mean).toEqual('number');
+  expect(mean).toEqual(0.174533);
+});
+
 it('mpsInKnots(1) converts m/s to knots', () => {
   const knots = mpsInKnots(1);
   expect(knots).toEqual(1.94384);
@@ -91,4 +126,3 @@ it('knotsInMps(2) converts knots to m/s', () => {
   const mps = knotsInMps(2);
   expect(mps).toEqual(1.028888);
 });
-

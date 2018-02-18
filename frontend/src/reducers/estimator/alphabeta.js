@@ -9,7 +9,7 @@ const {
 
 /**
 * Get the position of the vessel in meters, given degrees.
-* @param {Object} positionInDegrees   - The position in degrees.
+* @param {Object} positionInDegrees   The position in degrees.
 * @returns {Object} The position of the vessel in meters.
 */
 function getPositionInMeters(positionInDegrees) {
@@ -30,7 +30,7 @@ function getPositionInMeters(positionInDegrees) {
 
 /**
 * Get the position of the vessel in degrees, given meters.
-* @param {Object} positionInMeters   - The position in meters.
+* @param {Object} positionInMeters   The position in meters.
 * @returns {Object} The position of the vessel in degrees.
 */
 function getPositionInDegrees(positionInMeters) {

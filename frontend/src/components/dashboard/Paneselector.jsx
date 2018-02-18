@@ -2,13 +2,11 @@ import React, { Component } from 'react';
 import PropTypes from 'prop-types';
 import update from 'immutability-helper';
 import { connect } from 'react-redux';
-import AlphabetaHeading from './Alphabeta.heading.pane';
-import PidPane from './PID.pane';
-import HeadingPane from './Heading.pane';
 import SensorPane from './Sensor.pane';
 import ThrustersPane from './Thrusters.pane';
-import PositionPane from './Position.pane';
-import GpsSpeedPane from './GpsSpeed.pane';
+import OneGraphPane from './1Graph.pane';
+import TwoGraphPane from './2Graph.pane';
+import ThreeGraphPane from './3Graph.pane';
 import './Dashboard.css';
 
 /**
@@ -168,12 +166,14 @@ class Paneselector extends Component {
         <div className="row">
           <div className={this.state.isSettingsOpen === true ? 'col-lg-6' : 'col-lg-12'}>
             {this.state.pane === 'heading' &&
-              <HeadingPane
+              <OneGraphPane
                 min={this.props.initialSettings.min.heading}
                 max={this.props.initialSettings.max.heading}
+                firstLabel="Heading"
+                color1={{ r: 255, g: 0, b: 0 }}
                 isAutoAxis={this.state.isAutoAxis}
-                simulationTimeSeries={simulationTimeSeries}
-                headingSeries={modelPositionSeries.heading}
+                timeSeries={simulationTimeSeries}
+                firstSeries={modelPositionSeries.heading}
               />}
 
             {this.state.pane === 'rollpitch' &&
@@ -187,66 +187,88 @@ class Paneselector extends Component {
               />}
 
             {this.state.pane === 'position' &&
-              <PositionPane
+              <TwoGraphPane
                 min={this.props.initialSettings.min.position}
                 max={this.props.initialSettings.max.position}
                 min2={this.props.initialSettings.min.position2}
                 max2={this.props.initialSettings.max.position2}
+                firstLabel="Latitude"
+                secondLabel="Longitude"
+                color1={{ r: 0, g: 0, b: 0 }}
+                color2={{ r: 0, g: 255, b: 0 }}
                 isAutoAxis={this.state.isAutoAxis}
-                simulationTimeSeries={simulationTimeSeries}
-                latitudeSeries={modelPositionSeries.latitude}
-                longitudeSeries={modelPositionSeries.longitude}
+                timeSeries={simulationTimeSeries}
+                firstSeries={modelPositionSeries.latitude}
+                secondSeries={modelPositionSeries.longitude}
               />}
 
             {this.state.pane === 'gpsspeed' &&
-              <GpsSpeedPane
+              <OneGraphPane
                 min={this.props.initialSettings.min.gpsspeed}
                 max={this.props.initialSettings.max.gpsspeed}
+                firstLabel="GPS speed"
+                color1={{ r: 0, g: 0, b: 255 }}
                 isAutoAxis={this.state.isAutoAxis}
-                simulationTimeSeries={simulationTimeSeries}
-                speedSeries={speedSeries}
+                timeSeries={simulationTimeSeries}
+                firstSeries={speedSeries}
               />}
 
             {this.state.pane === 'alphabetaHeading' &&
-              <AlphabetaHeading
+              <TwoGraphPane
                 min={this.props.initialSettings.min.alphabetaHeading}
                 max={this.props.initialSettings.max.alphabetaHeading}
                 min2={this.props.initialSettings.min.alphabetaHeading2}
                 max2={this.props.initialSettings.max.alphabetaHeading2}
+                firstLabel="Heading"
+                secondLabel="ROT"
+                color1={{ r: 244, g: 229, b: 66 }}
+                color2={{ r: 63, g: 44, b: 22 }}
                 isAutoAxis={this.state.isAutoAxis}
-                simulationTimeSeries={simulationTimeSeries}
-                headingSeries={alphabetaHeadingSeries}
-                rotSeries={alphabetaRotSeries}
+                timeSeries={simulationTimeSeries}
+                firstSeries={alphabetaHeadingSeries}
+                secondSeries={alphabetaRotSeries}
               />}
 
             {this.state.pane === 'autopilotHeadingPid' &&
-              <PidPane
+              <ThreeGraphPane
                 min={this.props.initialSettings.min.autopilotHeadingPid}
                 max={this.props.initialSettings.max.autopilotHeadingPid}
                 min2={this.props.initialSettings.min.autopilotHeadingPid2}
                 max2={this.props.initialSettings.max.autopilotHeadingPid2}
                 min3={this.props.initialSettings.min.autopilotHeadingPid3}
                 max3={this.props.initialSettings.max.autopilotHeadingPid3}
+                firstLabel="P"
+                secondLabel="I"
+                thirdLabel="D"
+                color1={{ r: 69, g: 32, b: 117 }}
+                color2={{ r: 32, g: 117, b: 85 }}
+                color3={{ r: 255, g: 117, b: 85 }}
                 isAutoAxis={this.state.isAutoAxis}
-                simulationTimeSeries={simulationTimeSeries}
-                pSeries={headingPSeries}
-                iSeries={headingISeries}
-                dSeries={headingDSeries}
+                timeSeries={simulationTimeSeries}
+                firstSeries={headingPSeries}
+                secondSeries={headingISeries}
+                thirdSeries={headingDSeries}
               />}
 
             {this.state.pane === 'autopilotSpeedPid' &&
-              <PidPane
+              <ThreeGraphPane
                 min={this.props.initialSettings.min.autopilotSpeedPid}
                 max={this.props.initialSettings.max.autopilotSpeedPid}
                 min2={this.props.initialSettings.min.autopilotSpeedPid2}
                 max2={this.props.initialSettings.max.autopilotSpeedPid2}
                 min3={this.props.initialSettings.min.autopilotSpeedPid3}
                 max3={this.props.initialSettings.max.autopilotSpeedPid3}
+                firstLabel="P"
+                secondLabel="I"
+                thirdLabel="D"
+                color1={{ r: 69, g: 32, b: 117 }}
+                color2={{ r: 32, g: 117, b: 85 }}
+                color3={{ r: 255, g: 117, b: 85 }}
                 isAutoAxis={this.state.isAutoAxis}
-                simulationTimeSeries={simulationTimeSeries}
-                pSeries={speedPSeries}
-                iSeries={speedISeries}
-                dSeries={speedDSeries}
+                timeSeries={simulationTimeSeries}
+                firstSeries={speedPSeries}
+                secondSeries={speedISeries}
+                thirdSeries={speedDSeries}
               />}
           </div>
           {this.state.isSettingsOpen &&
