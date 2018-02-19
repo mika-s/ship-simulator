@@ -3,7 +3,7 @@ import { wrapTo0To360 } from '../../util/kinematics.util';
 
 /**
 * Get the thruster force.
-* @param {Object} thruster   - The thruster object.
+* @param {Object} thruster   The thruster object.
 * @returns {number} The force delivered by the thruster.
 */
 export function getForces(thruster) {
@@ -41,7 +41,7 @@ export function getForces(thruster) {
 
 /**
 * Get the thruster power.
-* @param {Object} thruster   - The thruster object.
+* @param {Object} thruster   The thruster object.
 * @returns {number} The consumed power of the thruster.
 */
 export function getPower(thruster) {
@@ -79,7 +79,7 @@ export function getPower(thruster) {
 
 /**
 * Return true if the thruster can change azimuth.
-* @param {string} thrusterType   - Type of thruster.
+* @param {string} thrusterType   Type of thruster.
 * @returns {boolean} true if azimuth can be changed, false otherwise.
 */
 export function isAzi(thrusterType) {
@@ -88,8 +88,8 @@ export function isAzi(thrusterType) {
 
 /**
 * Get the state of the thruster feedback.
-* @param {number} difference   - Difference between demand and feedback.
-* @param {Object} risetimes    - Object of risetimes.
+* @param {number} difference   Difference between demand and feedback.
+* @param {Object} risetimes    Object of risetimes.
 * @returns {enum} Demand/feedback state of the thruster.
 */
 function getFeedbackState(difference, risetimes) {
@@ -116,8 +116,8 @@ function getFeedbackState(difference, risetimes) {
 
 /**
 * Set the thruster demands.
-* @param {Object} thruster   - The thruster object.
-* @param {Object} demand     - The demand object with demands in rpm, pitch and azimuth.
+* @param {Object} thruster   The thruster object.
+* @param {Object} demand     The demand object with demands in rpm, pitch and azimuth.
 * @returns {Object} Object with thruster demands in rpm, pitch and azimuth.
 */
 export function setDemand(thruster, demand) {
@@ -129,7 +129,7 @@ export function setDemand(thruster, demand) {
 
 /**
 * Get the thruster feedbacks.
-* @param {Object} thruster   - The thruster object.
+* @param {Object} thruster   The thruster object.
 * @returns {Object} Object with thruster feedback in rpm, pitch and azimuth.
 */
 export function getFeedback(thruster) {

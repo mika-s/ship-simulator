@@ -49,13 +49,13 @@ function getPositionInDegrees(positionInMeters) {
 
 /**
 * Estimate x and xdot using an alphabeta filter.
-* @param {number} frequency   - The working frequency of the system.
-* @param {number} alpha       - Alpha parameter of the filter.
-* @param {number} beta        - Beta parameter of the filter.
-* @param {number} x           - The previous x value.
-* @param {number} xdot        - The previous xdot value.
-* @param {number} measuredX   - The measured x value.
-* @param {boolean} isHeading  - Whether the estimated x is a heading or not.
+* @param {number} frequency   The working frequency of the system.
+* @param {number} alpha       Alpha parameter of the filter.
+* @param {number} beta        Beta parameter of the filter.
+* @param {number} x           The previous x value.
+* @param {number} xdot        The previous xdot value.
+* @param {number} measuredX   The measured x value.
+* @param {boolean} isHeading  Whether the estimated x is a heading or not.
 * @returns {Object} An object containing estimated x and xdot.
 */
 function alphabetaFilter(frequency, alpha, beta, x, xdot, measuredX, isHeading) {
@@ -89,9 +89,9 @@ function alphabetaFilter(frequency, alpha, beta, x, xdot, measuredX, isHeading) 
 
 /**
 * Estimate position, velocity and acceleration for heading using an alphabeta filter.
-* @param {number} frequency            - The working frequency of the system.
-* @param {Object} estimator            - The estimator object.
-* @param {number} filteredGyroHeading  - The filtered heading from gyrocompasses.
+* @param {number} frequency            The working frequency of the system.
+* @param {Object} estimator            The estimator object.
+* @param {number} filteredGyroHeading  The filtered heading from gyrocompasses.
 * @returns {Object} An object containing estimated position, velocity and acceleration.
 */
 export function estimateForHeading(frequency, estimator, filteredGyroHeading) {
@@ -105,19 +105,21 @@ export function estimateForHeading(frequency, estimator, filteredGyroHeading) {
     true,
   );
 
+  const dt = 1 / frequency;
+
   const position = { heading: estimatedHeading };
   const velocity = { r: estimatedRot };
-  const acceleration = { rd: 0.0 };
+  const acceleration = { rd: (estimatedRot - estimator.alphabeta.velocity.r) / dt };
 
   return { position, velocity, acceleration };
 }
 
 /**
 * Estimate position, velocity and acceleration for latitude and longitude using an alphabeta filter.
-* @param {number} frequency            - The working frequency of the system.
-* @param {Object} estimator            - The estimator object.
-* @param {Object} filteredGpsPosition  - An filtered position from GPSes.
-* @param {number} heading              - The vessel's heading.
+* @param {number} frequency            The working frequency of the system.
+* @param {Object} estimator            The estimator object.
+* @param {Object} filteredGpsPosition  An filtered position from GPSes.
+* @param {number} heading              The vessel's heading.
 * @returns {Object} An object containing estimated position, velocity and acceleration.
 */
 export function estimateForLatitudeAndLongitude(
@@ -142,7 +144,7 @@ export function estimateForLatitudeAndLongitude(
 
   // Run latitude and longitude alphabeta filter in meters in BODY.
   const {
-    estimatedX: estimatedSurge, estimatedXdot: estimatedLatitudeVelocity,
+    estimatedX: estimatedSurge, estimatedXdot: estimatedSurgeVelocity,
   } = alphabetaFilter(
     frequency,
     estimator.alphabeta.alpha.latitude,
@@ -154,7 +156,7 @@ export function estimateForLatitudeAndLongitude(
   );
 
   const {
-    estimatedX: estimatedSway, estimatedXdot: estimatedLongitudeVelocity,
+    estimatedX: estimatedSway, estimatedXdot: estimatedSwayVelocity,
   } = alphabetaFilter(
     frequency,
     estimator.alphabeta.alpha.longitude,
@@ -171,19 +173,18 @@ export function estimateForLatitudeAndLongitude(
     heading: heading * (PI / 180.0),
   });
 
-  const positionInNed = getPositionInDegrees(positionInMetersInNed);
-
-  const position = {
-    latitude: positionInNed.latitude,
-    longitude: positionInNed.longitude,
-  };
+  const position = getPositionInDegrees(positionInMetersInNed);
 
   const velocity = {
-    u: estimatedLatitudeVelocity,
-    v: estimatedLongitudeVelocity,
+    u: estimatedSurgeVelocity,
+    v: estimatedSwayVelocity,
   };
 
-  const acceleration = { ud: 0.0, vd: 0.0 };
+  const dt = 1 / frequency;
+  const acceleration = {
+    ud: (estimatedSurgeVelocity - estimator.alphabeta.velocity.u) / dt,
+    vd: (estimatedSwayVelocity - estimator.alphabeta.velocity.v) / dt,
+  };
 
   return { position, velocity, acceleration };
 }
