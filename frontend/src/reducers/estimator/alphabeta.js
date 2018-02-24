@@ -92,9 +92,21 @@ function alphabetaFilter(frequency, alpha, beta, x, xdot, measuredX, isHeading) 
 * @param {number} frequency            The working frequency of the system.
 * @param {Object} estimator            The estimator object.
 * @param {number} filteredGyroHeading  The filtered heading from gyrocompasses.
-* @returns {Object} An object containing estimated position, velocity and acceleration.
+* @returns {Object} An object containing estimated position, velocity, acceleration
+*   and initialization status.
 */
 export function estimateForHeading(frequency, estimator, filteredGyroHeading) {
+  // Initialization logic.
+  const { samples } = estimator.alphabeta;
+  const isInitialized = { heading: estimator.alphabeta.isInitialized.heading };
+
+  if (!estimator.alphabeta.isInitialized.heading &&
+    samples.heading < estimator.alphabeta.samplesForInitializing.heading) {
+    samples.heading += 1;
+  } else {
+    isInitialized.heading = true;
+  }
+
   const { estimatedX: estimatedHeading, estimatedXdot: estimatedRot } = alphabetaFilter(
     frequency,
     estimator.alphabeta.alpha.heading,
@@ -107,11 +119,19 @@ export function estimateForHeading(frequency, estimator, filteredGyroHeading) {
 
   const dt = 1 / frequency;
 
-  const position = { heading: estimatedHeading };
-  const velocity = { r: estimatedRot };
-  const acceleration = { rd: (estimatedRot - estimator.alphabeta.velocity.r) / dt };
+  const position = {
+    heading: isInitialized.heading ? estimatedHeading : filteredGyroHeading,
+  };
+  const velocity = {
+    r: isInitialized.heading ? estimatedRot : 0.0,
+  };
+  const acceleration = {
+    rd: isInitialized.heading ? (estimatedRot - estimator.alphabeta.velocity.r) / dt : 0.0,
+  };
 
-  return { position, velocity, acceleration };
+  return {
+    position, velocity, acceleration, samples, isInitialized,
+  };
 }
 
 /**
@@ -120,7 +140,8 @@ export function estimateForHeading(frequency, estimator, filteredGyroHeading) {
 * @param {Object} estimator            The estimator object.
 * @param {Object} filteredGpsPosition  An filtered position from GPSes.
 * @param {number} heading              The vessel's heading.
-* @returns {Object} An object containing estimated position, velocity and acceleration.
+* @returns {Object} An object containing estimated position, velocity, acceleration
+*   and initialization status.
 */
 export function estimateForLatitudeAndLongitude(
   frequency, estimator,
@@ -142,13 +163,45 @@ export function estimateForLatitudeAndLongitude(
     heading: heading * (PI / 180.0),
   });
 
+  // Initialization logic.
+  const { samples } = estimator.alphabeta;
+  const usedAlpha = {
+    latitude: estimator.alphabeta.alpha.latitude,
+    longitude: estimator.alphabeta.alpha.longitude,
+  };
+  const usedBeta = {
+    latitude: estimator.alphabeta.beta.latitude,
+    longitude: estimator.alphabeta.beta.longitude,
+  };
+  const isInitialized = {
+    latitude: estimator.alphabeta.isInitialized.latitude,
+    longitude: estimator.alphabeta.isInitialized.longitude,
+  };
+
+  if (!estimator.alphabeta.isInitialized.latitude &&
+    samples.latitude < estimator.alphabeta.samplesForInitializing.latitude) {
+    samples.latitude += 1;
+    usedAlpha.latitude = 1.0;
+    usedBeta.latitude = 1.0;
+  } else {
+    isInitialized.latitude = true;
+  }
+  if (!estimator.alphabeta.isInitialized.longitude &&
+    samples.longitude < estimator.alphabeta.samplesForInitializing.longitude) {
+    samples.longitude += 1;
+    usedAlpha.longitude = 1.0;
+    usedBeta.longitude = 1.0;
+  } else {
+    isInitialized.longitude = true;
+  }
+
   // Run latitude and longitude alphabeta filter in meters in BODY.
   const {
     estimatedX: estimatedSurge, estimatedXdot: estimatedSurgeVelocity,
   } = alphabetaFilter(
     frequency,
-    estimator.alphabeta.alpha.latitude,
-    estimator.alphabeta.beta.latitude,
+    usedAlpha.latitude,
+    usedBeta.latitude,
     positionInMetersInBody.surge,
     estimator.alphabeta.velocity.u,
     filteredGpsPositionInMetersInBody.surge,
@@ -159,8 +212,8 @@ export function estimateForLatitudeAndLongitude(
     estimatedX: estimatedSway, estimatedXdot: estimatedSwayVelocity,
   } = alphabetaFilter(
     frequency,
-    estimator.alphabeta.alpha.longitude,
-    estimator.alphabeta.beta.longitude,
+    usedAlpha.longitude,
+    usedBeta.longitude,
     positionInMetersInBody.sway,
     estimator.alphabeta.velocity.v,
     filteredGpsPositionInMetersInBody.sway,
@@ -186,5 +239,7 @@ export function estimateForLatitudeAndLongitude(
     vd: (estimatedSwayVelocity - estimator.alphabeta.velocity.v) / dt,
   };
 
-  return { position, velocity, acceleration };
+  return {
+    position, velocity, acceleration, samples, isInitialized,
+  };
 }

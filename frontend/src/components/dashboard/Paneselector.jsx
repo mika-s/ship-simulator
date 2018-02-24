@@ -164,6 +164,7 @@ class Paneselector extends Component {
     const {
       simulationTimeSeries, modelPositionSeries, sensorsSeries,
       speedSeries, alphabetaHeadingSeries, alphabetaRotSeries, thrusters,
+      alphabetaLatitudeSeries, alphabetaLongitudeSeries,
       headingPSeries, headingISeries, headingDSeries, headingTotalSeries,
       speedPSeries, speedISeries, speedDSeries, speedTotalSeries,
     } = this.props;
@@ -182,6 +183,7 @@ class Paneselector extends Component {
             <option value="thrusters">Thrusters</option>
             <option value="gpsspeed">GPS speed</option>
             <option value="alphabetaHeading">αβ - Heading and ROT</option>
+            <option value="alphabetaPosition">αβ - Longitude and latitude</option>
             <option value="autopilotHeadingPid">Autopilot - Heading PID</option>
             <option value="autopilotSpeedPid">Autopilot - Speed PID</option>
           </select>
@@ -266,6 +268,22 @@ class Paneselector extends Component {
                 timeSeries={simulationTimeSeries}
                 firstSeries={alphabetaHeadingSeries}
                 secondSeries={alphabetaRotSeries}
+              />}
+
+            {this.state.pane === 'alphabetaPosition' &&
+              <TwoGraphPane
+                min={this.props.initialSettings.min.alphabetaPosition}
+                max={this.props.initialSettings.max.alphabetaPosition}
+                min2={this.props.initialSettings.min.alphabetaPosition2}
+                max2={this.props.initialSettings.max.alphabetaPosition2}
+                firstLabel="Latitude"
+                secondLabel="Longitude"
+                color1={{ r: 0, g: 0, b: 0 }}
+                color2={{ r: 0, g: 255, b: 0 }}
+                isAutoAxis={this.state.isAutoAxis}
+                timeSeries={simulationTimeSeries}
+                firstSeries={alphabetaLatitudeSeries}
+                secondSeries={alphabetaLongitudeSeries}
               />}
 
             {this.state.pane === 'autopilotHeadingPid' &&
@@ -491,6 +509,8 @@ const mapStateToProps = state => ({
   speedSeries: state.timeseries.referencesystems.speed,
   alphabetaHeadingSeries: state.timeseries.estimator.alphabeta.position.heading,
   alphabetaRotSeries: state.timeseries.estimator.alphabeta.velocity.r,
+  alphabetaLatitudeSeries: state.timeseries.estimator.alphabeta.position.latitude,
+  alphabetaLongitudeSeries: state.timeseries.estimator.alphabeta.position.longitude,
   headingPSeries: state.timeseries.autopilot.controllers.headingPid.p,
   headingISeries: state.timeseries.autopilot.controllers.headingPid.i,
   headingDSeries: state.timeseries.autopilot.controllers.headingPid.d,
@@ -526,6 +546,8 @@ Paneselector.propTypes = {
   speedSeries: PropTypes.arrayOf(PropTypes.number).isRequired,
   alphabetaHeadingSeries: PropTypes.arrayOf(PropTypes.number).isRequired,
   alphabetaRotSeries: PropTypes.arrayOf(PropTypes.number).isRequired,
+  alphabetaLatitudeSeries: PropTypes.arrayOf(PropTypes.number).isRequired,
+  alphabetaLongitudeSeries: PropTypes.arrayOf(PropTypes.number).isRequired,
   headingPSeries: PropTypes.arrayOf(PropTypes.number).isRequired,
   headingISeries: PropTypes.arrayOf(PropTypes.number).isRequired,
   headingDSeries: PropTypes.arrayOf(PropTypes.number).isRequired,

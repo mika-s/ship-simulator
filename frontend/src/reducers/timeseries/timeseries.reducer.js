@@ -25,13 +25,13 @@ export default function timeseriesReducer(
         estimator: {
           alphabeta: {
             position: {
-              longitude: updateArray(
-                state.estimator.alphabeta.position.longitude,
-                truncToDecimal(estimated.position.longitude, 7),
-              ),
               latitude: updateArray(
                 state.estimator.alphabeta.position.latitude,
                 truncToDecimal(estimated.position.latitude, 7),
+              ),
+              longitude: updateArray(
+                state.estimator.alphabeta.position.longitude,
+                truncToDecimal(estimated.position.longitude, 7),
               ),
               heading: updateArray(
                 state.estimator.alphabeta.position.heading,
@@ -137,7 +137,7 @@ export default function timeseriesReducer(
 
         estimator: {
           alphabeta: {
-            position: { longitude: [], latitude: [], heading: [] },
+            position: { latitude: [], longitude: [], heading: [] },
             velocity: { u: [], v: [], r: [] },
           },
         },

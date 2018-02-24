@@ -79,8 +79,14 @@ export function estimatePositionAndVelocity(frequency, estimator, gpses, gyrocom
   const position = Object.assign({}, latitudeAndLongitude.position, heading.position);
   const velocity = Object.assign({}, latitudeAndLongitude.velocity, heading.velocity);
   const acceleration = Object.assign({}, latitudeAndLongitude.acceleration, heading.acceleration);
+  const samples = Object.assign({}, latitudeAndLongitude.samples, heading.samples);
+  const isInitialized = Object.assign(
+    {},
+    latitudeAndLongitude.isInitialized,
+    heading.isInitialized,
+  );
 
   return {
-    position, velocity, acceleration, filteredGyroHeading,
+    position, velocity, acceleration, samples, isInitialized, filteredGyroHeading,
   };
 }

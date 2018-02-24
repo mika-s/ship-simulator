@@ -27,7 +27,11 @@ the axes from not being shown.
 
 Fix lever values when changing mode or stopping the simulator.
 
-Initial calibration of alphabeta filter by boosting alpha and beta.
+Add estop for autopilot.
+
+Move menu to the right side.
+
+Accent border to cards?
 
 ## Structure
 

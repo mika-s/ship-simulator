@@ -18,6 +18,8 @@ export default function estimatorReducer(state, action, uiEstimator, estimated) 
           position: estimated.position,
           velocity: estimated.velocity,
           acceleration: estimated.acceleration,
+          samples: estimated.samples,
+          isInitialized: estimated.isInitialized,
         },
       };
     default:
