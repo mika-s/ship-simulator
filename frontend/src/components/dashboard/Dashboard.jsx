@@ -12,7 +12,7 @@ import './Dashboard.css';
  * This is a smart component connected to the Redux store.
  * @extends Component
 */
-class Dashboard extends Component {
+export class UnconnectedDashboard extends Component {
   constructor(props) {
     super(props);
     this.state = {};
@@ -25,21 +25,10 @@ class Dashboard extends Component {
     this.toggleAutoAxis = this.toggleAutoAxis.bind(this);
   }
 
-  setMinMax(number, min, max) {
-    this.props.setMinMax(number, min, max);
-  }
-
-  setMinMax2(number, min, max) {
-    this.props.setMinMax2(number, min, max);
-  }
-
-  setMinMax3(number, min, max) {
-    this.props.setMinMax3(number, min, max);
-  }
-
-  setMinMax4(number, min, max) {
-    this.props.setMinMax4(number, min, max);
-  }
+  setMinMax(number, min, max) { this.props.setMinMax(number, min, max); }
+  setMinMax2(number, min, max) { this.props.setMinMax2(number, min, max); }
+  setMinMax3(number, min, max) { this.props.setMinMax3(number, min, max); }
+  setMinMax4(number, min, max) { this.props.setMinMax4(number, min, max); }
 
   changePane(event, number) {
     const newPane = event.target.value;
@@ -130,33 +119,12 @@ class Dashboard extends Component {
   }
 }
 
-const minMaxShape = PropTypes.shape({
-  heading: PropTypes.number.isRequired,
-  heading2: PropTypes.number.isRequired,
-  heading3: PropTypes.number.isRequired,
-  gpsspeed: PropTypes.number.isRequired,
-  position: PropTypes.number.isRequired,
-  position2: PropTypes.number.isRequired,
-  thrusters: PropTypes.number.isRequired,
-  rollpitch: PropTypes.number.isRequired,
-  alphabetaHeading: PropTypes.number.isRequired,
-  alphabetaHeading2: PropTypes.number.isRequired,
-  autopilotHeadingPid: PropTypes.number.isRequired,
-  autopilotHeadingPid2: PropTypes.number.isRequired,
-  autopilotHeadingPid3: PropTypes.number.isRequired,
-  autopilotHeadingPid4: PropTypes.number.isRequired,
-  autopilotSpeedPid: PropTypes.number.isRequired,
-  autopilotSpeedPid2: PropTypes.number.isRequired,
-  autopilotSpeedPid3: PropTypes.number.isRequired,
-  autopilotSpeedPid4: PropTypes.number.isRequired,
-}).isRequired;
-
-Dashboard.propTypes = {
+UnconnectedDashboard.propTypes = {
   panes: PropTypes.objectOf(PropTypes.shape({
     type: PropTypes.string.isRequired,
     isAutoAxis: PropTypes.bool.isRequired,
-    min: minMaxShape,
-    max: minMaxShape,
+    min: PropTypes.objectOf(PropTypes.number).isRequired,
+    max: PropTypes.objectOf(PropTypes.number).isRequired,
   })).isRequired,
   setDashboardPane: PropTypes.func.isRequired,
   toggleAutoAxis: PropTypes.func.isRequired,
@@ -179,6 +147,6 @@ const mapDispatchToProps = dispatch => ({
   setMinMax4: (number, min, max) => dispatch(setMinMax4(number, min, max)),
 });
 
-const ConnectedDashboard = connect(mapStateToProps, mapDispatchToProps)(Dashboard);
+const Dashboard = connect(mapStateToProps, mapDispatchToProps)(UnconnectedDashboard);
 
-export default ConnectedDashboard;
+export default Dashboard;
