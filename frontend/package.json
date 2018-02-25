@@ -1,10 +1,12 @@
 {
   "name": "frontend",
-  "version": "0.2.4",
+  "version": "0.2.5",
   "private": true,
   "dependencies": {
     "chart.js": "^2.7.1",
     "d3": "^4.12.2",
+    "enzyme": "^3.3.0",
+    "enzyme-adapter-react-16": "^1.1.1",
     "geodesy": "^1.1.2",
     "immutability-helper": "^2.6.2",
     "prop-types": "^15.6.0",
@@ -25,11 +27,7 @@
     "eject": "react-scripts eject"
   },
   "proxy": "http://localhost:8080",
-  "devDependencies": {
-    "enzyme": "^3.3.0",
-    "enzyme-adapter-react-16": "^1.1.1",
-    "redux-devtools": "^3.4.1"
-  },
+  "devDependencies": {},
   "jest": {
     "collectCoverageFrom": [
       "src/**/*.{js,jsx}",

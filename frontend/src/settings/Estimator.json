@@ -5,13 +5,13 @@
   },
   "alphabeta": {
     "alpha": {
-      "latitude": 1.0,
-      "longitude": 1.0,
+      "latitude": 0.2,
+      "longitude": 0.1,
       "heading": 0.2
     },
     "beta": {
-      "latitude": 1.0,
-      "longitude": 1.0,
+      "latitude": 0.1,
+      "longitude": 0.1,
       "heading": 0.03
     }
   }

@@ -1,7 +1,7 @@
 import { wrapTo0To360, wrapToPipi } from '../../util/kinematics.util';
 
 const {
-  PI, max, min, abs,
+  PI, max, min, abs, sign,
 } = Math;
 
 /**
@@ -32,7 +32,7 @@ export function headingController(autopilot, heading, rot) {
     // Find shortest distance.
     const ccw = error > 0 ? error - 360.0 : error;
     const cw = error > 0 ? error : 360 + error;
-    const chosenError = Math.abs(ccw) < Math.abs(cw) ? ccw : cw;
+    const chosenError = abs(ccw) < Math.abs(cw) ? ccw : cw;
 
     const errorInRads = chosenError * (PI / 180.0);
     headingError = wrapToPipi(errorInRads).angle * (180.0 / PI);
@@ -156,22 +156,24 @@ export function autopilotAlloc(surgeControlForce, headingControlForce, maxRudder
       let rpm;
       let pitch;
       let azimuth = rudderGain * headingControlForce;
-      azimuth = Math.max(-maxRudderAngle, azimuth);
-      azimuth = Math.min(maxRudderAngle, azimuth);
+      azimuth = max(-maxRudderAngle, azimuth);
+      azimuth = min(maxRudderAngle, azimuth);
       azimuth = wrapTo0To360(azimuth);
 
       if (thruster.controlType === 'rpm') {
         pitch = 0.0;
-        rpm = (surgeControlForce / thruster.maxForce.positive)
-          ** (1 / thruster.rpmExponent.positive);
+        rpm = sign(surgeControlForce) * ((abs(surgeControlForce) / thruster.maxForce.positive)
+          ** (1 / thruster.rpmExponent.positive));
 
-        rpm = Math.min(1.0, rpm);
+        rpm = min(1.0, rpm);
+        rpm = max(0.0, rpm);
       } else {
         rpm = 0.0;
-        pitch = (surgeControlForce / thruster.maxForce.positive)
-          ** (1 / thruster.pitchExponent.positive);
+        pitch = sign(surgeControlForce) * ((abs(surgeControlForce) / thruster.maxForce.positive)
+          ** (1 / thruster.pitchExponent.positive));
 
-        pitch = Math.min(1.0, pitch);
+        pitch = min(1.0, pitch);
+        pitch = max(0.0, pitch);
       }
 
       demands.push({

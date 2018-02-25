@@ -50,3 +50,13 @@ export function setMinMax3(number, min, max) {
   };
 }
 
+export function setMinMax4(number, min, max) {
+  return {
+    type: 'SET_MIN_MAX4_AXIS',
+    payload: {
+      number,
+      min,
+      max,
+    },
+  };
+}

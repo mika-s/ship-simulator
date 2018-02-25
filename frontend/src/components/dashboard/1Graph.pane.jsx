@@ -5,32 +5,36 @@ import { Line } from 'react-chartjs-2';
 import './Dashboard.css';
 
 /**
- * Class representing a GPS speed pane for use on the dashboard.
+ * Class representing a pane, containing a graph with one axis, for use on the dashboard.
  * This is a dumb component receiving data as props.
  * @extends Component
 */
-class GpsSpeedPane extends Component {
-  constructor() {
-    super();
+class OneGraphPane extends Component {
+  constructor(props) {
+    super(props);
+
+    const { r: r1, g: g1, b: b1 } = props.color1;
+    const { firstLabel } = props;
+
     this.state = {
       graphData: {
         labels: [],
         datasets: [
           {
-            label: 'GPS speed',
+            label: firstLabel,
             fill: false,
             lineTension: 0.1,
-            backgroundColor: 'rgba(0,0,255,0.4)',
-            borderColor: 'rgba(0,0,255,1)',
+            backgroundColor: `rgba(${r1},${g1},${b1},0.4)`,
+            borderColor: `rgba(${r1},${g1},${b1},1)`,
             borderCapStyle: 'butt',
             borderDash: [],
             borderDashOffset: 0.0,
             borderJoinStyle: 'miter',
-            pointBorderColor: 'rgba(0,0,255,1)',
+            pointBorderColor: `rgba(${r1},${g1},${b1},1)`,
             pointBackgroundColor: '#fff',
             pointBorderWidth: 1,
             pointHoverRadius: 5,
-            pointHoverBackgroundColor: 'rgba(0,0,255,1)',
+            pointHoverBackgroundColor: `rgba(${r1},${g1},${b1},1)`,
             pointHoverBorderColor: 'rgba(220,220,220,1)',
             pointHoverBorderWidth: 2,
             pointRadius: 1,
@@ -63,8 +67,8 @@ class GpsSpeedPane extends Component {
   componentWillMount() {
     this.setState({
       graphData: update(this.state.graphData, {
-        labels: { $set: this.props.simulationTimeSeries },
-        datasets: { 0: { data: { $set: this.props.speedSeries } } },
+        labels: { $set: this.props.timeSeries },
+        datasets: { 0: { data: { $set: this.props.firstSeries } } },
       }),
       options: update(this.state.options, {
         scales: {
@@ -81,8 +85,8 @@ class GpsSpeedPane extends Component {
   componentWillReceiveProps(nextProps) {
     this.setState({
       graphData: update(this.state.graphData, {
-        labels: { $set: nextProps.simulationTimeSeries },
-        datasets: { 0: { data: { $set: nextProps.speedSeries } } },
+        labels: { $set: nextProps.timeSeries },
+        datasets: { 0: { data: { $set: nextProps.firstSeries } } },
       }),
       options: update(this.state.options, {
         scales: {
@@ -91,8 +95,8 @@ class GpsSpeedPane extends Component {
           } : {
             $set: [{
               ticks: {
-                min: nextProps.speedSeries.length > 0 ? Math.min(...nextProps.speedSeries) : -1,
-                max: nextProps.speedSeries.length > 0 ? Math.max(...nextProps.speedSeries) : 1,
+                min: nextProps.firstSeries.length > 0 ? Math.min(...nextProps.firstSeries) : -1,
+                max: nextProps.firstSeries.length > 0 ? Math.max(...nextProps.firstSeries) : 1,
               },
             }],
           },
@@ -113,12 +117,18 @@ class GpsSpeedPane extends Component {
   }
 }
 
-GpsSpeedPane.propTypes = {
+OneGraphPane.propTypes = {
   isAutoAxis: PropTypes.bool.isRequired,
   min: PropTypes.number.isRequired,
   max: PropTypes.number.isRequired,
-  simulationTimeSeries: PropTypes.arrayOf(PropTypes.number).isRequired,
-  speedSeries: PropTypes.arrayOf(PropTypes.number).isRequired,
+  firstLabel: PropTypes.string.isRequired,
+  color1: PropTypes.shape({
+    r: PropTypes.number.isRequired,
+    g: PropTypes.number.isRequired,
+    b: PropTypes.number.isRequired,
+  }).isRequired,
+  timeSeries: PropTypes.arrayOf(PropTypes.number).isRequired,
+  firstSeries: PropTypes.arrayOf(PropTypes.number).isRequired,
 };
 
-export default GpsSpeedPane;
+export default OneGraphPane;

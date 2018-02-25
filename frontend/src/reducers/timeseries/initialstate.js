@@ -17,11 +17,13 @@ const timeseriesInitialState = {
   autopilot: {
     controllers: {
       headingPid: {
+        total: [],
         p: [],
         i: [],
         d: [],
       },
       speedPid: {
+        total: [],
         p: [],
         i: [],
         d: [],
@@ -38,6 +40,8 @@ const timeseriesInitialState = {
   sensors: {
     roll: [],
     pitch: [],
+    gyroHeading: [],
+    filteredGyroHeading: [],
   },
   referencesystems: {
     speed: [],

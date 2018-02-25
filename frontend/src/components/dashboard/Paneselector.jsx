@@ -2,13 +2,12 @@ import React, { Component } from 'react';
 import PropTypes from 'prop-types';
 import update from 'immutability-helper';
 import { connect } from 'react-redux';
-import AlphabetaHeading from './Alphabeta.heading.pane';
-import PidPane from './PID.pane';
-import HeadingPane from './Heading.pane';
 import SensorPane from './Sensor.pane';
 import ThrustersPane from './Thrusters.pane';
-import PositionPane from './Position.pane';
-import GpsSpeedPane from './GpsSpeed.pane';
+import OneGraphPane from './1Graph.pane';
+import TwoGraphPane from './2Graph.pane';
+import ThreeGraphPane from './3Graph.pane';
+import FourGraphPane from './4Graph.pane';
 import './Dashboard.css';
 
 /**
@@ -32,15 +31,18 @@ class Paneselector extends Component {
     this.handleMinChange = this.handleMinChange.bind(this);
     this.handleMinChange2 = this.handleMinChange2.bind(this);
     this.handleMinChange3 = this.handleMinChange3.bind(this);
+    this.handleMinChange4 = this.handleMinChange4.bind(this);
     this.handleMaxChange = this.handleMaxChange.bind(this);
     this.handleMaxChange2 = this.handleMaxChange2.bind(this);
     this.handleMaxChange3 = this.handleMaxChange3.bind(this);
+    this.handleMaxChange4 = this.handleMaxChange4.bind(this);
     this.onToggleAutoAxis = this.onToggleAutoAxis.bind(this);
     this.toggleSettings = this.toggleSettings.bind(this);
     this.changePane = this.changePane.bind(this);
     this.setMinMax = this.setMinMax.bind(this);
     this.setMinMax2 = this.setMinMax2.bind(this);
     this.setMinMax3 = this.setMinMax3.bind(this);
+    this.setMinMax4 = this.setMinMax4.bind(this);
   }
 
   onToggleAutoAxis() {
@@ -72,6 +74,15 @@ class Paneselector extends Component {
       this.props.number,
       Number.parseFloat(this.state.min[`${this.state.pane}3`]),
       Number.parseFloat(this.state.max[`${this.state.pane}3`]),
+    );
+  }
+
+  setMinMax4(event) {
+    event.preventDefault();
+    this.props.setMinMax4(
+      this.props.number,
+      Number.parseFloat(this.state.min[`${this.state.pane}4`]),
+      Number.parseFloat(this.state.max[`${this.state.pane}4`]),
     );
   }
 
@@ -109,6 +120,14 @@ class Paneselector extends Component {
     });
   }
 
+  handleMinChange4(event) {
+    this.setState({
+      min: update(this.state.min, {
+        [`${this.state.pane}4`]: { $set: event.target.value },
+      }),
+    });
+  }
+
   handleMaxChange(event) {
     this.setState({
       max: update(this.state.max, {
@@ -133,12 +152,21 @@ class Paneselector extends Component {
     });
   }
 
+  handleMaxChange4(event) {
+    this.setState({
+      max: update(this.state.max, {
+        [`${this.state.pane}4`]: { $set: event.target.value },
+      }),
+    });
+  }
+
   render() {
     const {
-      simulationTimeSeries, modelPositionSeries, rollSeries, pitchSeries,
+      simulationTimeSeries, modelPositionSeries, sensorsSeries,
       speedSeries, alphabetaHeadingSeries, alphabetaRotSeries, thrusters,
-      headingPSeries, headingISeries, headingDSeries,
-      speedPSeries, speedISeries, speedDSeries,
+      alphabetaLatitudeSeries, alphabetaLongitudeSeries,
+      headingPSeries, headingISeries, headingDSeries, headingTotalSeries,
+      speedPSeries, speedISeries, speedDSeries, speedTotalSeries,
     } = this.props;
 
     return (
@@ -155,6 +183,7 @@ class Paneselector extends Component {
             <option value="thrusters">Thrusters</option>
             <option value="gpsspeed">GPS speed</option>
             <option value="alphabetaHeading">αβ - Heading and ROT</option>
+            <option value="alphabetaPosition">αβ - Longitude and latitude</option>
             <option value="autopilotHeadingPid">Autopilot - Heading PID</option>
             <option value="autopilotSpeedPid">Autopilot - Speed PID</option>
           </select>
@@ -168,12 +197,24 @@ class Paneselector extends Component {
         <div className="row">
           <div className={this.state.isSettingsOpen === true ? 'col-lg-6' : 'col-lg-12'}>
             {this.state.pane === 'heading' &&
-              <HeadingPane
+              <ThreeGraphPane
                 min={this.props.initialSettings.min.heading}
                 max={this.props.initialSettings.max.heading}
+                min2={this.props.initialSettings.min.heading2}
+                max2={this.props.initialSettings.max.heading2}
+                min3={this.props.initialSettings.min.heading3}
+                max3={this.props.initialSettings.max.heading3}
+                firstLabel="Model heading"
+                secondLabel="Gyro heading"
+                thirdLabel="Filtered gyro heading"
+                color1={{ r: 255, g: 0, b: 0 }}
+                color2={{ r: 0, g: 255, b: 0 }}
+                color3={{ r: 0, g: 0, b: 255 }}
                 isAutoAxis={this.state.isAutoAxis}
-                simulationTimeSeries={simulationTimeSeries}
-                headingSeries={modelPositionSeries.heading}
+                timeSeries={simulationTimeSeries}
+                firstSeries={modelPositionSeries.heading}
+                secondSeries={sensorsSeries.gyroHeading}
+                thirdSeries={sensorsSeries.filteredGyroHeading}
               />}
 
             {this.state.pane === 'rollpitch' &&
@@ -181,77 +222,125 @@ class Paneselector extends Component {
                 min={this.props.initialSettings.min.rollpitch}
                 max={this.props.initialSettings.max.rollpitch}
                 isAutoAxis={this.state.isAutoAxis}
-                simulationTimeSeries={simulationTimeSeries}
-                rollSeries={rollSeries}
-                pitchSeries={pitchSeries}
+                timeSeries={simulationTimeSeries}
+                rollSeries={sensorsSeries.roll}
+                pitchSeries={sensorsSeries.pitch}
               />}
 
             {this.state.pane === 'position' &&
-              <PositionPane
+              <TwoGraphPane
                 min={this.props.initialSettings.min.position}
                 max={this.props.initialSettings.max.position}
                 min2={this.props.initialSettings.min.position2}
                 max2={this.props.initialSettings.max.position2}
+                firstLabel="Latitude"
+                secondLabel="Longitude"
+                color1={{ r: 0, g: 0, b: 0 }}
+                color2={{ r: 0, g: 255, b: 0 }}
                 isAutoAxis={this.state.isAutoAxis}
-                simulationTimeSeries={simulationTimeSeries}
-                latitudeSeries={modelPositionSeries.latitude}
-                longitudeSeries={modelPositionSeries.longitude}
+                timeSeries={simulationTimeSeries}
+                firstSeries={modelPositionSeries.latitude}
+                secondSeries={modelPositionSeries.longitude}
               />}
 
             {this.state.pane === 'gpsspeed' &&
-              <GpsSpeedPane
+              <OneGraphPane
                 min={this.props.initialSettings.min.gpsspeed}
                 max={this.props.initialSettings.max.gpsspeed}
+                firstLabel="GPS speed"
+                color1={{ r: 0, g: 0, b: 255 }}
                 isAutoAxis={this.state.isAutoAxis}
-                simulationTimeSeries={simulationTimeSeries}
-                speedSeries={speedSeries}
+                timeSeries={simulationTimeSeries}
+                firstSeries={speedSeries}
               />}
 
             {this.state.pane === 'alphabetaHeading' &&
-              <AlphabetaHeading
+              <TwoGraphPane
                 min={this.props.initialSettings.min.alphabetaHeading}
                 max={this.props.initialSettings.max.alphabetaHeading}
                 min2={this.props.initialSettings.min.alphabetaHeading2}
                 max2={this.props.initialSettings.max.alphabetaHeading2}
+                firstLabel="Heading"
+                secondLabel="ROT"
+                color1={{ r: 244, g: 229, b: 66 }}
+                color2={{ r: 63, g: 44, b: 22 }}
                 isAutoAxis={this.state.isAutoAxis}
-                simulationTimeSeries={simulationTimeSeries}
-                headingSeries={alphabetaHeadingSeries}
-                rotSeries={alphabetaRotSeries}
+                timeSeries={simulationTimeSeries}
+                firstSeries={alphabetaHeadingSeries}
+                secondSeries={alphabetaRotSeries}
+              />}
+
+            {this.state.pane === 'alphabetaPosition' &&
+              <TwoGraphPane
+                min={this.props.initialSettings.min.alphabetaPosition}
+                max={this.props.initialSettings.max.alphabetaPosition}
+                min2={this.props.initialSettings.min.alphabetaPosition2}
+                max2={this.props.initialSettings.max.alphabetaPosition2}
+                firstLabel="Latitude"
+                secondLabel="Longitude"
+                color1={{ r: 0, g: 0, b: 0 }}
+                color2={{ r: 0, g: 255, b: 0 }}
+                isAutoAxis={this.state.isAutoAxis}
+                timeSeries={simulationTimeSeries}
+                firstSeries={alphabetaLatitudeSeries}
+                secondSeries={alphabetaLongitudeSeries}
               />}
 
             {this.state.pane === 'autopilotHeadingPid' &&
-              <PidPane
+              <FourGraphPane
                 min={this.props.initialSettings.min.autopilotHeadingPid}
                 max={this.props.initialSettings.max.autopilotHeadingPid}
                 min2={this.props.initialSettings.min.autopilotHeadingPid2}
                 max2={this.props.initialSettings.max.autopilotHeadingPid2}
                 min3={this.props.initialSettings.min.autopilotHeadingPid3}
                 max3={this.props.initialSettings.max.autopilotHeadingPid3}
+                min4={this.props.initialSettings.min.autopilotHeadingPid4}
+                max4={this.props.initialSettings.max.autopilotHeadingPid4}
+                firstLabel="P"
+                secondLabel="I"
+                thirdLabel="D"
+                fourthLabel="Total"
+                color1={{ r: 69, g: 32, b: 117 }}
+                color2={{ r: 32, g: 117, b: 85 }}
+                color3={{ r: 255, g: 117, b: 85 }}
+                color4={{ r: 255, g: 0, b: 85 }}
                 isAutoAxis={this.state.isAutoAxis}
-                simulationTimeSeries={simulationTimeSeries}
-                pSeries={headingPSeries}
-                iSeries={headingISeries}
-                dSeries={headingDSeries}
+                timeSeries={simulationTimeSeries}
+                firstSeries={headingPSeries}
+                secondSeries={headingISeries}
+                thirdSeries={headingDSeries}
+                fourthSeries={headingTotalSeries}
               />}
 
             {this.state.pane === 'autopilotSpeedPid' &&
-              <PidPane
+              <FourGraphPane
                 min={this.props.initialSettings.min.autopilotSpeedPid}
                 max={this.props.initialSettings.max.autopilotSpeedPid}
                 min2={this.props.initialSettings.min.autopilotSpeedPid2}
                 max2={this.props.initialSettings.max.autopilotSpeedPid2}
                 min3={this.props.initialSettings.min.autopilotSpeedPid3}
                 max3={this.props.initialSettings.max.autopilotSpeedPid3}
+                min4={this.props.initialSettings.min.autopilotSpeedPid4}
+                max4={this.props.initialSettings.max.autopilotSpeedPid4}
+                firstLabel="P"
+                secondLabel="I"
+                thirdLabel="D"
+                fourthLabel="Total"
+                color1={{ r: 69, g: 32, b: 117 }}
+                color2={{ r: 32, g: 117, b: 85 }}
+                color3={{ r: 255, g: 117, b: 85 }}
+                color4={{ r: 255, g: 0, b: 85 }}
                 isAutoAxis={this.state.isAutoAxis}
-                simulationTimeSeries={simulationTimeSeries}
-                pSeries={speedPSeries}
-                iSeries={speedISeries}
-                dSeries={speedDSeries}
+                timeSeries={simulationTimeSeries}
+                firstSeries={speedPSeries}
+                secondSeries={speedISeries}
+                thirdSeries={speedDSeries}
+                fourthSeries={speedTotalSeries}
               />}
           </div>
           {this.state.isSettingsOpen &&
             <div className="col-lg-6">
-              <div className="card" style={{ marginTop: 30, marginBottom: 20 }}>
+              <div className="card" style={{ marginTop: 15, marginBottom: 10 }}>
                 <div className="card-body">
                   <h6 className="card-subtitle mb-2 text-muted">Graph settings</h6>
                   <div className="card-text">
@@ -268,7 +357,7 @@ class Paneselector extends Component {
                       </div>
                     </form>
                     {!this.state.isAutoAxis &&
-                      <form className="form-inline" style={{ marginTop: 10 }} onSubmit={this.setMinMax}>
+                      <form className="form-inline min-max-form" onSubmit={this.setMinMax}>
                         <div className="form-check">
                           Min:
                           <input
@@ -297,13 +386,14 @@ class Paneselector extends Component {
                           <button className="btn btn-secondary btn-sm" type="submit">Set</button>
                         </div>
                       </form>}
-                    {/* Special case for position which has two axes. */}
+                    {/* Special case for position which has two or more axes. */}
                     {!this.state.isAutoAxis &&
                     (this.state.pane === 'position' ||
+                    this.state.pane === 'heading' ||
                     this.state.pane === 'alphabetaHeading' ||
                     this.state.pane === 'autopilotHeadingPid' ||
                     this.state.pane === 'autopilotSpeedPid') &&
-                      <form className="form-inline" style={{ marginTop: 10 }} onSubmit={this.setMinMax2}>
+                      <form className="form-inline min-max-form" onSubmit={this.setMinMax2}>
                         <div className="form-check">
                           Min:
                           <input
@@ -332,11 +422,12 @@ class Paneselector extends Component {
                           <button className="btn btn-secondary btn-sm" type="submit">Set</button>
                         </div>
                       </form>}
-                    {/* Special case for position which has three axes. */}
+                    {/* Special case for position which has three or more axes. */}
                     {!this.state.isAutoAxis &&
-                    (this.state.pane === 'autopilotHeadingPid' ||
+                    (this.state.pane === 'heading' ||
+                    this.state.pane === 'autopilotHeadingPid' ||
                     this.state.pane === 'autopilotSpeedPid') &&
-                      <form className="form-inline" style={{ marginTop: 10 }} onSubmit={this.setMinMax3}>
+                      <form className="form-inline min-max-form" onSubmit={this.setMinMax3}>
                         <div className="form-check">
                           Min:
                           <input
@@ -365,6 +456,39 @@ class Paneselector extends Component {
                           <button className="btn btn-secondary btn-sm" type="submit">Set</button>
                         </div>
                       </form>}
+                    {/* Special case for position which has four axes. */}
+                    {!this.state.isAutoAxis &&
+                    (this.state.pane === 'autopilotHeadingPid' ||
+                    this.state.pane === 'autopilotSpeedPid') &&
+                      <form className="form-inline min-max-form" onSubmit={this.setMinMax4}>
+                        <div className="form-check">
+                          Min:
+                          <input
+                            type="number"
+                            min="-2000"
+                            max="2000"
+                            step="0.1"
+                            value={this.state.min[`${this.state.pane}4`]}
+                            onChange={this.handleMinChange4}
+                            style={{ width: 80, marginLeft: 5 }}
+                            className="form-control mb-2 mr-sm-2 mb-sm-0"
+                            required
+                          />
+                          Max:
+                          <input
+                            type="number"
+                            min="-2000"
+                            max="2000"
+                            step="0.1"
+                            value={this.state.max[`${this.state.pane}4`]}
+                            onChange={this.handleMaxChange4}
+                            style={{ width: 80, marginLeft: 5 }}
+                            className="form-control mb-2 mr-sm-2 mb-sm-0"
+                            required
+                          />
+                          <button className="btn btn-secondary btn-sm" type="submit">Set</button>
+                        </div>
+                      </form>}
                   </div>
                 </div>
               </div>
@@ -381,17 +505,20 @@ class Paneselector extends Component {
 const mapStateToProps = state => ({
   simulationTimeSeries: state.timeseries.time,
   modelPositionSeries: state.timeseries.model.position,
-  rollSeries: state.timeseries.sensors.roll,
-  pitchSeries: state.timeseries.sensors.pitch,
+  sensorsSeries: state.timeseries.sensors,
   speedSeries: state.timeseries.referencesystems.speed,
   alphabetaHeadingSeries: state.timeseries.estimator.alphabeta.position.heading,
   alphabetaRotSeries: state.timeseries.estimator.alphabeta.velocity.r,
+  alphabetaLatitudeSeries: state.timeseries.estimator.alphabeta.position.latitude,
+  alphabetaLongitudeSeries: state.timeseries.estimator.alphabeta.position.longitude,
   headingPSeries: state.timeseries.autopilot.controllers.headingPid.p,
   headingISeries: state.timeseries.autopilot.controllers.headingPid.i,
   headingDSeries: state.timeseries.autopilot.controllers.headingPid.d,
+  headingTotalSeries: state.timeseries.autopilot.controllers.headingPid.total,
   speedPSeries: state.timeseries.autopilot.controllers.speedPid.p,
   speedISeries: state.timeseries.autopilot.controllers.speedPid.i,
   speedDSeries: state.timeseries.autopilot.controllers.speedPid.d,
+  speedTotalSeries: state.timeseries.autopilot.controllers.speedPid.total,
   thrusters: state.ship.thrusters,
 });
 
@@ -412,19 +539,23 @@ Paneselector.propTypes = {
   setMinMax: PropTypes.func.isRequired,
   setMinMax2: PropTypes.func.isRequired,
   setMinMax3: PropTypes.func.isRequired,
+  setMinMax4: PropTypes.func.isRequired,
   simulationTimeSeries: PropTypes.arrayOf(PropTypes.number).isRequired,
   modelPositionSeries: PropTypes.objectOf(PropTypes.arrayOf(PropTypes.number)).isRequired,
-  rollSeries: PropTypes.arrayOf(PropTypes.number).isRequired,
-  pitchSeries: PropTypes.arrayOf(PropTypes.number).isRequired,
+  sensorsSeries: PropTypes.objectOf(PropTypes.arrayOf(PropTypes.number)).isRequired,
   speedSeries: PropTypes.arrayOf(PropTypes.number).isRequired,
   alphabetaHeadingSeries: PropTypes.arrayOf(PropTypes.number).isRequired,
   alphabetaRotSeries: PropTypes.arrayOf(PropTypes.number).isRequired,
+  alphabetaLatitudeSeries: PropTypes.arrayOf(PropTypes.number).isRequired,
+  alphabetaLongitudeSeries: PropTypes.arrayOf(PropTypes.number).isRequired,
   headingPSeries: PropTypes.arrayOf(PropTypes.number).isRequired,
   headingISeries: PropTypes.arrayOf(PropTypes.number).isRequired,
   headingDSeries: PropTypes.arrayOf(PropTypes.number).isRequired,
+  headingTotalSeries: PropTypes.arrayOf(PropTypes.number).isRequired,
   speedPSeries: PropTypes.arrayOf(PropTypes.number).isRequired,
   speedISeries: PropTypes.arrayOf(PropTypes.number).isRequired,
   speedDSeries: PropTypes.arrayOf(PropTypes.number).isRequired,
+  speedTotalSeries: PropTypes.arrayOf(PropTypes.number).isRequired,
   thrusters: PropTypes.arrayOf(PropTypes.object).isRequired,
 };
 

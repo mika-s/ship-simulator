@@ -3,6 +3,8 @@ import UiThruster from '../constructors/uithruster';
 
 const min = {
   heading: 0,
+  heading2: 0.0,
+  heading3: 0.0,
   gpsspeed: 0,
   position: 49.9,
   position2: 3.9,
@@ -10,16 +12,22 @@ const min = {
   rollpitch: -5.0,
   alphabetaHeading: -10.0,
   alphabetaHeading2: -30.0,
+  alphabetaPosition: 49.9,
+  alphabetaPosition2: 3.9,
   autopilotHeadingPid: -50.0,
   autopilotHeadingPid2: -3.0,
   autopilotHeadingPid3: -50.0,
+  autopilotHeadingPid4: -150.0,
   autopilotSpeedPid: -50.0,
   autopilotSpeedPid2: -100.0,
   autopilotSpeedPid3: -50.0,
+  autopilotSpeedPid4: -150.0,
 };
 
 const max = {
   heading: 360,
+  heading2: 360.0,
+  heading3: 360.0,
   gpsspeed: 10,
   position: 50.1,
   position2: 4.1,
@@ -27,12 +35,16 @@ const max = {
   rollpitch: 5.0,
   alphabetaHeading: 370.0,
   alphabetaHeading2: 30.0,
+  alphabetaPosition: 50.1,
+  alphabetaPosition2: 4.1,
   autopilotHeadingPid: 50.0,
   autopilotHeadingPid2: 3.0,
   autopilotHeadingPid3: 50.0,
+  autopilotHeadingPid4: 150.0,
   autopilotSpeedPid: 50.0,
   autopilotSpeedPid2: 100.0,
   autopilotSpeedPid3: 50.0,
+  autopilotSpeedPid4: 150.0,
 };
 
 const uiInitialState = {

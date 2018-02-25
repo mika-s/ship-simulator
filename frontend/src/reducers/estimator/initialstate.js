@@ -31,6 +31,21 @@ const estimatorInitialState = {
       vd: 0.0,
       rd: 0.0,
     },
+    samples: {
+      latitude: 0,
+      longitude: 0,
+      heading: 0,
+    },
+    samplesForInitializing: {
+      latitude: 3,
+      longitude: 3,
+      heading: 2,
+    },
+    isInitialized: {
+      latitude: false,
+      longitude: false,
+      heading: false,
+    },
   },
 };
 
